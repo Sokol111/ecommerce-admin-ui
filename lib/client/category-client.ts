@@ -4,10 +4,10 @@ import {
   UpdateCategoryRequest,
   CreateCategoryRequest,
   CategoryResponse,
-} from "@/api/generated/category-api";
-import { Category } from "../model/category-model";
+} from '@/api/generated/category-api';
+import { Category } from '../model/category-model';
 
-const basePath = process.env.NEXT_PUBLIC_CATEGORY_API_URL;
+const basePath = process.env.CATEGORY_API_URL;
 
 const api = new DefaultApi(new Configuration({ basePath }));
 

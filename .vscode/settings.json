@@ -1,0 +1,36 @@
+{
+  // Форматування коду
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // ESLint інтеграція
+  "eslint.enable": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  // Tailwind CSS IntelliSense
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "html",
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    "clsx\\(([^)]*)\\)",
+    "tw`([^`]*)`"
+  ],
+
+  // NPM та імпорти
+  "npm.enableScriptExplorer": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // Prettier налаштування (якщо використовуєте його)
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.semi": true,
+
+  // Headwind - сортування Tailwind класів
+  "headwind.classSorting": "concentric-css",
+
+  // Автозбереження
+  "files.autoSave": "onFocusChange"
+}
