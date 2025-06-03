@@ -1,38 +1,43 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Form, FormField } from "../ui/form";
-import { Button } from "../ui/button";
-import AppFormField from "@/components/form/AppFormInput";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { createCategoryAction } from "@/lib/actions";
-import AppFormCheckbox from "../form/AppFormCheckbox";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
+import { createCategoryAction } from '@/lib/actions';
+import { Input } from '../ui/input';
+import { Checkbox } from '../ui/checkbox';
 
-export const categorySchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Category name must be at least 2 characters",
+    message: 'Category name must be at least 2 characters',
   }),
-  enabled: z.boolean().default(false),
+  enabled: z.boolean(),
 });
-
-export type ZodCategoryCreate = z.infer<typeof categorySchema>;
 
 export default function AppCategoryCreate() {
   const router = useRouter();
 
-  const form = useForm<ZodCategoryCreate>({
-    resolver: zodResolver(categorySchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: '',
       enabled: false,
     },
   });
 
-  async function onSubmit(value: ZodCategoryCreate) {
+  async function onSubmit(value: z.infer<typeof formSchema>) {
     await createCategoryAction(value);
-    router.push("/category/list");
+    router.push('/category/list');
   }
 
   return (
@@ -40,24 +45,31 @@ export default function AppCategoryCreate() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name={"name"}
+          name={'name'}
           render={({ field }) => (
-            <AppFormField
-              type="text"
-              label="Category name"
-              inputProps={field}
-            />
+            <FormItem>
+              <FormLabel>Category name</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name={"enabled"}
+          name={'enabled'}
           render={({ field }) => (
-            <AppFormCheckbox
-              type="checkbox"
-              label="Enabled"
-              inputProps={{ ...field }}
-            />
+            <FormItem className="space-x-3">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel>Enabled</FormLabel>
+              <FormMessage />
+            </FormItem>
           )}
         />
         <Button type="submit">Save</Button>

@@ -4,10 +4,10 @@ import {
   UpdateProductRequest,
   CreateProductRequest,
   ProductResponse,
-} from "@/api/generated/product-api";
-import { Product } from "../model/product-model";
+} from '@/api/generated/product-api';
+import { Product } from '../model/product-model';
 
-const basePath = process.env.NEXT_PUBLIC_PRODUCT_API_URL;
+const basePath = process.env.PRODUCT_API_URL;
 
 const api = new DefaultApi(new Configuration({ basePath }));
 
