@@ -4,7 +4,7 @@ import {
   UpdateCategoryRequest,
   CreateCategoryRequest,
   CategoryResponse,
-} from '@/api/generated/category-api';
+} from '@sokol111/ecommerce-category-service-api';
 import { Category } from '../model/category-model';
 
 const basePath = process.env.CATEGORY_API_URL;
@@ -12,7 +12,7 @@ const basePath = process.env.CATEGORY_API_URL;
 const api = new DefaultApi(new Configuration({ basePath }));
 
 export async function getCategoryById(categoryId: string): Promise<Category> {
-  const response = await api.getCategoryById(categoryId);
+  const response = await api.getCategoryById({ id: categoryId });
   return transformCategoryResponse(response.data);
 }
 
@@ -24,14 +24,18 @@ export async function getAllCategories(): Promise<Category[]> {
 export async function createCategory(
   newCategory: CreateCategoryRequest
 ): Promise<Category> {
-  const response = await api.createCategory(newCategory);
+  const response = await api.createCategory({
+    createCategoryRequest: newCategory,
+  });
   return transformCategoryResponse(response.data);
 }
 
 export async function updateCategory(
   updatedCategory: UpdateCategoryRequest
 ): Promise<Category> {
-  const response = await api.updateCategory(updatedCategory);
+  const response = await api.updateCategory({
+    updateCategoryRequest: updatedCategory,
+  });
   return transformCategoryResponse(response.data);
 }
 

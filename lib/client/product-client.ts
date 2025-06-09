@@ -4,7 +4,7 @@ import {
   UpdateProductRequest,
   CreateProductRequest,
   ProductResponse,
-} from '@/api/generated/product-api';
+} from '@sokol111/ecommerce-product-service-api';
 import { Product } from '../model/product-model';
 
 const basePath = process.env.PRODUCT_API_URL;
@@ -12,7 +12,7 @@ const basePath = process.env.PRODUCT_API_URL;
 const api = new DefaultApi(new Configuration({ basePath }));
 
 export async function getProductById(productId: string): Promise<Product> {
-  const response = await api.getProductById(productId);
+  const response = await api.getProductById({ id: productId });
   return transformProductResponse(response.data);
 }
 
@@ -24,14 +24,18 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function createProduct(
   newProduct: CreateProductRequest
 ): Promise<Product> {
-  const response = await api.createProduct(newProduct);
+  const response = await api.createProduct({
+    createProductRequest: newProduct,
+  });
   return transformProductResponse(response.data);
 }
 
 export async function updateProduct(
   updatedProduct: UpdateProductRequest
 ): Promise<Product> {
-  const response = await api.updateProduct(updatedProduct);
+  const response = await api.updateProduct({
+    updateProductRequest: updatedProduct,
+  });
   return transformProductResponse(response.data);
 }
 
