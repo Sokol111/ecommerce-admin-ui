@@ -38,7 +38,6 @@ export default function RootLayout({
             <main className="p-5">{children}</main>
           </div>
         </SidebarProvider>
-        {children}
       </body>
     </html>
   );
