@@ -6,7 +6,9 @@ export default async function ProductPage({
 }: {
   params: { id: string };
 }) {
-  const product = await getProductById(params.id);
+  const { id } = await params
+
+  const product = await getProductById(id);
 
   return (
     <div>
