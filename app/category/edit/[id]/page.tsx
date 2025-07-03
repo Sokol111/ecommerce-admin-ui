@@ -6,7 +6,9 @@ export default async function CategoryPage({
 }: {
   params: { id: string };
 }) {
-  const category = await getCategoryById(params.id);
+  const { id } = await params
+
+  const category = await getCategoryById(id);
 
   return (
     <div>
