@@ -1,7 +1,16 @@
 'use client';
 
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { confirmUploadAction, createProductAction, presignImageAction } from '@/lib/actions';
+import { putToS3 } from '@/lib/client/s3-client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { randomUUID } from 'crypto';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -10,12 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form';
-import { Button } from '../ui/button';
-import { createProductAction } from '@/lib/actions';
-import { useRouter } from 'next/navigation';
-import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+// import { Label } from '@/components/ui/label';
 
 export const productSchema = z.object({
   name: z.string().min(2, {
@@ -28,6 +32,12 @@ export const productSchema = z.object({
 
 export default function AppProductCreate() {
   const router = useRouter();
+  const [draftId] = useState<string>(randomUUID().toString());
+
+  // const [imageId, setImageId] = useState<string | null>(null);
+  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -42,6 +52,28 @@ export default function AppProductCreate() {
   async function onSubmit(value: z.infer<typeof productSchema>) {
     await createProductAction(value);
     router.push('/product/list');
+  }
+
+   async function handleFileChange(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    setError(null);
+    setUploading(true);
+    try {
+      const presignResponse = await presignImageAction({ ownerId: draftId, file});
+      await putToS3(presignResponse.uploadUrl, presignResponse.requiredHeaders, file);
+      await confirmUploadAction({ ownerId: draftId, key: presignResponse.key });
+      // setImageId(image.id);
+      // const url = await getDeliveryUrl(meta.id, { w: 480, format: 'webp', quality: 85 });
+      // setPreviewUrl(url);
+    } catch (e) {
+      console.error(e);
+      setError('Upload failed');
+      // setImageId(null);
+      // setPreviewUrl(null);
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
@@ -102,7 +134,25 @@ export default function AppProductCreate() {
             </FormItem>
           )}
         />
-        <Button type="submit">Save</Button>
+          <FormItem>
+              <FormLabel>Product image</FormLabel>
+              <FormControl>
+                <Input
+                  type="image"
+                  disabled={uploading}
+                  onChange={(e) => handleFileChange(e.target.files)}/>
+              </FormControl>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+            </FormItem>
+
+        {/* <div className="grid w-full max-w-sm items-center gap-3">
+          <Label htmlFor="picture">Picture</Label>
+          <Input
+            type="image"
+            disabled={uploading}
+            onChange={(e) => handleFileChange(e.target.files)}/>
+        </div> */}
+        <Button type="submit" disabled={uploading}>Save</Button>
       </form>
     </Form>
   );
