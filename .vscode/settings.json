@@ -1,36 +1,67 @@
 {
-  // Форматування коду
+  // === Форматування (Prettier як єдиний форматтер) ===
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-
-  // ESLint інтеграція
-  "eslint.enable": true,
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-
-  // Tailwind CSS IntelliSense
-  "tailwindCSS.includeLanguages": {
-    "plaintext": "html",
-    "typescript": "javascript",
-    "typescriptreact": "javascript"
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
   },
+
+  // === ESLint інтеграція ===
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  // === Tailwind CSS IntelliSense ===
+  // includeLanguages більше не потрібен — Tailwind підтримує TS/TSX з коробки.
+  "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.experimental.classRegex": [
-    "clsx\\(([^)]*)\\)",
+    // clsx('px-4 py-2', condition && 'bg-red-500')
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^'\"`]*)(?:'|\"|`)"],
+    // cva('px-2', { variants: { intent: { primary: 'bg-blue-500' }}})
+    ["cva\\(([^)]*)\\)", "(?:'|\"|`)([^'\"`]*)(?:'|\"|`)"],
+    // twin.macro або шаблонні рядки з класами
     "tw`([^`]*)`"
   ],
 
-  // NPM та імпорти
+  // === NPM / імпорти ===
   "npm.enableScriptExplorer": true,
+  // Якщо маєте baseUrl/paths або alias '@/…', це ок:
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
 
-  // Prettier налаштування (якщо використовуєте його)
+  // === Prettier ===
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
   "prettier.semi": true,
+  // Щоб Prettier працював лише там, де є явний конфіг:
+  "prettier.requireConfig": true,
 
-  // Headwind - сортування Tailwind класів
-  "headwind.classSorting": "concentric-css",
+  // === TypeScript із проєкту ===
+  "typescript.tsdk": "node_modules/typescript/lib",
 
-  // Автозбереження
-  "files.autoSave": "onFocusChange"
+  // === Лінти CSS для Tailwind директив ===
+  "css.lint.unknownAtRules": "ignore",
+
+  // === Path IntelliSense (налаштуйте під свій alias/структуру) ===
+  // Якщо Next.js проект зі структурою src/ та alias "@/*"
+  "path-intellisense.mappings": {
+    "@": "${workspaceFolder}/src"
+  },
+
+  // === Автозбереження ===
+  "files.autoSave": "onFocusChange",
+
+  // === Корисні дрібниці ===
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true
+  },
+  "files.exclude": {
+    "**/.next": true
+  }
 }

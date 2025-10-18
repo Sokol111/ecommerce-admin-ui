@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@sokol111/ecommerce-category-service-api": "^1.0.7",
+    "@sokol111/ecommerce-image-service-api": "^1.0.10",
     "@sokol111/ecommerce-product-service-api": "^1.0.38",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.10.0",
