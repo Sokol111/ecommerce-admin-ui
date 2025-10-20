@@ -1,11 +1,11 @@
 import {
-  DefaultApi,
   Configuration,
-  PresignResponse,
-  PresignRequest,
   ConfirmRequest,
+  DefaultApi,
   Image,
-  PromoteRequest,
+  PresignRequest,
+  PresignResponse,
+  PromoteRequest
 } from '@sokol111/ecommerce-image-service-api';
 
 const basePath = process.env.IMAGE_API_URL;
@@ -25,6 +25,11 @@ export async function confirmUpload(request: ConfirmRequest): Promise<Image> {
 export async function promoteImages(request: PromoteRequest): Promise<Image> {
   const response = await api.promoteImages({ promoteRequest: request });
   return response.data
+}
+
+export async function getDeliveryUrl({ imageId, options }: { imageId: string; options: { w: number; quality: number; }; }): Promise<string> {
+  const response = await api.getDeliveryUrl({ id: imageId, w: options.w, quality: options.quality });
+  return response.data.url;
 }
 
 // export function transformProductResponse(response: ProductResponse): Product {
