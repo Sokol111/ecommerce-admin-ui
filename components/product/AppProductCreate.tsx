@@ -76,17 +76,13 @@ export default function AppProductCreate() {
         filename: file.name,
         size: file.size,
       });
-      alert('Presigned URL: ' + presignResponse.uploadUrl);
       console.log('Presign response:', presignResponse);
       await putToS3(presignResponse.uploadUrl, presignResponse.requiredHeaders, file);
-      alert('Uploaded to S3');
       const image = await confirmUploadAction({ ownerId: draftId, key: presignResponse.key });
       console.log('Confirm response:', image);
-      alert('Confirmed upload, image ID: ' + image.id);
       setImageId(image.id);
       const url = await getDeliveryUrlAction(image.id, 480);
       console.log('Delivery URL:', url);
-      alert('Delivery URL: ' + url);
       setPreviewUrl(url);
     } catch (e) {
       console.error(e);
@@ -144,7 +140,7 @@ export default function AppProductCreate() {
           control={form.control}
           name={'enabled'}
           render={({ field }) => (
-            <FormItem className="space-x-3">
+            <FormItem className="flex flex-row items-center">
               <FormControl>
                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
@@ -153,9 +149,10 @@ export default function AppProductCreate() {
             </FormItem>
           )}
         />
-        <div className="grid w-full max-w-sm items-center gap-3">
-          <Label>Product image</Label>
+        <div className="grid gap-3">
+          <Label htmlFor="image">Product image</Label>
           <Input
+            id="image"
             type="file"
             accept="image/*"
             disabled={uploading}
@@ -164,9 +161,6 @@ export default function AppProductCreate() {
           {error && <p className="text-sm text-red-600">{error}</p>}
           {previewUrl && (
             <>
-              <div>
-                ImageId: <div>{imageId}</div>
-              </div>
               <div className="mt-2">
                 <Image
                   src={previewUrl}
