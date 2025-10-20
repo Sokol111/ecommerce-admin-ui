@@ -1,7 +1,7 @@
 'use server';
 
 import { createCategory, updateCategory } from '@/lib/client/category-client';
-import { confirmUpload, createPresign } from '@/lib/client/image-client';
+import { confirmUpload, createPresign, getDeliveryUrl } from '@/lib/client/image-client';
 import { createProduct, updateProduct } from '@/lib/client/product-client';
 import {
   CreateCategoryRequest,
@@ -34,11 +34,15 @@ export async function createCategoryAction(category: CreateCategoryRequest) {
   revalidatePath('/category/list');
 }
 
-export async function presignImageAction({ ownerId, file}: { ownerId: string; file: File; }): Promise<PresignResponse> {
-  return await createPresign({  ownerType: "productDraft", ownerId: ownerId, filename: file.name, contentType: "image/jpeg", size: file.size, role: "main" });
+export async function presignImageAction({ ownerId, filename, size}: { ownerId: string; filename: string, size: number }): Promise<PresignResponse> {
+  return await createPresign({  ownerType: "productDraft", ownerId: ownerId, filename, contentType: "image/jpeg", size, role: "main" });
 }
 
 
 export async function confirmUploadAction({ownerId, key}: { ownerId: string; key: string; }): Promise<Image> {
   return await confirmUpload({ownerType: "productDraft", ownerId: ownerId, key, alt: "alt text", mime: "image/jpeg", role: "main" });
+}
+
+export async function getDeliveryUrlAction(imageId: string, width: number): Promise<string> {
+  return await getDeliveryUrl({imageId, options: { w: width, quality: 85 }});
 }
