@@ -1,39 +1,39 @@
-"use client";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+'use client';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Product } from "@/lib/model/product-model";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dropdown-menu';
+import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<ProductResponse>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: 'id',
+    header: 'ID',
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    accessorKey: "price",
-    header: "Price",
+    accessorKey: 'price',
+    header: 'Price',
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity",
+    accessorKey: 'quantity',
+    header: 'Quantity',
   },
   {
-    accessorKey: "enabled",
-    header: "Enabled",
+    accessorKey: 'enabled',
+    header: 'Enabled',
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       return (
         <DropdownMenu>
