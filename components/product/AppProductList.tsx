@@ -1,8 +1,8 @@
-import { Product } from '@/lib/model/product-model';
-import { columns } from './columns';
 import { DataTable } from '@/components/ui/data-table';
+import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { columns } from './columns';
 
-export default function AppProductList({ products }: { products: Product[] }) {
+export default function AppProductList({ products }: { products: ProductResponse[] }) {
   return (
     <div>
       <DataTable data={products} columns={columns} />

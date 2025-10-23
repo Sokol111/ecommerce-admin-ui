@@ -1,31 +1,31 @@
-"use client";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+'use client';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Category } from "@/lib/model/category-model";
+} from '@/components/ui/dropdown-menu';
+import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
-export const columns: ColumnDef<Category>[] = [
+export const columns: ColumnDef<CategoryResponse>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: 'id',
+    header: 'ID',
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    accessorKey: "enabled",
-    header: "Enabled",
+    accessorKey: 'enabled',
+    header: 'Enabled',
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       return (
         <DropdownMenu>
@@ -37,10 +37,7 @@ export const columns: ColumnDef<Category>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link
-                href={`/category/edit/${row.original.id}`}
-                className="block"
-              >
+              <Link href={`/category/edit/${row.original.id}`} className="block">
                 Edit
               </Link>
             </DropdownMenuItem>

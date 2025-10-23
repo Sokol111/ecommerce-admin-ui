@@ -1,9 +1,9 @@
-import AppProductCreate from "@/components/product/AppProductCreate";
+import AppProductEdit from '@/components/product/AppProductEdit';
 
 export default async function CreateProductPage() {
   return (
     <div>
-      <AppProductCreate />
+      <AppProductEdit />
     </div>
   );
 }
