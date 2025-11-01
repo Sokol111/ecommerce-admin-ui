@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -70,7 +71,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
           enabled: product.enabled,
         }
       : {
-          id: crypto.randomUUID(),
+          id: uuidv4(),
           version: 0,
           imageId: undefined,
           name: '',
