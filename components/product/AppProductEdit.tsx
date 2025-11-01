@@ -2,7 +2,6 @@
 
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +21,7 @@ const productSchema = z
   .object({
     id: z.string().uuid(),
     version: z.number().int().min(0, 'Version is required'),
-    imageId: z.string().uuid().optional(),
+    imageId: z.string().uuid().nullish(),
     name: z
       .string()
       .min(2, 'Product name must be at least 2 characters')
@@ -44,6 +43,14 @@ const productSchema = z
   .refine((data) => !(data.enabled && !data.imageId), {
     message: 'Enabled products must have an image',
     path: ['imageId'],
+  })
+  .refine((data) => !(data.enabled && data.price <= 0), {
+    message: 'Enabled products must have price greater than 0',
+    path: ['price'],
+  })
+  .refine((data) => !(data.enabled && data.quantity <= 0), {
+    message: 'Enabled products must have quantity greater than 0',
+    path: ['quantity'],
   });
 
 export type ProductFormData = z.infer<typeof productSchema>;
@@ -83,7 +90,10 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
 
   // Create a narrowed subset of the form for image upload (only draftId & imageId needed)
   const imageUploadForm: DraftFormAdapter = {
-    getValues: () => ({ draftId: form.getValues().id, imageId: form.getValues().imageId }),
+    getValues: () => ({
+      draftId: form.getValues().id,
+      imageId: form.getValues().imageId ?? undefined,
+    }),
     setValue: (name, value) => form.setValue(name, value),
   };
   const { previewUrl, error, imageUploading, handleFileChange } = useImageUpload(imageUploadForm);
@@ -103,7 +113,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
           price: value.price,
           quantity: value.quantity,
           enabled: value.enabled,
-          imageId: value.imageId,
+          imageId: value.imageId ?? undefined,
         });
       } else {
         result = await createProductAction({
@@ -112,7 +122,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
           price: value.price,
           quantity: value.quantity,
           enabled: value.enabled,
-          imageId: value.imageId,
+          imageId: value.imageId ?? undefined,
         });
       }
 
@@ -163,7 +173,6 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
         aria-busy={isBusy ? 'true' : undefined}
       >
         <input type="hidden" {...form.register('id')} />
-        <input type="hidden" {...form.register('imageId')} />
         <input type="hidden" {...form.register('version')} />
         <FormField
           control={form.control}
@@ -236,33 +245,37 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
             </FormItem>
           )}
         />
-        <div className="grid gap-3">
-          <Label htmlFor="image">Product image</Label>
-          <Input
-            id="image"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/avif"
-            disabled={isBusy}
-            onChange={(e) => handleFileChange(e.target.files)}
-          />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          {form.watch('enabled') && !form.watch('imageId') && (
-            <p className="text-xs text-muted-foreground">Enabled product requires an image.</p>
-          )}
-          {previewUrl && (
-            <>
-              <div className="mt-2">
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  width={480}
-                  height={360}
-                  className="rounded border"
+        <FormField
+          control={form.control}
+          name={'imageId'}
+          render={() => (
+            <FormItem>
+              <FormLabel htmlFor="image">Product image</FormLabel>
+              <FormControl>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  disabled={isBusy}
+                  onChange={(e) => handleFileChange(e.target.files)}
                 />
-              </div>
-            </>
+              </FormControl>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <FormMessage />
+              {previewUrl && (
+                <div className="mt-2">
+                  <Image
+                    src={previewUrl}
+                    alt="Preview"
+                    width={480}
+                    height={360}
+                    className="rounded border"
+                  />
+                </div>
+              )}
+            </FormItem>
           )}
-        </div>
+        />
         <Button type="submit" disabled={isBusy}>
           {saving ? 'Saving...' : isEditMode ? 'Update' : 'Save'}
         </Button>
