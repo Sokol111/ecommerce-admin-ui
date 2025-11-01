@@ -1,7 +1,7 @@
-import AppProductList from "@/components/product/AppProductList";
-import { Button } from "@/components/ui/button";
-import { getAllProducts } from "@/lib/client/product-client";
-import Link from "next/link";
+import AppProductList from '@/components/product/AppProductList';
+import { Button } from '@/components/ui/button';
+import { getAllProducts } from '@/lib/client/product-client';
+import Link from 'next/link';
 
 export default async function ProductListPage() {
   const products = await getAllProducts();

@@ -1,7 +1,7 @@
-import AppCategoryList from "@/components/category/AppCategoryList";
-import { Button } from "@/components/ui/button";
-import { getAllCategories } from "@/lib/client/category-client";
-import Link from "next/link";
+import AppCategoryList from '@/components/category/AppCategoryList';
+import { Button } from '@/components/ui/button';
+import { getAllCategories } from '@/lib/client/category-client';
+import Link from 'next/link';
 
 export default async function CategotyListPage() {
   const categories = await getAllCategories();
