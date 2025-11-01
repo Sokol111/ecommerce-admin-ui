@@ -117,7 +117,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
         });
       } else {
         result = await createProductAction({
-          draftId: value.id,
+          id: value.id,
           name: value.name,
           price: value.price,
           quantity: value.quantity,
