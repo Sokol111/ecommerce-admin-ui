@@ -43,6 +43,13 @@ export function actionErrorToDescription(error: ActionError): React.ReactNode {
           </div>
         ))}
       </div>
+      {(error.code || error.status || error.traceId) && (
+        <div className="text-xs text-muted-foreground border-t border-border pt-2 space-y-0.5">
+          {error.code && <div>Code: {error.code}</div>}
+          {error.status && <div>Status: {error.status}</div>}
+          {error.traceId && <div>Trace ID: {error.traceId}</div>}
+        </div>
+      )}
     </div>
   );
 }

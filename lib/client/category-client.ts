@@ -16,8 +16,13 @@ export async function getCategoryById(categoryId: string): Promise<CategoryRespo
 }
 
 export async function getAllCategories(): Promise<CategoryResponse[]> {
-  const response = await api.getAll();
-  return response.data;
+  const response = await api.getList({
+    page: 1,
+    size: 10,
+    sort: 'createdAt',
+    order: 'desc',
+  });
+  return response.data.items;
 }
 
 export async function createCategory(

@@ -2,6 +2,8 @@ import {
   Configuration,
   CreateProductRequest,
   DefaultApi,
+  DefaultApiGetListRequest,
+  ProductListResponse,
   ProductResponse,
   UpdateProductRequest,
 } from '@sokol111/ecommerce-product-service-api';
@@ -15,8 +17,16 @@ export async function getProductById(productId: string): Promise<ProductResponse
   return response.data;
 }
 
-export async function getAllProducts(): Promise<ProductResponse[]> {
-  const response = await api.getAll();
+export async function getListProducts(
+  params?: Partial<DefaultApiGetListRequest>
+): Promise<ProductListResponse> {
+  const response = await api.getList({
+    page: params?.page ?? 1,
+    size: params?.size ?? 10,
+    sort: params?.sort,
+    order: params?.order,
+    enabled: params?.enabled,
+  });
   return response.data;
 }
 
