@@ -72,7 +72,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
       ? {
           id: product.id,
           version: product.version,
-          imageId: undefined, // Image updates can be added later
+          imageId: product.imageId,
           name: product.name,
           price: product.price,
           quantity: product.quantity,
@@ -249,33 +249,52 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
         <FormField
           control={form.control}
           name={'imageId'}
-          render={() => (
-            <FormItem>
-              <FormLabel htmlFor="image">Product image</FormLabel>
-              <FormControl>
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/avif"
-                  disabled={isBusy}
-                  onChange={(e) => handleFileChange(e.target.files)}
-                />
-              </FormControl>
-              {error && <p className="text-sm text-red-600">{error}</p>}
-              <FormMessage />
-              {previewUrl && (
-                <div className="mt-2">
-                  <Image
-                    src={previewUrl}
-                    alt="Preview"
-                    width={480}
-                    height={360}
-                    className="rounded border"
-                  />
-                </div>
-              )}
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const hasImage = !!field.value;
+            const isOriginalImage = field.value === product?.imageId;
+            const fileName = !field.value
+              ? 'No file chosen'
+              : isOriginalImage
+                ? `Current image: ${field.value}`
+                : 'New image selected';
+
+            return (
+              <FormItem>
+                <FormLabel htmlFor="image">Product image</FormLabel>
+                <FormControl>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" asChild>
+                      <label htmlFor="image" className="cursor-pointer">
+                        {hasImage ? 'Replace Image' : 'Choose File'}
+                      </label>
+                    </Button>
+                    <span className="text-sm text-muted-foreground">{fileName}</span>
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      disabled={isBusy}
+                      onChange={(e) => handleFileChange(e.target.files)}
+                      className="hidden"
+                    />
+                  </div>
+                </FormControl>
+                {error && <p className="text-sm text-red-600">{error}</p>}
+                <FormMessage />
+                {previewUrl && (
+                  <div className="mt-2">
+                    <Image
+                      src={previewUrl}
+                      alt="Preview"
+                      width={480}
+                      height={360}
+                      className="rounded border"
+                    />
+                  </div>
+                )}
+              </FormItem>
+            );
+          }}
         />
         <Button type="submit" disabled={isBusy}>
           {saving ? 'Saving...' : isEditMode ? 'Update' : 'Save'}

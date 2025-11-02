@@ -1,7 +1,7 @@
 import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/actions';
 import { putToS3 } from '@/lib/client/s3-client';
 import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export interface UseImageUploadState {
@@ -31,6 +31,19 @@ export function useImageUpload(
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
+
+  // Load existing image URL on mount if imageId is present
+  useEffect(() => {
+    const existingImageId = form.getValues().imageId;
+    if (existingImageId) {
+      getDeliveryUrlAction(existingImageId, previewWidth).then((urlResult) => {
+        if (urlResult.success) {
+          setPreviewUrl(urlResult.data);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleFileChange(files: FileList | null) {
     if (!files || files.length === 0) return;
