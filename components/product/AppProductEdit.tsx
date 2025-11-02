@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
+import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
 import Image from 'next/image';
@@ -147,7 +148,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
         }
 
         toast.error(error.title, {
-          description: error.detail || 'Please check the form and try again',
+          description: actionErrorToDescription(error),
         });
         return;
       }

@@ -3,6 +3,7 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
+import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
 import { useRouter } from 'next/navigation';
@@ -87,16 +88,17 @@ export default function AppCategoryEdit({ category }: AppCategoryEditProps) {
         }
 
         toast.error(error.title, {
-          description: error.detail || 'Please check the form and try again',
+          description: actionErrorToDescription(error),
         });
         return;
       }
 
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
       router.push('/category/list');
-    } catch {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       toast.error('Unexpected error', {
-        description: `Something went wrong while ${isEditMode ? 'updating' : 'creating'} the category`,
+        description: `Something went wrong while ${isEditMode ? 'updating' : 'creating'} the category: ${errorMessage}`,
       });
     } finally {
       setSaving(false);

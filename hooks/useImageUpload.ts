@@ -1,5 +1,6 @@
 import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/actions';
 import { putToS3 } from '@/lib/client/s3-client';
+import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -49,7 +50,7 @@ export function useImageUpload(
         const errorMsg = presignResponse.error.detail || presignResponse.error.title;
         setError(errorMsg);
         toast.error(presignResponse.error.title, {
-          description: presignResponse.error.detail,
+          description: actionErrorToDescription(presignResponse.error),
         });
         return;
       }
@@ -66,7 +67,7 @@ export function useImageUpload(
         const errorMsg = imageResult.error.detail || imageResult.error.title;
         setError(errorMsg);
         toast.error(imageResult.error.title, {
-          description: imageResult.error.detail,
+          description: actionErrorToDescription(imageResult.error),
         });
         return;
       }
@@ -77,7 +78,7 @@ export function useImageUpload(
         const errorMsg = urlResult.error.detail || urlResult.error.title;
         setError(errorMsg);
         toast.error(urlResult.error.title, {
-          description: urlResult.error.detail,
+          description: actionErrorToDescription(urlResult.error),
         });
         return;
       }
@@ -89,8 +90,10 @@ export function useImageUpload(
       console.error(e);
       const errorMessage = 'Upload failed';
       setError(errorMessage);
+      const errorDetail =
+        e instanceof Error ? e.message : 'An unexpected error occurred while uploading the image';
       toast.error('Upload failed', {
-        description: 'An unexpected error occurred while uploading the image',
+        description: errorDetail,
       });
       form.setValue('imageId', undefined);
       setPreviewUrl(null);
