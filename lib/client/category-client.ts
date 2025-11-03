@@ -1,8 +1,10 @@
 import {
+  CategoryListResponse,
   CategoryResponse,
   Configuration,
   CreateCategoryRequest,
   DefaultApi,
+  DefaultApiGetListRequest,
   UpdateCategoryRequest,
 } from '@sokol111/ecommerce-category-service-api';
 
@@ -15,14 +17,17 @@ export async function getCategoryById(categoryId: string): Promise<CategoryRespo
   return response.data;
 }
 
-export async function getAllCategories(): Promise<CategoryResponse[]> {
+export async function getListCategories(
+  params?: Partial<DefaultApiGetListRequest>
+): Promise<CategoryListResponse> {
   const response = await api.getList({
-    page: 1,
-    size: 10,
-    sort: 'createdAt',
-    order: 'desc',
+    page: params?.page ?? 1,
+    size: params?.size ?? 10,
+    sort: params?.sort,
+    order: params?.order,
+    enabled: params?.enabled,
   });
-  return response.data.items;
+  return response.data;
 }
 
 export async function createCategory(

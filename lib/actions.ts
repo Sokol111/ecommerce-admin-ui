@@ -18,7 +18,6 @@ import {
   CreateProductRequest,
   UpdateProductRequest,
 } from '@sokol111/ecommerce-product-service-api';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 const ContentTypeSchema = z.enum([
@@ -54,7 +53,6 @@ const GetDeliveryUrlSchema = z.object({
 export async function updateProductAction(product: UpdateProductRequest): Promise<ActionResult> {
   try {
     await updateProduct(product);
-    revalidatePath('/product/list');
     return successResult(undefined);
   } catch (error) {
     console.error('Failed to update product:', error);
@@ -65,7 +63,6 @@ export async function updateProductAction(product: UpdateProductRequest): Promis
 export async function createProductAction(product: CreateProductRequest): Promise<ActionResult> {
   try {
     await createProduct(product);
-    revalidatePath('/product/list');
     return successResult(undefined);
   } catch (error) {
     console.error('Failed to create product:', error);
@@ -76,7 +73,6 @@ export async function createProductAction(product: CreateProductRequest): Promis
 export async function updateCategoryAction(category: UpdateCategoryRequest): Promise<ActionResult> {
   try {
     await updateCategory(category);
-    revalidatePath('/category/list');
     return successResult(undefined);
   } catch (error) {
     console.error('Failed to update category:', error);
@@ -87,7 +83,6 @@ export async function updateCategoryAction(category: UpdateCategoryRequest): Pro
 export async function createCategoryAction(category: CreateCategoryRequest): Promise<ActionResult> {
   try {
     await createCategory(category);
-    revalidatePath('/category/list');
     return successResult(undefined);
   } catch (error) {
     console.error('Failed to create category:', error);

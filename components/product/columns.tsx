@@ -13,10 +13,6 @@ import Link from 'next/link';
 
 export const columns: ColumnDef<ProductResponse>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-  },
-  {
     accessorKey: 'name',
     header: 'Name',
   },
@@ -31,6 +27,14 @@ export const columns: ColumnDef<ProductResponse>[] = [
   {
     accessorKey: 'enabled',
     header: 'Enabled',
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    cell: ({ row }) => {
+      const date = new Date(row.getValue('createdAt'));
+      return date.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+    },
   },
   {
     id: 'actions',

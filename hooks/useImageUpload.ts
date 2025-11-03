@@ -16,7 +16,7 @@ export interface UseImageUploadApi extends UseImageUploadState {
 }
 
 // Form shape minimal requirements for this hook
-export type DraftFormValues = { draftId: string; imageId?: string | undefined };
+export type DraftFormValues = { ownerId: string; imageId?: string | undefined };
 
 // Minimal adapter instead of full UseFormReturn to reduce coupling
 export interface DraftFormAdapter {
@@ -51,9 +51,9 @@ export function useImageUpload(
     setError(null);
     setImageUploading(true);
     try {
-      const draftId = form.getValues().draftId;
+      const ownerId = form.getValues().ownerId;
       const presignResponse = await presignImageAction({
-        ownerId: draftId,
+        ownerId: ownerId,
         filename: file.name,
         size: file.size,
         contentType: file.type,
@@ -71,7 +71,7 @@ export function useImageUpload(
       await putToS3(presignResponse.data.uploadUrl, presignResponse.data.requiredHeaders, file);
 
       const imageResult = await confirmUploadAction({
-        ownerId: draftId,
+        ownerId: ownerId,
         key: presignResponse.data.key,
         mime: file.type,
       });

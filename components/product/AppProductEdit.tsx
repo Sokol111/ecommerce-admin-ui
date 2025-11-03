@@ -7,7 +7,6 @@ import { createProductAction, updateProductAction } from '@/lib/actions';
 import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -92,7 +91,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
   // Create a narrowed subset of the form for image upload (only draftId & imageId needed)
   const imageUploadForm: DraftFormAdapter = {
     getValues: () => ({
-      draftId: form.getValues().id,
+      ownerId: form.getValues().id,
       imageId: form.getValues().imageId ?? undefined,
     }),
     setValue: (name, value) => form.setValue(name, value),
@@ -283,7 +282,8 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
                 <FormMessage />
                 {previewUrl && (
                   <div className="mt-2">
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={previewUrl}
                       alt="Preview"
                       width={480}

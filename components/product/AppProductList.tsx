@@ -1,7 +1,7 @@
+import { AppPagination } from '@/components/global/AppPagination';
 import { DataTable } from '@/components/ui/data-table';
 import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
 import { columns } from './columns';
-import { ProductPagination } from './ProductPagination';
 
 interface AppProductListProps {
   products: ProductResponse[];
@@ -23,7 +23,7 @@ export default function AppProductList({
       <DataTable data={products} columns={columns} />
       {totalPages > 1 && (
         <div className="mt-4">
-          <ProductPagination currentPage={currentPage} totalPages={totalPages} />
+          <AppPagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       )}
     </div>
