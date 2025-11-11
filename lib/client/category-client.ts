@@ -7,10 +7,13 @@ import {
   DefaultApiGetListRequest,
   UpdateCategoryRequest,
 } from '@sokol111/ecommerce-category-service-api';
+import { createTracedHttpClient } from './http-client';
 
 const basePath = process.env.CATEGORY_API_URL;
 
-const api = new DefaultApi(new Configuration({ basePath }));
+const httpClient = createTracedHttpClient();
+
+const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 
 export async function getCategoryById(categoryId: string): Promise<CategoryResponse> {
   const response = await api.getCategoryById({ id: categoryId });

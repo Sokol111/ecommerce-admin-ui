@@ -7,10 +7,13 @@ import {
   ProductResponse,
   UpdateProductRequest,
 } from '@sokol111/ecommerce-product-service-api';
+import { createTracedHttpClient } from './http-client';
 
 const basePath = process.env.PRODUCT_API_URL;
 
-const api = new DefaultApi(new Configuration({ basePath }));
+const httpClient = createTracedHttpClient();
+
+const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 
 export async function getProductById(productId: string): Promise<ProductResponse> {
   const response = await api.getProductById({ id: productId });

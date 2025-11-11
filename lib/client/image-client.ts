@@ -8,10 +8,13 @@ import {
   PromoteImages200Response,
   PromoteRequest,
 } from '@sokol111/ecommerce-image-service-api';
+import { createTracedHttpClient } from './http-client';
 
 const basePath = process.env.IMAGE_API_URL;
 
-const api = new DefaultApi(new Configuration({ basePath }));
+const httpClient = createTracedHttpClient();
+
+const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 
 export async function createPresign(request: PresignRequest): Promise<PresignResponse> {
   const response = await api.createPresign({ presignRequest: request });

@@ -20,6 +20,19 @@ import {
 } from '@sokol111/ecommerce-product-service-api';
 import { z } from 'zod';
 
+/**
+ * Helper to log trace information for server actions
+ * This helps correlate frontend actions with backend API calls
+ */
+function logActionTrace(actionName: string, error?: unknown) {
+  const timestamp = new Date().toISOString();
+  if (error) {
+    console.error(`[${timestamp}] [Action:${actionName}] Failed:`, error);
+  } else {
+    console.log(`[${timestamp}] [Action:${actionName}] Executed`);
+  }
+}
+
 const ContentTypeSchema = z.enum([
   PresignRequestContentTypeEnum.ImageJpeg,
   PresignRequestContentTypeEnum.ImagePng,
@@ -52,40 +65,44 @@ const GetDeliveryUrlSchema = z.object({
 
 export async function updateProductAction(product: UpdateProductRequest): Promise<ActionResult> {
   try {
+    logActionTrace('updateProduct');
     await updateProduct(product);
     return successResult(undefined);
   } catch (error) {
-    console.error('Failed to update product:', error);
+    logActionTrace('updateProduct', error);
     return failureResult(parseError(error, 'Failed to update product'));
   }
 }
 
 export async function createProductAction(product: CreateProductRequest): Promise<ActionResult> {
   try {
+    logActionTrace('createProduct');
     await createProduct(product);
     return successResult(undefined);
   } catch (error) {
-    console.error('Failed to create product:', error);
+    logActionTrace('createProduct', error);
     return failureResult(parseError(error, 'Failed to create product'));
   }
 }
 
 export async function updateCategoryAction(category: UpdateCategoryRequest): Promise<ActionResult> {
   try {
+    logActionTrace('updateCategory');
     await updateCategory(category);
     return successResult(undefined);
   } catch (error) {
-    console.error('Failed to update category:', error);
+    logActionTrace('updateCategory', error);
     return failureResult(parseError(error, 'Failed to update category'));
   }
 }
 
 export async function createCategoryAction(category: CreateCategoryRequest): Promise<ActionResult> {
   try {
+    logActionTrace('createCategory');
     await createCategory(category);
     return successResult(undefined);
   } catch (error) {
-    console.error('Failed to create category:', error);
+    logActionTrace('createCategory', error);
     return failureResult(parseError(error, 'Failed to create category'));
   }
 }
@@ -108,6 +125,7 @@ export async function presignImageAction({
       size: vSize,
       contentType: vContentType,
     } = PresignImageSchema.parse({ ownerId, filename, size, contentType });
+    logActionTrace('presignImage');
     const data = await createPresign({
       ownerType: 'productDraft',
       ownerId: vOwnerId,
@@ -118,7 +136,7 @@ export async function presignImageAction({
     });
     return successResult(data);
   } catch (error) {
-    console.error('Failed to create presign:', error);
+    logActionTrace('presignImage', error);
     return failureResult(parseError(error, 'Failed to prepare image upload'));
   }
 }
@@ -142,6 +160,7 @@ export async function confirmUploadAction({
       key,
       mime,
     });
+    logActionTrace('confirmUpload');
     const data = await confirmUpload({
       ownerType: 'productDraft',
       ownerId: vOwnerId,
@@ -152,7 +171,7 @@ export async function confirmUploadAction({
     });
     return successResult(data);
   } catch (error) {
-    console.error('Failed to confirm upload:', error);
+    logActionTrace('confirmUpload', error);
     return failureResult(parseError(error, 'Failed to confirm image upload'));
   }
 }
@@ -163,10 +182,11 @@ export async function getDeliveryUrlAction(
 ): Promise<ActionResult<string>> {
   try {
     const { imageId: vImageId, width: vWidth } = GetDeliveryUrlSchema.parse({ imageId, width });
+    logActionTrace('getDeliveryUrl');
     const data = await getDeliveryUrl({ imageId: vImageId, options: { w: vWidth, quality: 85 } });
     return successResult(data);
   } catch (error) {
-    console.error('Failed to get delivery URL:', error);
+    logActionTrace('getDeliveryUrl', error);
     return failureResult(parseError(error, 'Failed to get image URL'));
   }
 }
