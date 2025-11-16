@@ -53,9 +53,9 @@ const PresignImageSchema = z.object({
 });
 
 const ConfirmUploadSchema = z.object({
-  ownerId: z.string().uuid(),
-  key: z.string().min(1),
-  mime: ContentTypeSchema,
+  uploadToken: z.string().min(1),
+  alt: z.string().min(1),
+  role: z.enum(['main', 'gallery', 'other']),
 });
 
 const GetDeliveryUrlSchema = z.object({
@@ -142,32 +142,29 @@ export async function presignImageAction({
 }
 
 export async function confirmUploadAction({
-  ownerId,
-  key,
-  mime,
+  uploadToken,
+  alt,
+  role,
 }: {
-  ownerId: string;
-  key: string;
-  mime: string;
+  uploadToken: string;
+  alt: string;
+  role: 'main' | 'gallery' | 'other';
 }): Promise<ActionResult<Image>> {
   try {
     const {
-      ownerId: vOwnerId,
-      key: vKey,
-      mime: vMime,
+      uploadToken: vUploadToken,
+      alt: vAlt,
+      role: vRole,
     } = ConfirmUploadSchema.parse({
-      ownerId,
-      key,
-      mime,
+      uploadToken,
+      alt,
+      role,
     });
     logActionTrace('confirmUpload');
     const data = await confirmUpload({
-      ownerType: 'productDraft',
-      ownerId: vOwnerId,
-      key: vKey,
-      alt: 'alt text',
-      mime: vMime,
-      role: 'main',
+      uploadToken: vUploadToken,
+      alt: vAlt,
+      role: vRole,
     });
     return successResult(data);
   } catch (error) {
@@ -179,7 +176,7 @@ export async function confirmUploadAction({
 export async function getDeliveryUrlAction(
   imageId: string,
   width: number
-): Promise<ActionResult<string>> {
+): Promise<ActionResult<{ url: string; expiresAt: string }>> {
   try {
     const { imageId: vImageId, width: vWidth } = GetDeliveryUrlSchema.parse({ imageId, width });
     logActionTrace('getDeliveryUrl');

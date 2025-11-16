@@ -38,7 +38,7 @@ export function useImageUpload(
     if (existingImageId) {
       getDeliveryUrlAction(existingImageId, previewWidth).then((urlResult) => {
         if (urlResult.success) {
-          setPreviewUrl(urlResult.data);
+          setPreviewUrl(urlResult.data.url);
         }
       });
     }
@@ -71,9 +71,9 @@ export function useImageUpload(
       await putToS3(presignResponse.data.uploadUrl, presignResponse.data.requiredHeaders, file);
 
       const imageResult = await confirmUploadAction({
-        ownerId: ownerId,
-        key: presignResponse.data.key,
-        mime: file.type,
+        uploadToken: presignResponse.data.uploadToken,
+        alt: file.name,
+        role: 'main',
       });
 
       if (!imageResult.success) {
@@ -97,7 +97,7 @@ export function useImageUpload(
       }
 
       form.setValue('imageId', imageResult.data.id);
-      setPreviewUrl(urlResult.data);
+      setPreviewUrl(urlResult.data.url);
       toast.success('Image uploaded successfully');
     } catch (e) {
       console.error(e);

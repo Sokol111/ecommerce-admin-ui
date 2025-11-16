@@ -37,13 +37,13 @@ export async function getDeliveryUrl({
 }: {
   imageId: string;
   options: { w: number; quality: number };
-}): Promise<string> {
+}): Promise<{ url: string; expiresAt: string }> {
   const response = await api.getDeliveryUrl({
     id: imageId,
     w: options.w,
     quality: options.quality,
   });
-  return response.data.url;
+  return response.data;
 }
 
 // export function transformProductResponse(response: ProductResponse): Product {
