@@ -37,7 +37,7 @@ export async function getDeliveryUrl({
 }: {
   imageId: string;
   options: { w: number; quality: number };
-}): Promise<{ url: string; expiresAt: string }> {
+}): Promise<{ url: string; expiresAt?: string }> {
   const response = await api.getDeliveryUrl({
     id: imageId,
     w: options.w,

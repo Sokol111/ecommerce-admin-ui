@@ -176,7 +176,7 @@ export async function confirmUploadAction({
 export async function getDeliveryUrlAction(
   imageId: string,
   width: number
-): Promise<ActionResult<{ url: string; expiresAt: string }>> {
+): Promise<ActionResult<{ url: string; expiresAt?: string }>> {
   try {
     const { imageId: vImageId, width: vWidth } = GetDeliveryUrlSchema.parse({ imageId, width });
     logActionTrace('getDeliveryUrl');
