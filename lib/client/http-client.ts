@@ -1,4 +1,4 @@
-import { createTraceparent, parseTraceparent } from '@/lib/tracing';
+import { parseTraceparent } from '@/lib/tracing';
 import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 /**
@@ -13,30 +13,19 @@ import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } 
 export function createTracedHttpClient(config?: AxiosRequestConfig): AxiosInstance {
   const client = axios.create(config);
 
-  // Request interceptor to add traceparent header
+  // Request interceptor to add traceparent header (if exists)
   client.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      // Check if traceparent already exists (e.g., passed from client)
+      // Only propagate existing traceparent, don't generate new ones
+      // The backend service will create the root span
       const existingTraceparent = config.headers?.['traceparent'] as string | undefined;
 
       if (existingTraceparent) {
-        // Validate and keep existing traceparent
         const parsed = parseTraceparent(existingTraceparent);
         if (parsed) {
-          console.log('[Tracing] Using existing trace:', parsed.traceId);
-          return config;
+          console.log('[Tracing] Propagating existing trace:', parsed.traceId);
         }
       }
-
-      // Generate new traceparent for this request
-      const traceparent = createTraceparent();
-      const parsed = parseTraceparent(traceparent);
-
-      if (parsed) {
-        console.log('[Tracing] Generated new trace:', parsed.traceId);
-      }
-
-      config.headers.set('traceparent', traceparent);
 
       return config;
     },
