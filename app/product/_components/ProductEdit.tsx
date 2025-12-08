@@ -1,6 +1,15 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
@@ -13,8 +22,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import { Button } from '../ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 // Schema for create mode
 const productSchema = z
@@ -55,11 +62,11 @@ const productSchema = z
 
 export type ProductFormData = z.infer<typeof productSchema>;
 
-interface AppProductFormProps {
+interface ProductEditProps {
   product?: ProductResponse;
 }
 
-export default function AppProductEdit({ product }: AppProductFormProps) {
+export default function ProductEdit({ product }: ProductEditProps) {
   const router = useRouter();
   const isEditMode = !!product;
 

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+import { cn } from '@/lib/utils';
+import React from 'react';
 
 export default function AppContainer({
   children,
@@ -8,5 +8,5 @@ export default function AppContainer({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("px-8", className)}>{children}</div>;
+  return <div className={cn('px-8', className)}>{children}</div>;
 }

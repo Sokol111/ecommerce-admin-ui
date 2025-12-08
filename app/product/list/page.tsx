@@ -1,4 +1,3 @@
-import AppProductList from '@/components/product/AppProductList';
 import { Button } from '@/components/ui/button';
 import { getListProducts } from '@/lib/client/product-client';
 import {
@@ -7,6 +6,7 @@ import {
   GetListSortEnum,
 } from '@sokol111/ecommerce-product-service-api';
 import Link from 'next/link';
+import ProductList from '../_components/ProductList';
 
 type SearchParamsType = {
   [K in keyof DefaultApiGetListRequest]?: string;
@@ -34,7 +34,7 @@ export default async function ProductListPage({ searchParams }: ProductListPageP
           <Button>Create product</Button>
         </Link>
       </div>
-      <AppProductList
+      <ProductList
         products={productList.items}
         currentPage={productList.page}
         pageSize={productList.size}

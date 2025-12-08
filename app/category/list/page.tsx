@@ -1,4 +1,3 @@
-import AppCategoryList from '@/components/category/AppCategoryList';
 import { Button } from '@/components/ui/button';
 import { getListCategories } from '@/lib/client/category-client';
 import {
@@ -7,6 +6,7 @@ import {
   GetListSortEnum,
 } from '@sokol111/ecommerce-category-service-api';
 import Link from 'next/link';
+import CategoryList from '../_components/CategoryList';
 
 type SearchParamsType = {
   [K in keyof DefaultApiGetListRequest]?: string;
@@ -34,7 +34,7 @@ export default async function CategoryListPage({ searchParams }: CategoryListPag
           <Button>Create category</Button>
         </Link>
       </div>
-      <AppCategoryList
+      <CategoryList
         categories={categoryList.items}
         currentPage={categoryList.page}
         pageSize={categoryList.size}

@@ -1,9 +1,9 @@
-import AppCategoryEdit from '@/components/category/AppCategoryEdit';
+import CategoryEdit from '../_components/CategoryEdit';
 
 export default async function CreateCategoryPage() {
   return (
     <div>
-      <AppCategoryEdit />
+      <CategoryEdit />
     </div>
   );
 }

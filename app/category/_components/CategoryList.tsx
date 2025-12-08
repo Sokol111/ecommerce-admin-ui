@@ -1,26 +1,26 @@
-import { AppPagination } from '@/components/global/AppPagination';
+import { AppPagination } from '@/components/common/AppPagination';
 import { DataTable } from '@/components/ui/data-table';
 import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
-import { columns } from './columns';
+import { categoryColumns } from './category-columns';
 
-interface AppCategoryListProps {
+interface CategoryListProps {
   categories: CategoryResponse[];
   currentPage: number;
   pageSize: number;
   totalItems: number;
 }
 
-export default function AppCategoryList({
+export default function CategoryList({
   categories,
   currentPage,
   pageSize,
   totalItems,
-}: AppCategoryListProps) {
+}: CategoryListProps) {
   const totalPages = Math.ceil(totalItems / pageSize);
 
   return (
     <div>
-      <DataTable data={categories} columns={columns} />
+      <DataTable data={categories} columns={categoryColumns} />
       {totalPages > 1 && (
         <div className="mt-4">
           <AppPagination currentPage={currentPage} totalPages={totalPages} />

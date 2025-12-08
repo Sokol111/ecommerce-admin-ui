@@ -1,4 +1,3 @@
-import { Container, Home } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,22 +7,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "../ui/sidebar";
+} from '@/components/ui/sidebar';
+import { Container, Home } from 'lucide-react';
 
 const items = [
   {
-    title: "Home",
-    url: "/",
+    title: 'Home',
+    url: '/',
     icon: Home,
   },
   {
-    title: "Products",
-    url: "/product/list",
+    title: 'Products',
+    url: '/product/list',
     icon: Container,
   },
   {
-    title: "Categories",
-    url: "/category/list",
+    title: 'Categories',
+    url: '/category/list',
     icon: Container,
   },
 ];

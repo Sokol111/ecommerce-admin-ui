@@ -1,5 +1,5 @@
-import AppCategoryEdit from '@/components/category/AppCategoryEdit';
 import { getCategoryById } from '@/lib/client/category-client';
+import CategoryEdit from '../../_components/CategoryEdit';
 
 export default async function CategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -8,7 +8,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ id: s
 
   return (
     <div>
-      <AppCategoryEdit category={category} />
+      <CategoryEdit category={category} />
     </div>
   );
 }

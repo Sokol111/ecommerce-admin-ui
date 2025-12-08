@@ -1,6 +1,15 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
@@ -12,8 +21,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import { Button } from '../ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 // Schema for category form
 const categorySchema = z.object({
@@ -30,11 +37,11 @@ const categorySchema = z.object({
 
 export type CategoryFormData = z.infer<typeof categorySchema>;
 
-interface AppCategoryEditProps {
+interface CategoryEditProps {
   category?: CategoryResponse;
 }
 
-export default function AppCategoryEdit({ category }: AppCategoryEditProps) {
+export default function CategoryEdit({ category }: CategoryEditProps) {
   const router = useRouter();
   const isEditMode = !!category;
 

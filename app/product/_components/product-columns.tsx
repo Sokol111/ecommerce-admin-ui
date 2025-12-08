@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
-export const columns: ColumnDef<ProductResponse>[] = [
+export const productColumns: ColumnDef<ProductResponse>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
