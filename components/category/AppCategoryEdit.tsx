@@ -3,7 +3,7 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
-import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
+import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
 import { useRouter } from 'next/navigation';
@@ -88,7 +88,7 @@ export default function AppCategoryEdit({ category }: AppCategoryEditProps) {
         }
 
         toast.error(error.title, {
-          description: actionErrorToDescription(error),
+          description: problemToDescription(error),
         });
         return;
       }

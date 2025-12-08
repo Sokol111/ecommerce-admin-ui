@@ -7,11 +7,11 @@ import {
   DefaultApiGetListRequest,
   UpdateCategoryRequest,
 } from '@sokol111/ecommerce-category-service-api';
-import { createTracedHttpClient } from './http-client';
+import { createHttpClient } from './http-client';
 
 const basePath = process.env.CATEGORY_API_URL;
 
-const httpClient = createTracedHttpClient();
+const httpClient = createHttpClient();
 
 const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 

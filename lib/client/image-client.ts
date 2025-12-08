@@ -8,11 +8,11 @@ import {
   PromoteImages200Response,
   PromoteRequest,
 } from '@sokol111/ecommerce-image-service-api';
-import { createTracedHttpClient } from './http-client';
+import { createHttpClient } from './http-client';
 
 const basePath = process.env.IMAGE_API_URL;
 
-const httpClient = createTracedHttpClient();
+const httpClient = createHttpClient();
 
 const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 

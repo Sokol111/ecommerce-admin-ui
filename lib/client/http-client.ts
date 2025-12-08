@@ -1,85 +1,8 @@
-import { parseTraceparent } from '@/lib/tracing';
-import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 /**
- * Creates an Axios instance with OpenTelemetry tracing support
- *
- * Automatically adds W3C traceparent header to all outgoing requests
- * This ensures distributed tracing across microservices
- *
- * @param config - Optional Axios configuration
- * @returns Configured Axios instance with tracing interceptor
+ * Creates an Axios instance for API calls
  */
-export function createTracedHttpClient(config?: AxiosRequestConfig): AxiosInstance {
-  const client = axios.create(config);
-
-  // Request interceptor to add traceparent header (if exists)
-  client.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      // Only propagate existing traceparent, don't generate new ones
-      // The backend service will create the root span
-      const existingTraceparent = config.headers?.['traceparent'] as string | undefined;
-
-      if (existingTraceparent) {
-        const parsed = parseTraceparent(existingTraceparent);
-        if (parsed) {
-          console.log('[Tracing] Propagating existing trace:', parsed.traceId);
-        }
-      }
-
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  // Response interceptor to log trace information
-  client.interceptors.response.use(
-    (response) => {
-      const traceparent = response.config.headers?.['traceparent'] as string | undefined;
-      if (traceparent) {
-        const parsed = parseTraceparent(traceparent);
-        if (parsed) {
-          console.log('[Tracing] Request completed:', {
-            traceId: parsed.traceId,
-            url: response.config.url,
-            status: response.status,
-          });
-        }
-      }
-      return response;
-    },
-    (error) => {
-      const traceparent = error.config?.headers?.['traceparent'] as string | undefined;
-      if (traceparent) {
-        const parsed = parseTraceparent(traceparent);
-        if (parsed) {
-          console.error('[Tracing] Request failed:', {
-            traceId: parsed.traceId,
-            url: error.config?.url,
-            status: error.response?.status,
-            message: error.message,
-          });
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
-
-  return client;
-}
-
-/**
- * Extract trace ID from Axios request config
- * Useful for logging and correlation
- */
-export function getTraceIdFromConfig(config: AxiosRequestConfig): string | null {
-  const traceparent = config.headers?.['traceparent'] as string | undefined;
-  if (!traceparent) {
-    return null;
-  }
-
-  const parsed = parseTraceparent(traceparent);
-  return parsed?.traceId || null;
+export function createHttpClient(config?: AxiosRequestConfig): AxiosInstance {
+  return axios.create(config);
 }

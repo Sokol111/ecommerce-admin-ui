@@ -7,11 +7,11 @@ import {
   ProductResponse,
   UpdateProductRequest,
 } from '@sokol111/ecommerce-product-service-api';
-import { createTracedHttpClient } from './http-client';
+import { createHttpClient } from './http-client';
 
 const basePath = process.env.PRODUCT_API_URL;
 
-const httpClient = createTracedHttpClient();
+const httpClient = createHttpClient();
 
 const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
 

@@ -4,7 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
-import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
+import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
 import { useRouter } from 'next/navigation';
@@ -147,7 +147,7 @@ export default function AppProductEdit({ product }: AppProductFormProps) {
         }
 
         toast.error(error.title, {
-          description: actionErrorToDescription(error),
+          description: problemToDescription(error),
         });
         return;
       }

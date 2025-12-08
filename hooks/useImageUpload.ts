@@ -1,6 +1,6 @@
 import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/actions';
 import { putToS3 } from '@/lib/client/s3-client';
-import { actionErrorToDescription } from '@/lib/utils/toast-helpers';
+import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -63,7 +63,7 @@ export function useImageUpload(
         const errorMsg = presignResponse.error.detail || presignResponse.error.title;
         setError(errorMsg);
         toast.error(presignResponse.error.title, {
-          description: actionErrorToDescription(presignResponse.error),
+          description: problemToDescription(presignResponse.error),
         });
         return;
       }
@@ -80,7 +80,7 @@ export function useImageUpload(
         const errorMsg = imageResult.error.detail || imageResult.error.title;
         setError(errorMsg);
         toast.error(imageResult.error.title, {
-          description: actionErrorToDescription(imageResult.error),
+          description: problemToDescription(imageResult.error),
         });
         return;
       }
@@ -91,7 +91,7 @@ export function useImageUpload(
         const errorMsg = urlResult.error.detail || urlResult.error.title;
         setError(errorMsg);
         toast.error(urlResult.error.title, {
-          description: actionErrorToDescription(urlResult.error),
+          description: problemToDescription(urlResult.error),
         });
         return;
       }

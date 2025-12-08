@@ -3,8 +3,8 @@
 import { createCategory, updateCategory } from '@/lib/client/category-client';
 import { confirmUpload, createPresign, getDeliveryUrl } from '@/lib/client/image-client';
 import { createProduct, updateProduct } from '@/lib/client/product-client';
-import { ActionResult, failureResult, successResult } from '@/lib/types/action-result';
-import { parseError } from '@/lib/utils/error-parser';
+import { ActionResult } from '@/lib/types/action-result';
+import { toProblem } from '@/lib/types/problem';
 import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
@@ -19,19 +19,6 @@ import {
   UpdateProductRequest,
 } from '@sokol111/ecommerce-product-service-api';
 import { z } from 'zod';
-
-/**
- * Helper to log trace information for server actions
- * This helps correlate frontend actions with backend API calls
- */
-function logActionTrace(actionName: string, error?: unknown) {
-  const timestamp = new Date().toISOString();
-  if (error) {
-    console.error(`[${timestamp}] [Action:${actionName}] Failed:`, error);
-  } else {
-    console.log(`[${timestamp}] [Action:${actionName}] Executed`);
-  }
-}
 
 const ContentTypeSchema = z.enum([
   PresignRequestContentTypeEnum.ImageJpeg,
@@ -65,45 +52,37 @@ const GetDeliveryUrlSchema = z.object({
 
 export async function updateProductAction(product: UpdateProductRequest): Promise<ActionResult> {
   try {
-    logActionTrace('updateProduct');
     await updateProduct(product);
-    return successResult(undefined);
+    return { success: true, data: undefined };
   } catch (error) {
-    logActionTrace('updateProduct', error);
-    return failureResult(parseError(error, 'Failed to update product'));
+    return { success: false, error: toProblem(error, 'Failed to update product') };
   }
 }
 
 export async function createProductAction(product: CreateProductRequest): Promise<ActionResult> {
   try {
-    logActionTrace('createProduct');
     await createProduct(product);
-    return successResult(undefined);
+    return { success: true, data: undefined };
   } catch (error) {
-    logActionTrace('createProduct', error);
-    return failureResult(parseError(error, 'Failed to create product'));
+    return { success: false, error: toProblem(error, 'Failed to create product') };
   }
 }
 
 export async function updateCategoryAction(category: UpdateCategoryRequest): Promise<ActionResult> {
   try {
-    logActionTrace('updateCategory');
     await updateCategory(category);
-    return successResult(undefined);
+    return { success: true, data: undefined };
   } catch (error) {
-    logActionTrace('updateCategory', error);
-    return failureResult(parseError(error, 'Failed to update category'));
+    return { success: false, error: toProblem(error, 'Failed to update category') };
   }
 }
 
 export async function createCategoryAction(category: CreateCategoryRequest): Promise<ActionResult> {
   try {
-    logActionTrace('createCategory');
     await createCategory(category);
-    return successResult(undefined);
+    return { success: true, data: undefined };
   } catch (error) {
-    logActionTrace('createCategory', error);
-    return failureResult(parseError(error, 'Failed to create category'));
+    return { success: false, error: toProblem(error, 'Failed to create category') };
   }
 }
 
@@ -125,7 +104,6 @@ export async function presignImageAction({
       size: vSize,
       contentType: vContentType,
     } = PresignImageSchema.parse({ ownerId, filename, size, contentType });
-    logActionTrace('presignImage');
     const data = await createPresign({
       ownerType: 'productDraft',
       ownerId: vOwnerId,
@@ -134,10 +112,9 @@ export async function presignImageAction({
       size: vSize,
       role: 'main',
     });
-    return successResult(data);
+    return { success: true, data: data };
   } catch (error) {
-    logActionTrace('presignImage', error);
-    return failureResult(parseError(error, 'Failed to prepare image upload'));
+    return { success: false, error: toProblem(error, 'Failed to prepare image upload') };
   }
 }
 
@@ -160,16 +137,14 @@ export async function confirmUploadAction({
       alt,
       role,
     });
-    logActionTrace('confirmUpload');
     const data = await confirmUpload({
       uploadToken: vUploadToken,
       alt: vAlt,
       role: vRole,
     });
-    return successResult(data);
+    return { success: true, data: data };
   } catch (error) {
-    logActionTrace('confirmUpload', error);
-    return failureResult(parseError(error, 'Failed to confirm image upload'));
+    return { success: false, error: toProblem(error, 'Failed to confirm image upload') };
   }
 }
 
@@ -179,11 +154,9 @@ export async function getDeliveryUrlAction(
 ): Promise<ActionResult<{ url: string; expiresAt?: string }>> {
   try {
     const { imageId: vImageId, width: vWidth } = GetDeliveryUrlSchema.parse({ imageId, width });
-    logActionTrace('getDeliveryUrl');
     const data = await getDeliveryUrl({ imageId: vImageId, options: { w: vWidth, quality: 85 } });
-    return successResult(data);
+    return { success: true, data: data };
   } catch (error) {
-    logActionTrace('getDeliveryUrl', error);
-    return failureResult(parseError(error, 'Failed to get image URL'));
+    return { success: false, error: toProblem(error, 'Failed to get image URL') };
   }
 }
