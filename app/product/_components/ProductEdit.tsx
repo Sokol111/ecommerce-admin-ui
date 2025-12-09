@@ -26,21 +26,21 @@ import { z } from 'zod';
 // Schema for create mode
 const productSchema = z
   .object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     version: z.number().int().min(0, 'Version is required'),
-    imageId: z.string().uuid().nullish(),
+    imageId: z.uuid().nullish(),
     name: z
       .string()
       .min(2, 'Product name must be at least 2 characters')
       .max(50, 'Product name must be at most 50 characters')
       .regex(/^[A-Za-z0-9 _-]+$/, 'Only letters, numbers, space, underscore and dash allowed')
       .transform((s) => s.trim()),
-    price: z.coerce
+    price: z
       .number()
       .min(0, 'Price must be >= 0')
       .max(1_000_000, 'Price is too large')
       .refine((n) => /^\d+(\.\d{1,2})?$/.test(String(n)), 'Price must have up to 2 decimals'),
-    quantity: z.coerce
+    quantity: z
       .number()
       .int('Quantity must be an integer')
       .min(0, 'Quantity must be >= 0')
@@ -208,6 +208,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
                   min={0}
                   disabled={isBusy}
                   {...field}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
               <FormMessage />
@@ -228,6 +229,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
                   min={0}
                   disabled={isBusy}
                   {...field}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
               <FormMessage />

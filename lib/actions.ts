@@ -29,7 +29,7 @@ const ContentTypeSchema = z.enum([
 
 // Max size 1MB (same as client side check) enforced server-side
 const PresignImageSchema = z.object({
-  ownerId: z.string().uuid(),
+  ownerId: z.uuid(),
   filename: z.string().min(1),
   size: z
     .number()
@@ -46,7 +46,7 @@ const ConfirmUploadSchema = z.object({
 });
 
 const GetDeliveryUrlSchema = z.object({
-  imageId: z.string().uuid(),
+  imageId: z.uuid(),
   width: z.number().int().positive().max(4096),
 });
 

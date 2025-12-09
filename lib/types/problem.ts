@@ -107,9 +107,9 @@ export function toProblem(error: unknown, fallbackTitle: string = 'An error occu
   // Zod validation error
   if (error instanceof z.ZodError) {
     const fields: Record<string, string> = {};
-    error.errors.forEach((err) => {
-      const field = err.path.join('.');
-      fields[field] = err.message;
+    error.issues.forEach((issue) => {
+      const field = issue.path.join('.');
+      fields[field] = issue.message;
     });
 
     return {
