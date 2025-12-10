@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
@@ -35,6 +36,11 @@ const productSchema = z
       .max(50, 'Product name must be at most 50 characters')
       .regex(/^[A-Za-z0-9 _-]+$/, 'Only letters, numbers, space, underscore and dash allowed')
       .transform((s) => s.trim()),
+    description: z
+      .string()
+      .max(2000, 'Description must be at most 2000 characters')
+      .transform((s) => s?.trim() || undefined)
+      .optional(),
     price: z
       .number()
       .min(0, 'Price must be >= 0')
@@ -80,6 +86,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           version: product.version,
           imageId: product.imageId,
           name: product.name,
+          description: product.description,
           price: product.price,
           quantity: product.quantity,
           enabled: product.enabled,
@@ -89,6 +96,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           version: 0,
           imageId: undefined,
           name: '',
+          description: undefined,
           price: 0,
           quantity: 0,
           enabled: false,
@@ -117,6 +125,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           id: value.id,
           version: value.version,
           name: value.name,
+          description: value.description,
           price: value.price,
           quantity: value.quantity,
           enabled: value.enabled,
@@ -126,6 +135,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
         result = await createProductAction({
           id: value.id,
           name: value.name,
+          description: value.description,
           price: value.price,
           quantity: value.quantity,
           enabled: value.enabled,
@@ -144,6 +154,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
               field === 'version' ||
               field === 'imageId' ||
               field === 'name' ||
+              field === 'description' ||
               field === 'price' ||
               field === 'quantity' ||
               field === 'enabled'
@@ -189,6 +200,26 @@ export default function ProductEdit({ product }: ProductEditProps) {
               <FormLabel>Product name</FormLabel>
               <FormControl>
                 <Input type="text" disabled={isBusy} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={'description'}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Enter product description (optional)"
+                  maxLength={2000}
+                  disabled={isBusy}
+                  className="resize-y min-h-[100px]"
+                  {...field}
+                  value={field.value ?? ''}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
