@@ -1,50 +1,43 @@
 import {
-  Configuration,
-  CreateProductRequest,
-  DefaultApi,
-  DefaultApiGetListRequest,
+  CreateProductBody,
+  GetListParams,
+  getProductAPI,
   ProductListResponse,
   ProductResponse,
-  UpdateProductRequest,
+  UpdateProductBody,
 } from '@sokol111/ecommerce-product-service-api';
-import { createHttpClient } from './http-client';
 
-const basePath = process.env.PRODUCT_API_URL;
+const baseURL = process.env.PRODUCT_API_URL;
 
-const httpClient = createHttpClient();
-
-const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
+const api = getProductAPI();
 
 export async function getProductById(productId: string): Promise<ProductResponse> {
-  const response = await api.getProductById({ id: productId });
+  const response = await api.getProductById(productId, { baseURL });
   return response.data;
 }
 
 export async function getListProducts(
-  params?: Partial<DefaultApiGetListRequest>
+  params?: Partial<GetListParams>
 ): Promise<ProductListResponse> {
-  const response = await api.getList({
-    page: params?.page ?? 1,
-    size: params?.size ?? 10,
-    sort: params?.sort,
-    order: params?.order,
-    enabled: params?.enabled,
-  });
+  const response = await api.getList(
+    {
+      page: params?.page ?? 1,
+      size: params?.size ?? 10,
+      sort: params?.sort,
+      order: params?.order,
+      enabled: params?.enabled,
+    },
+    { baseURL }
+  );
   return response.data;
 }
 
-export async function createProduct(newProduct: CreateProductRequest): Promise<ProductResponse> {
-  const response = await api.createProduct({
-    createProductRequest: newProduct,
-  });
+export async function createProduct(newProduct: CreateProductBody): Promise<ProductResponse> {
+  const response = await api.createProduct(newProduct, { baseURL });
   return response.data;
 }
 
-export async function updateProduct(
-  updatedProduct: UpdateProductRequest
-): Promise<ProductResponse> {
-  const response = await api.updateProduct({
-    updateProductRequest: updatedProduct,
-  });
+export async function updateProduct(updatedProduct: UpdateProductBody): Promise<ProductResponse> {
+  const response = await api.updateProduct(updatedProduct, { baseURL });
   return response.data;
 }

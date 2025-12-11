@@ -14,10 +14,7 @@ import {
   PresignRequestContentTypeEnum,
   PresignResponse,
 } from '@sokol111/ecommerce-image-service-api';
-import {
-  CreateProductRequest,
-  UpdateProductRequest,
-} from '@sokol111/ecommerce-product-service-api';
+import { CreateProductBody, UpdateProductBody } from '@sokol111/ecommerce-product-service-api';
 import { z } from 'zod';
 
 const ContentTypeSchema = z.enum([
@@ -50,7 +47,7 @@ const GetDeliveryUrlSchema = z.object({
   width: z.number().int().positive().max(4096),
 });
 
-export async function updateProductAction(product: UpdateProductRequest): Promise<ActionResult> {
+export async function updateProductAction(product: UpdateProductBody): Promise<ActionResult> {
   try {
     await updateProduct(product);
     return { success: true, data: undefined };
@@ -59,7 +56,7 @@ export async function updateProductAction(product: UpdateProductRequest): Promis
   }
 }
 
-export async function createProductAction(product: CreateProductRequest): Promise<ActionResult> {
+export async function createProductAction(product: CreateProductBody): Promise<ActionResult> {
   try {
     await createProduct(product);
     return { success: true, data: undefined };
