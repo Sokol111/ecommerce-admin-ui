@@ -7,7 +7,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   const [product, categoriesResponse] = await Promise.all([
     getProductById(id),
-    getListCategories({ size: 100, enabled: true }),
+    getListCategories({ size: 100 }),
   ]);
 
   return (

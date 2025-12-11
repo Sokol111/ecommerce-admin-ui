@@ -330,7 +330,16 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
                           !field.value && 'text-muted-foreground'
                         )}
                       >
-                        {selectedCategory ? selectedCategory.name : 'Select category...'}
+                        {selectedCategory ? (
+                          <span
+                            className={!selectedCategory.enabled ? 'text-muted-foreground' : ''}
+                          >
+                            {selectedCategory.name}
+                            {!selectedCategory.enabled && ' (disabled)'}
+                          </span>
+                        ) : (
+                          'Select category...'
+                        )}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -349,6 +358,7 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
                                 field.onChange(category.id === field.value ? null : category.id);
                                 setCategoryOpen(false);
                               }}
+                              className={!category.enabled ? 'text-muted-foreground' : ''}
                             >
                               <Check
                                 className={cn(
@@ -357,6 +367,7 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
                                 )}
                               />
                               {category.name}
+                              {!category.enabled && ' (disabled)'}
                             </CommandItem>
                           ))}
                         </CommandGroup>
