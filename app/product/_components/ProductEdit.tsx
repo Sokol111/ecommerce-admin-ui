@@ -3,6 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
   Form,
   FormControl,
   FormField,
@@ -11,12 +19,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
+import { cn } from '@/lib/utils';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
 import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,6 +42,7 @@ const productSchema = z
     id: z.uuid(),
     version: z.number().int().min(0, 'Version is required'),
     imageId: z.uuid().nullish(),
+    categoryId: z.uuid().nullish(),
     name: z
       .string()
       .min(2, 'Product name must be at least 2 characters')
@@ -57,6 +70,10 @@ const productSchema = z
     message: 'Enabled products must have an image',
     path: ['imageId'],
   })
+  .refine((data) => !(data.enabled && !data.categoryId), {
+    message: 'Enabled products must have a category',
+    path: ['categoryId'],
+  })
   .refine((data) => !(data.enabled && data.price <= 0), {
     message: 'Enabled products must have price greater than 0',
     path: ['price'],
@@ -70,13 +87,15 @@ export type ProductFormData = z.infer<typeof productSchema>;
 
 interface ProductEditProps {
   product?: ProductResponse;
+  categories: CategoryResponse[];
 }
 
-export default function ProductEdit({ product }: ProductEditProps) {
+export default function ProductEdit({ product, categories }: ProductEditProps) {
   const router = useRouter();
   const isEditMode = !!product;
 
   const [saving, setSaving] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -85,6 +104,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           id: product.id,
           version: product.version,
           imageId: product.imageId,
+          categoryId: product.categoryId,
           name: product.name,
           description: product.description,
           price: product.price,
@@ -95,6 +115,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           id: uuidv4(),
           version: 0,
           imageId: undefined,
+          categoryId: undefined,
           name: '',
           description: undefined,
           price: 0,
@@ -130,6 +151,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           quantity: value.quantity,
           enabled: value.enabled,
           imageId: value.imageId ?? undefined,
+          categoryId: value.categoryId ?? undefined,
         });
       } else {
         result = await createProductAction({
@@ -140,6 +162,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
           quantity: value.quantity,
           enabled: value.enabled,
           imageId: value.imageId ?? undefined,
+          categoryId: value.categoryId ?? undefined,
         });
       }
 
@@ -153,6 +176,7 @@ export default function ProductEdit({ product }: ProductEditProps) {
               field === 'id' ||
               field === 'version' ||
               field === 'imageId' ||
+              field === 'categoryId' ||
               field === 'name' ||
               field === 'description' ||
               field === 'price' ||
@@ -284,6 +308,66 @@ export default function ProductEdit({ product }: ProductEditProps) {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          control={form.control}
+          name={'categoryId'}
+          render={({ field }) => {
+            const selectedCategory = categories.find((c) => c.id === field.value);
+            return (
+              <FormItem className="flex flex-col">
+                <FormLabel>Category</FormLabel>
+                <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={categoryOpen}
+                        disabled={isBusy}
+                        className={cn(
+                          'w-[300px] justify-between',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        {selectedCategory ? selectedCategory.name : 'Select category...'}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[300px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search category..." />
+                      <CommandList>
+                        <CommandEmpty>No category found.</CommandEmpty>
+                        <CommandGroup>
+                          {categories.map((category) => (
+                            <CommandItem
+                              key={category.id}
+                              value={category.name}
+                              onSelect={() => {
+                                field.onChange(category.id === field.value ? null : category.id);
+                                setCategoryOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  field.value === category.id ? 'opacity-100' : 'opacity-0'
+                                )}
+                              />
+                              {category.name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
         <FormField
           control={form.control}
