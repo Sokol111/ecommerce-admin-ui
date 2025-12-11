@@ -1,52 +1,45 @@
 import {
   CategoryListResponse,
   CategoryResponse,
-  Configuration,
-  CreateCategoryRequest,
-  DefaultApi,
-  DefaultApiGetListRequest,
-  UpdateCategoryRequest,
+  CreateCategoryBody,
+  getCategoryAPI,
+  GetListParams,
+  UpdateCategoryBody,
 } from '@sokol111/ecommerce-category-service-api';
-import { createHttpClient } from './http-client';
 
-const basePath = process.env.CATEGORY_API_URL;
+const baseURL = process.env.CATEGORY_API_URL;
 
-const httpClient = createHttpClient();
-
-const api = new DefaultApi(new Configuration({ basePath }), basePath, httpClient);
+const api = getCategoryAPI();
 
 export async function getCategoryById(categoryId: string): Promise<CategoryResponse> {
-  const response = await api.getCategoryById({ id: categoryId });
+  const response = await api.getCategoryById(categoryId, { baseURL });
   return response.data;
 }
 
 export async function getListCategories(
-  params?: Partial<DefaultApiGetListRequest>
+  params?: Partial<GetListParams>
 ): Promise<CategoryListResponse> {
-  const response = await api.getList({
-    page: params?.page ?? 1,
-    size: params?.size ?? 10,
-    sort: params?.sort,
-    order: params?.order,
-    enabled: params?.enabled,
-  });
+  const response = await api.getList(
+    {
+      page: params?.page ?? 1,
+      size: params?.size ?? 10,
+      sort: params?.sort,
+      order: params?.order,
+      enabled: params?.enabled,
+    },
+    { baseURL }
+  );
   return response.data;
 }
 
-export async function createCategory(
-  newCategory: CreateCategoryRequest
-): Promise<CategoryResponse> {
-  const response = await api.createCategory({
-    createCategoryRequest: newCategory,
-  });
+export async function createCategory(newCategory: CreateCategoryBody): Promise<CategoryResponse> {
+  const response = await api.createCategory(newCategory, { baseURL });
   return response.data;
 }
 
 export async function updateCategory(
-  updatedCategory: UpdateCategoryRequest
+  updatedCategory: UpdateCategoryBody
 ): Promise<CategoryResponse> {
-  const response = await api.updateCategory({
-    updateCategoryRequest: updatedCategory,
-  });
+  const response = await api.updateCategory(updatedCategory, { baseURL });
   return response.data;
 }

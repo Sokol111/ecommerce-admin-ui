@@ -5,23 +5,20 @@ import { confirmUpload, createPresign, getDeliveryUrl } from '@/lib/client/image
 import { createProduct, updateProduct } from '@/lib/client/product-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
-import {
-  CreateCategoryRequest,
-  UpdateCategoryRequest,
-} from '@sokol111/ecommerce-category-service-api';
+import { CreateCategoryBody, UpdateCategoryBody } from '@sokol111/ecommerce-category-service-api';
 import {
   Image,
-  PresignRequestContentTypeEnum,
+  PresignRequestContentType,
   PresignResponse,
 } from '@sokol111/ecommerce-image-service-api';
 import { CreateProductBody, UpdateProductBody } from '@sokol111/ecommerce-product-service-api';
 import { z } from 'zod';
 
 const ContentTypeSchema = z.enum([
-  PresignRequestContentTypeEnum.ImageJpeg,
-  PresignRequestContentTypeEnum.ImagePng,
-  PresignRequestContentTypeEnum.ImageWebp,
-  PresignRequestContentTypeEnum.ImageAvif,
+  PresignRequestContentType['image/jpeg'],
+  PresignRequestContentType['image/png'],
+  PresignRequestContentType['image/webp'],
+  PresignRequestContentType['image/avif'],
 ]);
 
 // Max size 1MB (same as client side check) enforced server-side
@@ -65,7 +62,7 @@ export async function createProductAction(product: CreateProductBody): Promise<A
   }
 }
 
-export async function updateCategoryAction(category: UpdateCategoryRequest): Promise<ActionResult> {
+export async function updateCategoryAction(category: UpdateCategoryBody): Promise<ActionResult> {
   try {
     await updateCategory(category);
     return { success: true, data: undefined };
@@ -74,7 +71,7 @@ export async function updateCategoryAction(category: UpdateCategoryRequest): Pro
   }
 }
 
-export async function createCategoryAction(category: CreateCategoryRequest): Promise<ActionResult> {
+export async function createCategoryAction(category: CreateCategoryBody): Promise<ActionResult> {
   try {
     await createCategory(category);
     return { success: true, data: undefined };

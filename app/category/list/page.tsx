@@ -1,15 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { getListCategories } from '@/lib/client/category-client';
-import {
-  DefaultApiGetListRequest,
-  GetListOrderEnum,
-  GetListSortEnum,
-} from '@sokol111/ecommerce-category-service-api';
+import { GetListOrder, GetListParams, GetListSort } from '@sokol111/ecommerce-category-service-api';
 import Link from 'next/link';
 import CategoryList from '../_components/CategoryList';
 
 type SearchParamsType = {
-  [K in keyof DefaultApiGetListRequest]?: string;
+  [K in keyof GetListParams]?: string;
 };
 
 interface CategoryListPageProps {
@@ -21,8 +17,8 @@ export default async function CategoryListPage({ searchParams }: CategoryListPag
 
   const page = params.page ? parseInt(params.page, 10) : undefined;
   const size = params.size ? parseInt(params.size, 10) : undefined;
-  const sort = params.sort as GetListSortEnum | undefined;
-  const order = params.order as GetListOrderEnum | undefined;
+  const sort = params.sort as GetListSort | undefined;
+  const order = params.order as GetListOrder | undefined;
   const enabled = params.enabled === 'true' ? true : params.enabled === 'false' ? false : undefined;
 
   const categoryList = await getListCategories({ page, size, sort, order, enabled });

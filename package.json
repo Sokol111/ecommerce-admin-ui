@@ -20,8 +20,8 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@sokol111/ecommerce-category-service-api": "^1.0.24",
-    "@sokol111/ecommerce-image-service-api": "^1.0.25",
+    "@sokol111/ecommerce-category-service-api": "^1.0.25",
+    "@sokol111/ecommerce-image-service-api": "^1.0.28",
     "@sokol111/ecommerce-product-service-api": "^1.0.96",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.10.0",
@@ -52,8 +52,5 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
-  },
-  "overrides": {
-    "@sokol111/ecommerce-product-service-api": "file:../ecommerce-product-service-api/gen/typescript"
   }
 }
