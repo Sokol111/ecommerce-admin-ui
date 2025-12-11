@@ -52,5 +52,12 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@sokol111/ecommerce-category-service-api": "file:../ecommerce-category-service-api/gen/typescript",
+      "@sokol111/ecommerce-image-service-api": "file:../ecommerce-image-service-api/gen/typescript",
+      "@sokol111/ecommerce-product-service-api": "file:../ecommerce-product-service-api/gen/typescript"
+    }
   }
 }
