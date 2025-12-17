@@ -23,6 +23,7 @@
     "@sokol111/ecommerce-category-service-api": "^1.0.25",
     "@sokol111/ecommerce-image-service-api": "^1.0.28",
     "@sokol111/ecommerce-product-service-api": "^1.0.96",
+    "@sokol111/ecommerce-attribute-service-api": "0.0.0",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
@@ -57,7 +58,8 @@
     "overrides": {
       "@sokol111/ecommerce-category-service-api": "file:../ecommerce-category-service-api/gen/typescript",
       "@sokol111/ecommerce-image-service-api": "file:../ecommerce-image-service-api/gen/typescript",
-      "@sokol111/ecommerce-product-service-api": "file:../ecommerce-product-service-api/gen/typescript"
+      "@sokol111/ecommerce-product-service-api": "file:../ecommerce-product-service-api/gen/typescript",
+      "@sokol111/ecommerce-attribute-service-api": "file:../ecommerce-attribute-service-api/gen/typescript"
     }
   }
 }

@@ -8,6 +8,7 @@ overrides:
   '@sokol111/ecommerce-category-service-api': file:../ecommerce-category-service-api/gen/typescript
   '@sokol111/ecommerce-image-service-api': file:../ecommerce-image-service-api/gen/typescript
   '@sokol111/ecommerce-product-service-api': file:../ecommerce-product-service-api/gen/typescript
+  '@sokol111/ecommerce-attribute-service-api': file:../ecommerce-attribute-service-api/gen/typescript
 
 importers:
 
@@ -43,6 +44,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.7
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@sokol111/ecommerce-attribute-service-api':
+        specifier: file:../ecommerce-attribute-service-api/gen/typescript
+        version: file:../ecommerce-attribute-service-api/gen/typescript
       '@sokol111/ecommerce-category-service-api':
         specifier: file:../ecommerce-category-service-api/gen/typescript
         version: file:../ecommerce-category-service-api/gen/typescript
@@ -847,6 +851,9 @@ packages:
 
   '@rushstack/eslint-patch@1.15.0':
     resolution: {integrity: sha512-ojSshQPKwVvSMR8yT2L/QtUkV5SXi/IfDiJ4/8d6UbTPjiHVmxZzUAzGD8Tzks1b9+qQkZa0isUOvYObedITaw==}
+
+  '@sokol111/ecommerce-attribute-service-api@file:../ecommerce-attribute-service-api/gen/typescript':
+    resolution: {directory: ../ecommerce-attribute-service-api/gen/typescript, type: directory}
 
   '@sokol111/ecommerce-category-service-api@file:../ecommerce-category-service-api/gen/typescript':
     resolution: {directory: ../ecommerce-category-service-api/gen/typescript, type: directory}
@@ -3102,6 +3109,12 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.15.0': {}
+
+  '@sokol111/ecommerce-attribute-service-api@file:../ecommerce-attribute-service-api/gen/typescript':
+    dependencies:
+      axios: 1.13.2
+    transitivePeerDependencies:
+      - debug
 
   '@sokol111/ecommerce-category-service-api@file:../ecommerce-category-service-api/gen/typescript':
     dependencies:
