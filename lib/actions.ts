@@ -1,10 +1,15 @@
 'use server';
 
+import { createAttribute, deleteAttribute, updateAttribute } from '@/lib/client/attribute-client';
 import { createCategory, updateCategory } from '@/lib/client/category-client';
 import { confirmUpload, createPresign, getDeliveryUrl } from '@/lib/client/image-client';
 import { createProduct, updateProduct } from '@/lib/client/product-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
+import {
+  CreateAttributeBody,
+  UpdateAttributeBody,
+} from '@sokol111/ecommerce-attribute-service-api';
 import { CreateCategoryBody, UpdateCategoryBody } from '@sokol111/ecommerce-category-service-api';
 import {
   Image,
@@ -79,6 +84,37 @@ export async function createCategoryAction(category: CreateCategoryBody): Promis
     return { success: false, error: toProblem(error, 'Failed to create category') };
   }
 }
+
+// ==================== ATTRIBUTE ACTIONS ====================
+
+export async function createAttributeAction(attribute: CreateAttributeBody): Promise<ActionResult> {
+  try {
+    await createAttribute(attribute);
+    return { success: true, data: undefined };
+  } catch (error) {
+    return { success: false, error: toProblem(error, 'Failed to create attribute') };
+  }
+}
+
+export async function updateAttributeAction(attribute: UpdateAttributeBody): Promise<ActionResult> {
+  try {
+    await updateAttribute(attribute);
+    return { success: true, data: undefined };
+  } catch (error) {
+    return { success: false, error: toProblem(error, 'Failed to update attribute') };
+  }
+}
+
+export async function deleteAttributeAction(attributeId: string): Promise<ActionResult> {
+  try {
+    await deleteAttribute(attributeId);
+    return { success: true, data: undefined };
+  } catch (error) {
+    return { success: false, error: toProblem(error, 'Failed to delete attribute') };
+  }
+}
+
+// ==================== IMAGE ACTIONS ====================
 
 export async function presignImageAction({
   ownerId,

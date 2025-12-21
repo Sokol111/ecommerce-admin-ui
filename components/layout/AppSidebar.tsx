@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { Container, Home } from 'lucide-react';
+import { Container, Home, Tags } from 'lucide-react';
 
 const items = [
   {
@@ -25,6 +25,11 @@ const items = [
     title: 'Categories',
     url: '/category/list',
     icon: Container,
+  },
+  {
+    title: 'Attributes',
+    url: '/attribute/list',
+    icon: Tags,
   },
 ];
 
