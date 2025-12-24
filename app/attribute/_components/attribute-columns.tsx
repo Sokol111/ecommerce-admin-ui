@@ -154,15 +154,6 @@ export const attributeColumns: ColumnDef<AttributeResponse>[] = [
     },
   },
   {
-    accessorKey: 'defaultFilterable',
-    header: 'Filterable',
-    cell: ({ row }) => (
-      <Badge variant={row.original.defaultFilterable ? 'default' : 'outline'}>
-        {row.original.defaultFilterable ? 'Yes' : 'No'}
-      </Badge>
-    ),
-  },
-  {
     accessorKey: 'sortOrder',
     header: 'Sort Order',
   },

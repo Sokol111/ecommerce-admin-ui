@@ -76,8 +76,6 @@ const attributeSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only'),
   type: z.enum(['select', 'multiselect', 'range', 'boolean', 'text']),
   unit: z.string().max(20, 'Unit must be at most 20 characters').optional(),
-  defaultFilterable: z.boolean(),
-  defaultSearchable: z.boolean(),
   sortOrder: z.number().int().min(0).max(10000).optional(),
   enabled: z.boolean(),
   options: z.array(attributeOptionSchema).optional(),
@@ -105,8 +103,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: attribute.slug,
           type: attribute.type,
           unit: attribute.unit ?? '',
-          defaultFilterable: attribute.defaultFilterable,
-          defaultSearchable: attribute.defaultSearchable,
           sortOrder: attribute.sortOrder,
           enabled: attribute.enabled,
           options:
@@ -125,8 +121,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: '',
           type: 'select',
           unit: '',
-          defaultFilterable: true,
-          defaultSearchable: false,
           sortOrder: 0,
           enabled: true,
           options: [],
@@ -190,8 +184,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: value.slug,
           type: value.type as CreateAttributeBodyType,
           unit: showUnit ? value.unit || undefined : undefined,
-          defaultFilterable: value.defaultFilterable,
-          defaultSearchable: value.defaultSearchable,
           sortOrder: value.sortOrder,
           enabled: value.enabled,
           options,
@@ -203,8 +195,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: value.slug,
           type: value.type as CreateAttributeBodyType,
           unit: showUnit ? value.unit || undefined : undefined,
-          defaultFilterable: value.defaultFilterable,
-          defaultSearchable: value.defaultSearchable,
           sortOrder: value.sortOrder,
           enabled: value.enabled,
           options,
@@ -377,40 +367,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
             <div className="flex flex-wrap gap-6">
               <FormField
                 control={form.control}
-                name="defaultFilterable"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        disabled={isBusy}
-                        onCheckedChange={(v) => field.onChange(v === true)}
-                      />
-                    </FormControl>
-                    <FormLabel className="!mt-0">Default Filterable</FormLabel>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="defaultSearchable"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        disabled={isBusy}
-                        onCheckedChange={(v) => field.onChange(v === true)}
-                      />
-                    </FormControl>
-                    <FormLabel className="!mt-0">Default Searchable</FormLabel>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="enabled"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-2">
@@ -421,7 +377,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                         onCheckedChange={(v) => field.onChange(v === true)}
                       />
                     </FormControl>
-                    <FormLabel className="!mt-0">Enabled</FormLabel>
+                    <FormLabel className="mt-0!">Enabled</FormLabel>
                   </FormItem>
                 )}
               />
@@ -556,7 +512,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                                     onCheckedChange={(v) => field.onChange(v === true)}
                                   />
                                 </FormControl>
-                                <FormLabel className="!mt-0">Enabled</FormLabel>
+                                <FormLabel className="mt-0!">Enabled</FormLabel>
                               </FormItem>
                             )}
                           />
