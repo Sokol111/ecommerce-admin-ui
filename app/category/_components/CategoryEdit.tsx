@@ -36,6 +36,7 @@ import { z } from 'zod';
 // Schema for category attribute
 const categoryAttributeSchema = z.object({
   attributeId: z.string().uuid('Please select an attribute'),
+  usage: z.enum(['variant', 'specification'], { message: 'Please select usage type' }),
   required: z.boolean(),
   sortOrder: z.number().int().min(0).max(10000),
   filterable: z.boolean(),
@@ -81,6 +82,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
           attributes:
             category.attributes?.map((attr) => ({
               attributeId: attr.attributeId,
+              usage: attr.usage,
               required: attr.required,
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
@@ -110,6 +112,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
     if (availableToAdd.length === 0) return;
     append({
       attributeId: '',
+      usage: 'specification',
       required: false,
       sortOrder: fields.length,
       filterable: false,
@@ -131,6 +134,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
         value.attributes.length > 0
           ? value.attributes.map((attr) => ({
               attributeId: attr.attributeId,
+              usage: attr.usage,
               required: attr.required,
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
@@ -330,6 +334,34 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                     ref={field.ref}
                                   />
                                 </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`attributes.${index}.usage`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Usage</FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={field.value}
+                                  disabled={isBusy}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="w-full">
+                                      <SelectValue placeholder="Select usage type" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="variant">Variant (buyer chooses)</SelectItem>
+                                    <SelectItem value="specification">
+                                      Specification (product info)
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
