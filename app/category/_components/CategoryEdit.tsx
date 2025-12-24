@@ -36,7 +36,7 @@ import { z } from 'zod';
 // Schema for category attribute
 const categoryAttributeSchema = z.object({
   attributeId: z.string().uuid('Please select an attribute'),
-  usage: z.enum(['variant', 'specification'], { message: 'Please select usage type' }),
+  role: z.enum(['variant', 'specification'], { message: 'Please select role' }),
   required: z.boolean(),
   sortOrder: z.number().int().min(0).max(10000),
   filterable: z.boolean(),
@@ -82,7 +82,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
           attributes:
             category.attributes?.map((attr) => ({
               attributeId: attr.attributeId,
-              usage: attr.usage,
+              role: attr.role,
               required: attr.required,
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
@@ -112,7 +112,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
     if (availableToAdd.length === 0) return;
     append({
       attributeId: '',
-      usage: 'specification',
+      role: 'specification',
       required: false,
       sortOrder: fields.length,
       filterable: false,
@@ -131,14 +131,14 @@ export default function CategoryEdit({ category, availableAttributes }: Category
     return attr?.type;
   };
 
-  // Validate attribute type + usage combination
-  // Only 'single' type is valid for 'variant' usage
-  const getUsageWarning = (attributeId: string, usage: string): string | null => {
+  // Validate attribute type + role combination
+  // Only 'single' type is valid for 'variant' role
+  const getRoleWarning = (attributeId: string, role: string): string | null => {
     const attrType = getAttributeType(attributeId);
-    if (!attrType || usage !== 'variant') return null;
+    if (!attrType || role !== 'variant') return null;
 
     if (attrType !== 'single') {
-      return `"${attrType}" type is not compatible with "variant" usage. Only "single" type can be used for variants (e.g., Color, Size).`;
+      return `"${attrType}" type is not compatible with "variant" role. Only "single" type can be used for variants (e.g., Color, Size).`;
     }
     return null;
   };
@@ -151,7 +151,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
         value.attributes.length > 0
           ? value.attributes.map((attr) => ({
               attributeId: attr.attributeId,
-              usage: attr.usage,
+              role: attr.role,
               required: attr.required,
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
@@ -358,15 +358,15 @@ export default function CategoryEdit({ category, availableAttributes }: Category
 
                           <FormField
                             control={form.control}
-                            name={`attributes.${index}.usage`}
+                            name={`attributes.${index}.role`}
                             render={({ field }) => {
                               const currentAttrId = watchedAttributes?.[index]?.attributeId;
                               const warning = currentAttrId
-                                ? getUsageWarning(currentAttrId, field.value)
+                                ? getRoleWarning(currentAttrId, field.value)
                                 : null;
                               return (
                                 <FormItem>
-                                  <FormLabel>Usage</FormLabel>
+                                  <FormLabel>Role</FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
@@ -376,7 +376,7 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                       <SelectTrigger
                                         className={`w-full ${warning ? 'border-yellow-500' : ''}`}
                                       >
-                                        <SelectValue placeholder="Select usage type" />
+                                        <SelectValue placeholder="Select role" />
                                       </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
