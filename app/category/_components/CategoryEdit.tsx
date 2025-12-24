@@ -126,6 +126,23 @@ export default function CategoryEdit({ category, availableAttributes }: Category
     return attr?.name ?? attributeId;
   };
 
+  const getAttributeType = (attributeId: string) => {
+    const attr = availableAttributes.find((a) => a.id === attributeId);
+    return attr?.type;
+  };
+
+  // Validate attribute type + usage combination
+  // Only 'select' type is valid for 'variant' usage
+  const getUsageWarning = (attributeId: string, usage: string): string | null => {
+    const attrType = getAttributeType(attributeId);
+    if (!attrType || usage !== 'variant') return null;
+
+    if (attrType !== 'select') {
+      return `"${attrType}" type is not compatible with "variant" usage. Only "select" type can be used for variants (e.g., Color, Size).`;
+    }
+    return null;
+  };
+
   async function onSubmit(value: CategoryFormData) {
     setSaving(true);
     try {
@@ -342,29 +359,44 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                           <FormField
                             control={form.control}
                             name={`attributes.${index}.usage`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Usage</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                  disabled={isBusy}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger className="w-full">
-                                      <SelectValue placeholder="Select usage type" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="variant">Variant (buyer chooses)</SelectItem>
-                                    <SelectItem value="specification">
-                                      Specification (product info)
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                            render={({ field }) => {
+                              const currentAttrId = watchedAttributes?.[index]?.attributeId;
+                              const warning = currentAttrId
+                                ? getUsageWarning(currentAttrId, field.value)
+                                : null;
+                              return (
+                                <FormItem>
+                                  <FormLabel>Usage</FormLabel>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    disabled={isBusy}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger
+                                        className={`w-full ${warning ? 'border-yellow-500' : ''}`}
+                                      >
+                                        <SelectValue placeholder="Select usage type" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value="variant">
+                                        Variant (buyer chooses)
+                                      </SelectItem>
+                                      <SelectItem value="specification">
+                                        Specification (product info)
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  {warning && (
+                                    <p className="text-sm text-yellow-600 dark:text-yellow-500 mt-1">
+                                      ⚠️ {warning}
+                                    </p>
+                                  )}
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
                           />
                         </div>
 
