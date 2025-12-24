@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getListCategories } from '@/lib/client/category-client';
 import { GetListOrder, GetListParams, GetListSort } from '@sokol111/ecommerce-category-service-api';
@@ -25,9 +26,13 @@ export default async function CategoryListPage({ searchParams }: CategoryListPag
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-5">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">Categories</h1>
+          <Badge variant="outline">{categoryList.total}</Badge>
+        </div>
         <Link href="/category/create">
-          <Button>Create category</Button>
+          <Button>Create Category</Button>
         </Link>
       </div>
       <CategoryList

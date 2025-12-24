@@ -3,7 +3,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -20,14 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createCategoryAction, getAttributeListAction, updateCategoryAction } from '@/lib/actions';
+import { Switch } from '@/components/ui/switch';
+import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
 import { CategoryAttributeInput, CategoryResponse } from '@sokol111/ecommerce-category-service-api';
 import { Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
@@ -61,36 +61,14 @@ export type CategoryFormData = z.infer<typeof categorySchema>;
 
 interface CategoryEditProps {
   category?: CategoryResponse;
+  availableAttributes: AttributeResponse[];
 }
 
-export default function CategoryEdit({ category }: CategoryEditProps) {
+export default function CategoryEdit({ category, availableAttributes }: CategoryEditProps) {
   const router = useRouter();
   const isEditMode = !!category;
 
   const [saving, setSaving] = useState(false);
-  const [availableAttributes, setAvailableAttributes] = useState<AttributeResponse[]>([]);
-  const [loadingAttributes, setLoadingAttributes] = useState(true);
-
-  // Fetch available attributes on mount
-  useEffect(() => {
-    async function fetchAttributes() {
-      try {
-        const result = await getAttributeListAction({ enabled: true, size: 100 });
-        if (result.success) {
-          setAvailableAttributes(result.data.items);
-        } else {
-          toast.error('Failed to load attributes', {
-            description: problemToDescription(result.error),
-          });
-        }
-      } catch {
-        toast.error('Failed to load attributes');
-      } finally {
-        setLoadingAttributes(false);
-      }
-    }
-    fetchAttributes();
-  }, []);
 
   const form = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -208,7 +186,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
     }
   }
 
-  const isBusy = saving || loadingAttributes;
+  const isBusy = saving;
 
   return (
     <Form {...form}>
@@ -245,7 +223,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-2">
                   <FormControl>
-                    <Checkbox
+                    <Switch
                       id="enabled"
                       checked={field.value}
                       disabled={isBusy}
@@ -281,11 +259,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
             </Button>
           </CardHeader>
           <CardContent>
-            {loadingAttributes ? (
-              <p className="text-muted-foreground text-sm text-center py-4">
-                Loading attributes...
-              </p>
-            ) : fields.length === 0 ? (
+            {fields.length === 0 ? (
               <p className="text-muted-foreground text-sm text-center py-4">
                 No attributes assigned yet. Click &quot;Add Attribute&quot; to assign one.
               </p>
@@ -369,7 +343,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
                             render={({ field }) => (
                               <FormItem className="flex items-center gap-2">
                                 <FormControl>
-                                  <Checkbox
+                                  <Switch
                                     checked={field.value}
                                     disabled={isBusy}
                                     onCheckedChange={(v) => field.onChange(v === true)}
@@ -386,7 +360,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
                             render={({ field }) => (
                               <FormItem className="flex items-center gap-2">
                                 <FormControl>
-                                  <Checkbox
+                                  <Switch
                                     checked={field.value}
                                     disabled={isBusy}
                                     onCheckedChange={(v) => field.onChange(v === true)}
@@ -403,7 +377,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
                             render={({ field }) => (
                               <FormItem className="flex items-center gap-2">
                                 <FormControl>
-                                  <Checkbox
+                                  <Switch
                                     checked={field.value}
                                     disabled={isBusy}
                                     onCheckedChange={(v) => field.onChange(v === true)}
@@ -420,7 +394,7 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
                             render={({ field }) => (
                               <FormItem className="flex items-center gap-2">
                                 <FormControl>
-                                  <Checkbox
+                                  <Switch
                                     checked={field.value}
                                     disabled={isBusy}
                                     onCheckedChange={(v) => field.onChange(v === true)}

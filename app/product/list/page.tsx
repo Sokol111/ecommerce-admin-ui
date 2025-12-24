@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getListProducts } from '@/lib/client/product-client';
 import { GetListOrder, GetListParams, GetListSort } from '@sokol111/ecommerce-product-service-api';
@@ -25,9 +26,13 @@ export default async function ProductListPage({ searchParams }: ProductListPageP
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-5">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">Products</h1>
+          <Badge variant="outline">{productList.total}</Badge>
+        </div>
         <Link href="/product/create">
-          <Button>Create product</Button>
+          <Button>Create Product</Button>
         </Link>
       </div>
       <ProductList

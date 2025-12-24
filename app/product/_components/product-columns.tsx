@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ export const productColumns: ColumnDef<ProductResponse>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+    cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
   },
   {
     accessorKey: 'price',
@@ -24,17 +26,37 @@ export const productColumns: ColumnDef<ProductResponse>[] = [
   {
     accessorKey: 'quantity',
     header: 'Quantity',
+    cell: ({ row }) => <Badge variant="outline">{row.original.quantity}</Badge>,
   },
   {
     accessorKey: 'enabled',
-    header: 'Enabled',
+    header: 'Status',
+    cell: ({ row }) => (
+      <Badge variant={row.original.enabled ? 'default' : 'secondary'}>
+        {row.original.enabled ? 'Enabled' : 'Disabled'}
+      </Badge>
+    ),
   },
   {
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'));
-      return date.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+      const formatted = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+      const time = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      return (
+        <div className="text-sm">
+          <div>{formatted}</div>
+          <div className="text-muted-foreground">{time}</div>
+        </div>
+      );
     },
   },
   {

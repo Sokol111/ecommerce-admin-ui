@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getAttributeList } from '@/lib/client/attribute-client';
 import {
@@ -32,7 +33,10 @@ export default async function AttributeListPage({ searchParams }: AttributeListP
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-bold">Attributes</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">Attributes</h1>
+          <Badge variant="outline">{attributeList.total}</Badge>
+        </div>
         <Link href="/attribute/create">
           <Button>Create Attribute</Button>
         </Link>

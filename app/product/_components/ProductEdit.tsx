@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Command,
   CommandEmpty,
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { createProductAction, updateProductAction } from '@/lib/actions';
@@ -297,7 +297,7 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center gap-2">
               <FormControl>
-                <Checkbox
+                <Switch
                   id="enabled"
                   checked={field.value}
                   disabled={isBusy}

@@ -3,7 +3,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { createAttributeAction, updateAttributeAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -371,7 +371,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-2">
                     <FormControl>
-                      <Checkbox
+                      <Switch
                         checked={field.value}
                         disabled={isBusy}
                         onCheckedChange={(v) => field.onChange(v === true)}
@@ -506,7 +506,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                             render={({ field }) => (
                               <FormItem className="flex items-center gap-2 pb-2">
                                 <FormControl>
-                                  <Checkbox
+                                  <Switch
                                     checked={field.value}
                                     disabled={isBusy}
                                     onCheckedChange={(v) => field.onChange(v === true)}

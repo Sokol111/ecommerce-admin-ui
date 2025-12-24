@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,16 +15,26 @@ import Link from 'next/link';
 
 export const categoryColumns: ColumnDef<CategoryResponse>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-  },
-  {
     accessorKey: 'name',
     header: 'Name',
+    cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
+  },
+  {
+    accessorKey: 'attributes',
+    header: 'Attributes',
+    cell: ({ row }) => {
+      const count = row.original.attributes?.length || 0;
+      return <Badge variant="outline">{count}</Badge>;
+    },
   },
   {
     accessorKey: 'enabled',
-    header: 'Enabled',
+    header: 'Status',
+    cell: ({ row }) => (
+      <Badge variant={row.original.enabled ? 'default' : 'secondary'}>
+        {row.original.enabled ? 'Enabled' : 'Disabled'}
+      </Badge>
+    ),
   },
   {
     id: 'actions',
