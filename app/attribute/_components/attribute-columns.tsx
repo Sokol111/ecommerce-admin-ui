@@ -31,16 +31,16 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 const typeLabels: Record<string, string> = {
-  select: 'Select',
-  multiselect: 'Multiselect',
+  single: 'Single',
+  multiple: 'Multiple',
   range: 'Range',
   boolean: 'Boolean',
   text: 'Text',
 };
 
 const typeVariants: Record<string, 'default' | 'secondary' | 'outline'> = {
-  select: 'default',
-  multiselect: 'default',
+  single: 'default',
+  multiple: 'default',
   range: 'secondary',
   boolean: 'outline',
   text: 'outline',
@@ -147,7 +147,7 @@ export const attributeColumns: ColumnDef<AttributeResponse>[] = [
     header: 'Options',
     cell: ({ row }) => {
       const count = row.original.options?.length || 0;
-      if (row.original.type !== 'select' && row.original.type !== 'multiselect') {
+      if (row.original.type !== 'single' && row.original.type !== 'multiple') {
         return <span className="text-muted-foreground">—</span>;
       }
       return <Badge variant="outline">{count}</Badge>;

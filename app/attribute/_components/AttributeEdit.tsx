@@ -38,8 +38,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 const ATTRIBUTE_TYPES = [
-  { value: 'select', label: 'Select (single choice)' },
-  { value: 'multiselect', label: 'Multiselect (multiple choices)' },
+  { value: 'single', label: 'Single (one choice)' },
+  { value: 'multiple', label: 'Multiple (many choices)' },
   { value: 'range', label: 'Range (numeric)' },
   { value: 'boolean', label: 'Boolean (yes/no)' },
   { value: 'text', label: 'Text (free input)' },
@@ -74,7 +74,7 @@ const attributeSchema = z.object({
     .min(2, 'Slug must be at least 2 characters')
     .max(50, 'Slug must be at most 50 characters')
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only'),
-  type: z.enum(['select', 'multiselect', 'range', 'boolean', 'text']),
+  type: z.enum(['single', 'multiple', 'range', 'boolean', 'text']),
   unit: z.string().max(20, 'Unit must be at most 20 characters').optional(),
   sortOrder: z.number().int().min(0).max(10000).optional(),
   enabled: z.boolean(),
@@ -119,7 +119,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           version: 0,
           name: '',
           slug: '',
-          type: 'select',
+          type: 'single',
           unit: '',
           sortOrder: 0,
           enabled: true,
@@ -133,9 +133,9 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
   });
 
   const watchType = form.watch('type');
-  const showOptions = watchType === 'select' || watchType === 'multiselect';
+  const showOptions = watchType === 'single' || watchType === 'multiple';
   const showUnit = watchType === 'range';
-  const showColorCode = watchType === 'select' || watchType === 'multiselect';
+  const showColorCode = watchType === 'single' || watchType === 'multiple';
 
   // Auto-generate slug from name
   const handleNameChange = (value: string) => {

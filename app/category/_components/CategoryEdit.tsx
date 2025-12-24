@@ -132,13 +132,13 @@ export default function CategoryEdit({ category, availableAttributes }: Category
   };
 
   // Validate attribute type + usage combination
-  // Only 'select' type is valid for 'variant' usage
+  // Only 'single' type is valid for 'variant' usage
   const getUsageWarning = (attributeId: string, usage: string): string | null => {
     const attrType = getAttributeType(attributeId);
     if (!attrType || usage !== 'variant') return null;
 
-    if (attrType !== 'select') {
-      return `"${attrType}" type is not compatible with "variant" usage. Only "select" type can be used for variants (e.g., Color, Size).`;
+    if (attrType !== 'single') {
+      return `"${attrType}" type is not compatible with "variant" usage. Only "single" type can be used for variants (e.g., Color, Size).`;
     }
     return null;
   };
