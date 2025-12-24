@@ -20,12 +20,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
 import { CategoryAttributeInput, CategoryResponse } from '@sokol111/ecommerce-category-service-api';
-import { Plus, Trash2 } from 'lucide-react';
+import { Info, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -337,7 +338,18 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                             name={`attributes.${index}.sortOrder`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Sort Order</FormLabel>
+                                <FormLabel className="flex items-center gap-1">
+                                  Sort Order
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      Defines the display order of this attribute. Lower values
+                                      appear first.
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     type="number"
@@ -366,7 +378,24 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                 : null;
                               return (
                                 <FormItem>
-                                  <FormLabel>Role</FormLabel>
+                                  <FormLabel className="flex items-center gap-1">
+                                    Role
+                                    <Tooltip>
+                                      <TooltipTrigger type="button">
+                                        <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="max-w-xs">
+                                        <p>
+                                          <strong>Variant:</strong> Buyer can select (e.g., Color,
+                                          Size). Creates product variants.
+                                        </p>
+                                        <p className="mt-1">
+                                          <strong>Specification:</strong> Informational only (e.g.,
+                                          Processor, Weight).
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
@@ -413,7 +442,18 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                     onCheckedChange={(v) => field.onChange(v === true)}
                                   />
                                 </FormControl>
-                                <FormLabel className="mt-0!">Required</FormLabel>
+                                <FormLabel className="mt-0! flex items-center gap-1">
+                                  Required
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      If enabled, this attribute must be filled when creating a
+                                      product in this category.
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </FormLabel>
                               </FormItem>
                             )}
                           />
@@ -430,7 +470,18 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                     onCheckedChange={(v) => field.onChange(v === true)}
                                   />
                                 </FormControl>
-                                <FormLabel className="mt-0!">Filterable</FormLabel>
+                                <FormLabel className="mt-0! flex items-center gap-1">
+                                  Filterable
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      If enabled, customers can filter products by this attribute on
+                                      the category page sidebar.
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </FormLabel>
                               </FormItem>
                             )}
                           />
@@ -447,7 +498,18 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                     onCheckedChange={(v) => field.onChange(v === true)}
                                   />
                                 </FormControl>
-                                <FormLabel className="mt-0!">Searchable</FormLabel>
+                                <FormLabel className="mt-0! flex items-center gap-1">
+                                  Searchable
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      If enabled, this attribute&apos;s values will be included in
+                                      the search index for full-text product search.
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </FormLabel>
                               </FormItem>
                             )}
                           />
@@ -464,7 +526,18 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                                     onCheckedChange={(v) => field.onChange(v === true)}
                                   />
                                 </FormControl>
-                                <FormLabel className="mt-0!">Enabled</FormLabel>
+                                <FormLabel className="mt-0! flex items-center gap-1">
+                                  Enabled
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      Disabled attributes are hidden from product forms and are not
+                                      displayed to customers.
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </FormLabel>
                               </FormItem>
                             )}
                           />
