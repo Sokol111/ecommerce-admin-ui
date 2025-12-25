@@ -26,8 +26,9 @@ import { createProductAction, updateProductAction } from '@/lib/actions';
 import { cn } from '@/lib/utils';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
 import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
-import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { ProductAttributeInput, ProductResponse } from '@sokol111/ecommerce-product-service-api';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -35,6 +36,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
+import ProductAttributes from './ProductAttributes';
+
+// Schema for product attribute
+const productAttributeSchema = z.object({
+  attributeId: z.string().uuid(),
+  value: z.string().optional(),
+  values: z.array(z.string()).optional(),
+  numericValue: z.number().optional(),
+});
 
 // Schema for create mode
 const productSchema = z
@@ -65,6 +75,7 @@ const productSchema = z
       .min(0, 'Quantity must be >= 0')
       .max(1_000_000, 'Quantity is too large'),
     enabled: z.boolean(),
+    attributes: z.array(productAttributeSchema).optional(),
   })
   .refine((data) => !(data.enabled && !data.imageId), {
     message: 'Enabled products must have an image',
@@ -88,9 +99,14 @@ export type ProductFormData = z.infer<typeof productSchema>;
 interface ProductEditProps {
   product?: ProductResponse;
   categories: CategoryResponse[];
+  availableAttributes: AttributeResponse[];
 }
 
-export default function ProductEdit({ product, categories }: ProductEditProps) {
+export default function ProductEdit({
+  product,
+  categories,
+  availableAttributes,
+}: ProductEditProps) {
   const router = useRouter();
   const isEditMode = !!product;
 
@@ -110,6 +126,13 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
           price: product.price,
           quantity: product.quantity,
           enabled: product.enabled,
+          attributes:
+            product.attributes?.map((attr) => ({
+              attributeId: attr.attributeId,
+              value: attr.value,
+              values: attr.values,
+              numericValue: attr.numericValue,
+            })) ?? [],
         }
       : {
           id: uuidv4(),
@@ -121,8 +144,14 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
           price: 0,
           quantity: 0,
           enabled: false,
+          attributes: [],
         },
   });
+
+  // Watch categoryId to get category attributes
+  const watchedCategoryId = form.watch('categoryId');
+  const selectedCategory = categories.find((c) => c.id === watchedCategoryId);
+  const categoryAttributes = selectedCategory?.attributes ?? [];
 
   // Create a narrowed subset of the form for image upload (only draftId & imageId needed)
   const imageUploadForm: DraftFormAdapter = {
@@ -140,6 +169,24 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
       // Normalize price to two decimals
       value.price = Number(value.price.toFixed(2));
 
+      // Prepare attributes for API - filter out empty values
+      const attributes: ProductAttributeInput[] | undefined =
+        value.attributes && value.attributes.length > 0
+          ? value.attributes
+              .filter(
+                (attr) =>
+                  attr.value !== undefined ||
+                  (attr.values && attr.values.length > 0) ||
+                  attr.numericValue !== undefined
+              )
+              .map((attr) => ({
+                attributeId: attr.attributeId,
+                value: attr.value,
+                values: attr.values && attr.values.length > 0 ? attr.values : undefined,
+                numericValue: attr.numericValue,
+              }))
+          : undefined;
+
       let result;
       if (isEditMode) {
         result = await updateProductAction({
@@ -152,6 +199,7 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
           enabled: value.enabled,
           imageId: value.imageId ?? undefined,
           categoryId: value.categoryId ?? undefined,
+          attributes,
         });
       } else {
         result = await createProductAction({
@@ -163,6 +211,7 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
           enabled: value.enabled,
           imageId: value.imageId ?? undefined,
           categoryId: value.categoryId ?? undefined,
+          attributes,
         });
       }
 
@@ -431,6 +480,16 @@ export default function ProductEdit({ product, categories }: ProductEditProps) {
             );
           }}
         />
+
+        {/* Product Attributes */}
+        <ProductAttributes
+          control={form.control}
+          watch={form.watch}
+          categoryAttributes={categoryAttributes}
+          availableAttributes={availableAttributes}
+          disabled={isBusy}
+        />
+
         <Button type="submit" disabled={isBusy}>
           {saving ? 'Saving...' : isEditMode ? 'Update' : 'Save'}
         </Button>
