@@ -1,26 +1,10 @@
 'use client';
 
+import { NumberField, SelectField, SwitchField, TextField } from '@/components/form-fields';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+import { Form, FormDescription } from '@/components/ui/form';
 import { createAttributeAction, updateAttributeAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,59 +13,21 @@ import {
   AttributeResponse,
   CreateAttributeBodyType,
 } from '@sokol111/ecommerce-attribute-service-api';
-import { GripVertical, Plus, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
-import { z } from 'zod';
+import {
+  ATTRIBUTE_TYPES,
+  AttributeFormData,
+  attributeSchema,
+  generateSlug,
+} from '../_schemas/attribute.schema';
+import { AttributeOptionRow } from './AttributeOptionRow';
 
-const ATTRIBUTE_TYPES = [
-  { value: 'single', label: 'Single (one choice)' },
-  { value: 'multiple', label: 'Multiple (many choices)' },
-  { value: 'range', label: 'Range (numeric)' },
-  { value: 'boolean', label: 'Boolean (yes/no)' },
-  { value: 'text', label: 'Text (free input)' },
-] as const;
-
-const attributeOptionSchema = z.object({
-  value: z.string().min(1, 'Value is required').max(100, 'Value must be at most 100 characters'),
-  slug: z
-    .string()
-    .min(1, 'Slug is required')
-    .max(50, 'Slug must be at most 50 characters')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only'),
-  colorCode: z
-    .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid color code')
-    .optional()
-    .or(z.literal('')),
-  sortOrder: z.number().int().min(0).max(10000).optional(),
-  enabled: z.boolean(),
-});
-
-const attributeSchema = z.object({
-  id: z.string().uuid(),
-  version: z.number().int().min(0),
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be at most 100 characters')
-    .transform((s) => s.trim()),
-  slug: z
-    .string()
-    .min(2, 'Slug must be at least 2 characters')
-    .max(50, 'Slug must be at most 50 characters')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only'),
-  type: z.enum(['single', 'multiple', 'range', 'boolean', 'text']),
-  unit: z.string().max(20, 'Unit must be at most 20 characters').optional(),
-  sortOrder: z.number().int().min(0).max(10000).optional(),
-  enabled: z.boolean(),
-  options: z.array(attributeOptionSchema).optional(),
-});
-
-export type AttributeFormData = z.infer<typeof attributeSchema>;
+export type { AttributeFormData } from '../_schemas/attribute.schema';
 
 interface AttributeEditProps {
   attribute?: AttributeResponse;
@@ -90,7 +36,6 @@ interface AttributeEditProps {
 export default function AttributeEdit({ attribute }: AttributeEditProps) {
   const router = useRouter();
   const isEditMode = !!attribute;
-
   const [saving, setSaving] = useState(false);
 
   const form = useForm<AttributeFormData>({
@@ -137,17 +82,10 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
   const showUnit = watchType === 'range';
   const showColorCode = watchType === 'single' || watchType === 'multiple';
 
-  // Auto-generate slug from name
   const handleNameChange = (value: string) => {
     form.setValue('name', value);
     if (!isEditMode || !form.getValues('slug')) {
-      const slug = value
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-');
-      form.setValue('slug', slug);
+      form.setValue('slug', generateSlug(value));
     }
   };
 
@@ -161,10 +99,11 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
     });
   };
 
+  const isBusy = saving;
+
   async function onSubmit(value: AttributeFormData) {
     setSaving(true);
     try {
-      // Prepare options - filter out empty colorCode
       const options: AttributeOptionInput[] | undefined = showOptions
         ? value.options?.map((opt) => ({
             value: opt.value,
@@ -175,31 +114,20 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           }))
         : undefined;
 
-      let result;
-      if (isEditMode) {
-        result = await updateAttributeAction({
-          id: value.id,
-          version: value.version,
-          name: value.name,
-          slug: value.slug,
-          type: value.type as CreateAttributeBodyType,
-          unit: showUnit ? value.unit || undefined : undefined,
-          sortOrder: value.sortOrder,
-          enabled: value.enabled,
-          options,
-        });
-      } else {
-        result = await createAttributeAction({
-          id: value.id,
-          name: value.name,
-          slug: value.slug,
-          type: value.type as CreateAttributeBodyType,
-          unit: showUnit ? value.unit || undefined : undefined,
-          sortOrder: value.sortOrder,
-          enabled: value.enabled,
-          options,
-        });
-      }
+      const payload = {
+        id: value.id,
+        name: value.name,
+        slug: value.slug,
+        type: value.type as CreateAttributeBodyType,
+        unit: showUnit ? value.unit || undefined : undefined,
+        sortOrder: value.sortOrder,
+        enabled: value.enabled,
+        options,
+      };
+
+      const result = isEditMode
+        ? await updateAttributeAction({ ...payload, version: value.version })
+        : await createAttributeAction(payload);
 
       if (!result.success) {
         const { error } = result;
@@ -208,9 +136,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
             form.setError(field as keyof AttributeFormData, { message });
           });
         }
-        toast.error(error.title, {
-          description: problemToDescription(error),
-        });
+        toast.error(error.title, { description: problemToDescription(error) });
         return;
       }
 
@@ -228,7 +154,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
     }
   }
 
-  const isBusy = saving;
+  const typeOptions = ATTRIBUTE_TYPES.map((t) => ({ value: t.value, label: t.label }));
 
   return (
     <Form {...form}>
@@ -243,145 +169,69 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
+              <TextField
                 control={form.control}
                 name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="e.g., Color, Size, Memory"
-                        disabled={isBusy}
-                        {...field}
-                        onChange={(e) => handleNameChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Name"
+                placeholder="e.g., Color, Size, Memory"
+                disabled={isBusy}
+                onChange={(e) => handleNameChange(e.target.value)}
               />
-
-              <FormField
-                control={form.control}
-                name="slug"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Slug</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="e.g., color, size, memory"
-                        disabled={isBusy}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>URL-friendly identifier</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <TextField
+                  control={form.control}
+                  name="slug"
+                  label="Slug"
+                  placeholder="e.g., color, size, memory"
+                  disabled={isBusy}
+                />
+                <FormDescription className="mt-1">URL-friendly identifier</FormDescription>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isBusy || isEditMode}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select attribute type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ATTRIBUTE_TYPES.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {isEditMode && (
-                      <FormDescription>Type cannot be changed after creation</FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+              <div>
+                <SelectField
+                  control={form.control}
+                  name="type"
+                  label="Type"
+                  options={typeOptions}
+                  placeholder="Select attribute type"
+                  disabled={isBusy || isEditMode}
+                />
+                {isEditMode && (
+                  <FormDescription className="mt-1">
+                    Type cannot be changed after creation
+                  </FormDescription>
                 )}
-              />
+              </div>
 
-              <FormField
+              <NumberField
                 control={form.control}
                 name="sortOrder"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sort Order</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        max={10000}
-                        disabled={isBusy}
-                        value={field.value ?? 0}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                        onBlur={field.onBlur}
-                        name={field.name}
-                        ref={field.ref}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Sort Order"
+                min={0}
+                max={10000}
+                disabled={isBusy}
               />
             </div>
 
             {showUnit && (
-              <FormField
-                control={form.control}
-                name="unit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Unit</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="e.g., GB, kg, cm"
-                        disabled={isBusy}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>Unit of measurement for range type</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <TextField
+                  control={form.control}
+                  name="unit"
+                  label="Unit"
+                  placeholder="e.g., GB, kg, cm"
+                  disabled={isBusy}
+                />
+                <FormDescription className="mt-1">
+                  Unit of measurement for range type
+                </FormDescription>
+              </div>
             )}
 
-            <div className="flex flex-wrap gap-6">
-              <FormField
-                control={form.control}
-                name="enabled"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-2">
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        disabled={isBusy}
-                        onCheckedChange={(v) => field.onChange(v === true)}
-                      />
-                    </FormControl>
-                    <FormLabel className="mt-0!">Enabled</FormLabel>
-                  </FormItem>
-                )}
-              />
-            </div>
+            <SwitchField control={form.control} name="enabled" label="Enabled" disabled={isBusy} />
           </CardContent>
         </Card>
 
@@ -414,121 +264,16 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
               ) : (
                 <div className="space-y-4">
                   {fields.map((field, index) => (
-                    <div
+                    <AttributeOptionRow
                       key={field.id}
-                      className="flex items-start gap-3 p-4 border rounded-lg bg-muted/30"
-                    >
-                      <div className="flex items-center pt-8 text-muted-foreground">
-                        <GripVertical className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <FormField
-                          control={form.control}
-                          name={`options.${index}.value`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Value</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  placeholder="e.g., Red"
-                                  disabled={isBusy}
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e);
-                                    // Auto-generate slug for option
-                                    const slug = e.target.value
-                                      .toLowerCase()
-                                      .trim()
-                                      .replace(/[^a-z0-9\s-]/g, '')
-                                      .replace(/\s+/g, '-');
-                                    form.setValue(`options.${index}.slug`, slug);
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name={`options.${index}.slug`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Slug</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  placeholder="e.g., red"
-                                  disabled={isBusy}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        {showColorCode && (
-                          <FormField
-                            control={form.control}
-                            name={`options.${index}.colorCode`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Color Code</FormLabel>
-                                <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input
-                                      type="text"
-                                      placeholder="#FF0000"
-                                      disabled={isBusy}
-                                      {...field}
-                                    />
-                                    {field.value && /^#[0-9A-Fa-f]{6}$/.test(field.value) && (
-                                      <div
-                                        className="w-9 h-9 rounded border shrink-0"
-                                        style={{ backgroundColor: field.value }}
-                                      />
-                                    )}
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        )}
-
-                        <div className="flex items-end gap-2">
-                          <FormField
-                            control={form.control}
-                            name={`options.${index}.enabled`}
-                            render={({ field }) => (
-                              <FormItem className="flex items-center gap-2 pb-2">
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    disabled={isBusy}
-                                    onCheckedChange={(v) => field.onChange(v === true)}
-                                  />
-                                </FormControl>
-                                <FormLabel className="mt-0!">Enabled</FormLabel>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="mt-8 text-destructive hover:text-destructive"
-                        onClick={() => remove(index)}
-                        disabled={isBusy}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      control={form.control}
+                      index={index}
+                      fieldId={field.id}
+                      showColorCode={showColorCode}
+                      disabled={isBusy}
+                      onRemove={() => remove(index)}
+                      setValue={form.setValue}
+                    />
                   ))}
                 </div>
               )}
