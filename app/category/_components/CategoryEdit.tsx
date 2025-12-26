@@ -81,9 +81,6 @@ export default function CategoryEdit({ category, availableAttributes }: Category
     });
   };
 
-  const getAttributeName = (attributeId: string) =>
-    availableAttributes.find((a) => a.id === attributeId)?.name ?? attributeId;
-
   const getAttributeType = (attributeId: string) =>
     availableAttributes.find((a) => a.id === attributeId)?.type;
 
@@ -209,7 +206,6 @@ export default function CategoryEdit({ category, availableAttributes }: Category
                       currentRole={watchedAttributes?.[index]?.role}
                       disabled={isBusy}
                       onRemove={() => remove(index)}
-                      getAttributeName={getAttributeName}
                       getAttributeType={getAttributeType}
                     />
                   );

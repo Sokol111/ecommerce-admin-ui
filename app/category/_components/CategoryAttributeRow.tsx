@@ -17,7 +17,6 @@ interface CategoryAttributeRowProps {
   currentRole?: string;
   disabled?: boolean;
   onRemove: () => void;
-  getAttributeName: (id: string) => string;
   getAttributeType: (id: string) => string | undefined;
 }
 
@@ -30,7 +29,6 @@ export function CategoryAttributeRow({
   currentRole,
   disabled,
   onRemove,
-  getAttributeName,
   getAttributeType,
 }: CategoryAttributeRowProps) {
   // Validate attribute type + role combination
