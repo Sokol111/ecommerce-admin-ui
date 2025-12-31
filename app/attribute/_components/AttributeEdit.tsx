@@ -52,7 +52,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           enabled: attribute.enabled,
           options:
             attribute.options?.map((opt) => ({
-              value: opt.value,
+              name: opt.name,
               slug: opt.slug,
               colorCode: opt.colorCode ?? '',
               sortOrder: opt.sortOrder,
@@ -91,7 +91,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
 
   const addOption = () => {
     append({
-      value: '',
+      name: '',
       slug: '',
       colorCode: '',
       sortOrder: fields.length,
@@ -106,7 +106,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
     try {
       const options: AttributeOptionInput[] | undefined = showOptions
         ? value.options?.map((opt) => ({
-            value: opt.value,
+            name: opt.name,
             slug: opt.slug,
             colorCode: opt.colorCode || undefined,
             sortOrder: opt.sortOrder,

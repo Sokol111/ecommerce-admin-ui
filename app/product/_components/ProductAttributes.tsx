@@ -13,8 +13,8 @@ import {
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
 import { CategoryAttribute } from '@sokol111/ecommerce-category-service-api';
 import { Control, useFieldArray, UseFormWatch } from 'react-hook-form';
-import { AttributeRow } from './AttributeRow';
 import { ProductFormData } from '../_schemas/product.schema';
+import { AttributeRow } from './AttributeRow';
 
 interface ProductAttributesProps {
   control: Control<ProductFormData>;
@@ -58,9 +58,11 @@ export default function ProductAttributes({
       .filter((ca) => ca.enabled && !currentAttrIds.has(ca.attributeId))
       .map((ca) => ({
         attributeId: ca.attributeId,
-        value: undefined,
-        values: undefined,
+        optionSlug: undefined,
+        optionSlugs: undefined,
         numericValue: undefined,
+        textValue: undefined,
+        booleanValue: undefined,
       }));
 
     replace([...keptAttrs, ...newAttrs]);
@@ -69,9 +71,11 @@ export default function ProductAttributes({
   const addAttribute = (attributeId: string) => {
     append({
       attributeId,
-      value: undefined,
-      values: undefined,
+      optionSlug: undefined,
+      optionSlugs: undefined,
       numericValue: undefined,
+      textValue: undefined,
+      booleanValue: undefined,
     });
   };
 

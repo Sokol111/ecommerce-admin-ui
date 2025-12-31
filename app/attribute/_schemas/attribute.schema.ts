@@ -9,7 +9,7 @@ export const ATTRIBUTE_TYPES = [
 ] as const;
 
 export const attributeOptionSchema = z.object({
-  value: z.string().min(1, 'Value is required').max(100, 'Value must be at most 100 characters'),
+  name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
   slug: z
     .string()
     .min(1, 'Slug is required')

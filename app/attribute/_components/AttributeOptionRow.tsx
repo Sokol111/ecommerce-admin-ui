@@ -39,10 +39,10 @@ export function AttributeOptionRow({
       <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
         <FormField
           control={control}
-          name={`options.${index}.value`}
+          name={`options.${index}.name`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Value</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
                   type="text"

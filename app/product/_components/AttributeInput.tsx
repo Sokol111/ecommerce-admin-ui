@@ -31,7 +31,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <SingleSelectInput
           control={control}
-          name={`${fieldName}.value` as Path<TFieldValues>}
+          name={`${fieldName}.optionSlug` as Path<TFieldValues>}
           options={attributeDef.options}
           disabled={disabled}
         />
@@ -41,7 +41,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <MultipleSelectInput
           control={control}
-          name={`${fieldName}.values` as Path<TFieldValues>}
+          name={`${fieldName}.optionSlugs` as Path<TFieldValues>}
           options={attributeDef.options}
           disabled={disabled}
         />
@@ -61,7 +61,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <BooleanInput
           control={control}
-          name={`${fieldName}.value` as Path<TFieldValues>}
+          name={`${fieldName}.booleanValue` as Path<TFieldValues>}
           disabled={disabled}
         />
       );
@@ -70,7 +70,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <TextInput
           control={control}
-          name={`${fieldName}.value` as Path<TFieldValues>}
+          name={`${fieldName}.textValue` as Path<TFieldValues>}
           disabled={disabled}
         />
       );
@@ -110,14 +110,14 @@ function SingleSelectInput<TFieldValues extends FieldValues>({
               {options
                 ?.filter((opt) => opt.enabled)
                 .map((opt) => (
-                  <SelectItem key={opt.slug} value={opt.value}>
+                  <SelectItem key={opt.slug} value={opt.slug}>
                     {opt.colorCode && (
                       <span
                         className="inline-block w-3 h-3 rounded-full mr-2"
                         style={{ backgroundColor: opt.colorCode }}
                       />
                     )}
-                    {opt.value}
+                    {opt.name}
                   </SelectItem>
                 ))}
             </SelectContent>
@@ -155,7 +155,7 @@ function MultipleSelectInput<TFieldValues extends FieldValues>({
               {options
                 ?.filter((opt) => opt.enabled)
                 .map((opt) => {
-                  const isChecked = selectedValues.includes(opt.value);
+                  const isChecked = selectedValues.includes(opt.slug);
                   return (
                     <label key={opt.slug} className="flex items-center gap-1.5 cursor-pointer">
                       <Checkbox
@@ -163,9 +163,9 @@ function MultipleSelectInput<TFieldValues extends FieldValues>({
                         disabled={disabled}
                         onCheckedChange={(checked) => {
                           if (checked) {
-                            field.onChange([...selectedValues, opt.value]);
+                            field.onChange([...selectedValues, opt.slug]);
                           } else {
-                            field.onChange(selectedValues.filter((v) => v !== opt.value));
+                            field.onChange(selectedValues.filter((v) => v !== opt.slug));
                           }
                         }}
                       />
@@ -175,7 +175,7 @@ function MultipleSelectInput<TFieldValues extends FieldValues>({
                           style={{ backgroundColor: opt.colorCode }}
                         />
                       )}
-                      <span className="text-sm">{opt.value}</span>
+                      <span className="text-sm">{opt.name}</span>
                     </label>
                   );
                 })}
@@ -249,7 +249,11 @@ function BooleanInput<TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="flex-1">
-          <Select onValueChange={field.onChange} value={field.value ?? ''} disabled={disabled}>
+          <Select
+            onValueChange={(val) => field.onChange(val === 'true')}
+            value={field.value === true ? 'true' : field.value === false ? 'false' : ''}
+            disabled={disabled}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select..." />
