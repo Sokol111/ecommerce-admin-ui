@@ -8,7 +8,6 @@ export const categoryAttributeSchema = z.object({
   sortOrder: z.number().int().min(0).max(10000),
   filterable: z.boolean(),
   searchable: z.boolean(),
-  enabled: z.boolean(),
 });
 
 // Schema for category form

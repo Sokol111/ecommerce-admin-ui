@@ -1,6 +1,6 @@
 'use client';
 
-import { NumberField, SelectField, SwitchField, TextField } from '@/components/form-fields';
+import { SelectField, SwitchField, TextField } from '@/components/form-fields';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,7 +48,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: attribute.slug,
           type: attribute.type,
           unit: attribute.unit ?? '',
-          sortOrder: attribute.sortOrder,
           enabled: attribute.enabled,
           options:
             attribute.options?.map((opt) => ({
@@ -66,7 +65,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
           slug: '',
           type: 'single',
           unit: '',
-          sortOrder: 0,
           enabled: true,
           options: [],
         },
@@ -120,7 +118,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
         slug: value.slug,
         type: value.type as CreateAttributeBodyType,
         unit: showUnit ? value.unit || undefined : undefined,
-        sortOrder: value.sortOrder,
         enabled: value.enabled,
         options,
       };
@@ -205,15 +202,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                   </FormDescription>
                 )}
               </div>
-
-              <NumberField
-                control={form.control}
-                name="sortOrder"
-                label="Sort Order"
-                min={0}
-                max={10000}
-                disabled={isBusy}
-              />
             </div>
 
             {showUnit && (

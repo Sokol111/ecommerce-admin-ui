@@ -39,7 +39,6 @@ export const attributeSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only'),
   type: z.enum(['single', 'multiple', 'range', 'boolean', 'text']),
   unit: z.string().max(20, 'Unit must be at most 20 characters').optional(),
-  sortOrder: z.number().int().min(0).max(10000).optional(),
   enabled: z.boolean(),
   options: z.array(attributeOptionSchema).optional(),
 });

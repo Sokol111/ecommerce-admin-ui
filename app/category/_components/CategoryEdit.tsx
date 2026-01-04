@@ -47,7 +47,6 @@ export default function CategoryEdit({ category, availableAttributes }: Category
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
               searchable: attr.searchable,
-              enabled: attr.enabled,
             })) ?? [],
         }
       : {
@@ -77,7 +76,6 @@ export default function CategoryEdit({ category, availableAttributes }: Category
       sortOrder: fields.length,
       filterable: false,
       searchable: false,
-      enabled: true,
     });
   };
 
@@ -98,7 +96,6 @@ export default function CategoryEdit({ category, availableAttributes }: Category
               sortOrder: attr.sortOrder,
               filterable: attr.filterable,
               searchable: attr.searchable,
-              enabled: attr.enabled,
             }))
           : undefined;
 

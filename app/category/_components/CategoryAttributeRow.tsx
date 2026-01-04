@@ -136,14 +136,6 @@ export function CategoryAttributeRow({
             tooltip="If enabled, this attribute's values will be included in the search index for full-text product search."
             disabled={disabled}
           />
-
-          <SwitchFieldWithTooltip
-            control={control}
-            name={`attributes.${index}.enabled`}
-            label="Enabled"
-            tooltip="Disabled attributes are hidden from product forms and are not displayed to customers."
-            disabled={disabled}
-          />
         </div>
       </div>
 
@@ -179,8 +171,7 @@ interface SwitchFieldWithTooltipProps {
   name:
     | `attributes.${number}.required`
     | `attributes.${number}.filterable`
-    | `attributes.${number}.searchable`
-    | `attributes.${number}.enabled`;
+    | `attributes.${number}.searchable`;
   label: string;
   tooltip: string;
   disabled?: boolean;

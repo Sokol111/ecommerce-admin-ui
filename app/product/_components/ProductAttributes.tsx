@@ -55,7 +55,7 @@ export default function ProductAttributes({
     );
 
     const newAttrs = categoryAttributes
-      .filter((ca) => ca.enabled && !currentAttrIds.has(ca.attributeId))
+      .filter((ca) => !currentAttrIds.has(ca.attributeId))
       .map((ca) => ({
         attributeId: ca.attributeId,
         optionSlugValue: undefined,
@@ -82,7 +82,7 @@ export default function ProductAttributes({
   const availableToAdd = (() => {
     const usedIds = new Set(watchedAttributes?.map((a) => a.attributeId) ?? []);
     return categoryAttributes
-      .filter((ca) => ca.enabled && !usedIds.has(ca.attributeId))
+      .filter((ca) => !usedIds.has(ca.attributeId))
       .map((ca) => getAttributeDef(ca.attributeId))
       .filter((a): a is AttributeResponse => !!a);
   })();
