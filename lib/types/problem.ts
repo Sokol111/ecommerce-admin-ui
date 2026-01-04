@@ -84,9 +84,41 @@ function errorsToFields(errors?: ValidationError[]): Record<string, string> | un
 }
 
 /**
+ * Log error details in development mode (server-side only)
+ */
+function logErrorInDev(context: string, error: unknown, extra?: Record<string, unknown>): void {
+  if (process.env.NODE_ENV !== 'development') return;
+
+  console.error(`\n[toProblem] ${context}`);
+  console.error('─'.repeat(50));
+
+  if (extra) {
+    Object.entries(extra).forEach(([key, value]) => {
+      console.error(`${key}:`, value);
+    });
+  }
+
+  if (axios.isAxiosError(error)) {
+    console.error('Request URL:', error.config?.url);
+    console.error('Request Method:', error.config?.method?.toUpperCase());
+    console.error('Request BaseURL:', error.config?.baseURL);
+    console.error('Request Data:', error.config?.data);
+    console.error('Response Status:', error.response?.status);
+    console.error('Response Data:', error.response?.data);
+    console.error('Error Code:', error.code);
+  }
+
+  console.error('Full Error:', error);
+  console.error('─'.repeat(50) + '\n');
+}
+
+/**
  * Convert any error into a Problem object.
  */
 export function toProblem(error: unknown, fallbackTitle: string = 'An error occurred'): Problem {
+  // Log once at the start in development mode
+  logErrorInDev(fallbackTitle, error);
+
   // Already a Problem
   if (isProblem(error)) {
     return {
@@ -101,6 +133,46 @@ export function toProblem(error: unknown, fallbackTitle: string = 'An error occu
     return {
       ...data,
       fields: data.fields ?? errorsToFields(data.errors),
+    };
+  }
+
+  // Axios error WITHOUT Problem in response (e.g., 500 from proxy, network issues)
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status ?? 0;
+    const method = error.config?.method?.toUpperCase() ?? 'UNKNOWN';
+    const url = error.config?.baseURL
+      ? `${error.config.baseURL}${error.config.url}`
+      : (error.config?.url ?? 'unknown');
+
+    // Network error (no response at all)
+    if (!error.response) {
+      return {
+        title: 'Network error',
+        status: 0,
+        detail: `Unable to connect to the server (${method} ${url}). ${error.message}`,
+      };
+    }
+
+    // Server returned non-Problem response
+    const responseData = error.response.data;
+    let detail = error.message;
+
+    // Try to extract useful info from response
+    if (typeof responseData === 'string' && responseData.length > 0 && responseData.length < 500) {
+      detail = responseData;
+    } else if (typeof responseData === 'object' && responseData !== null) {
+      const msg =
+        (responseData as Record<string, unknown>).message ??
+        (responseData as Record<string, unknown>).error;
+      if (typeof msg === 'string') {
+        detail = msg;
+      }
+    }
+
+    return {
+      title: fallbackTitle,
+      status,
+      detail: `${detail} [${method} ${url}]`,
     };
   }
 
