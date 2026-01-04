@@ -3,8 +3,8 @@ import { z } from 'zod';
 // Schema for product attribute
 export const productAttributeSchema = z.object({
   attributeId: z.string().uuid(),
-  optionSlug: z.string().optional(),
-  optionSlugs: z.array(z.string()).optional(),
+  optionSlugValue: z.string().optional(),
+  optionSlugValues: z.array(z.string()).optional(),
   numericValue: z.number().optional(),
   textValue: z.string().optional(),
   booleanValue: z.boolean().optional(),

@@ -58,8 +58,8 @@ export default function ProductAttributes({
       .filter((ca) => ca.enabled && !currentAttrIds.has(ca.attributeId))
       .map((ca) => ({
         attributeId: ca.attributeId,
-        optionSlug: undefined,
-        optionSlugs: undefined,
+        optionSlugValue: undefined,
+        optionSlugValues: undefined,
         numericValue: undefined,
         textValue: undefined,
         booleanValue: undefined,
@@ -71,8 +71,8 @@ export default function ProductAttributes({
   const addAttribute = (attributeId: string) => {
     append({
       attributeId,
-      optionSlug: undefined,
-      optionSlugs: undefined,
+      optionSlugValue: undefined,
+      optionSlugValues: undefined,
       numericValue: undefined,
       textValue: undefined,
       booleanValue: undefined,

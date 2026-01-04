@@ -31,7 +31,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <SingleSelectInput
           control={control}
-          name={`${fieldName}.optionSlug` as Path<TFieldValues>}
+          name={`${fieldName}.optionSlugValue` as Path<TFieldValues>}
           options={attributeDef.options}
           disabled={disabled}
         />
@@ -41,7 +41,7 @@ export function AttributeInput<TFieldValues extends FieldValues = FieldValues>({
       return (
         <MultipleSelectInput
           control={control}
-          name={`${fieldName}.optionSlugs` as Path<TFieldValues>}
+          name={`${fieldName}.optionSlugValues` as Path<TFieldValues>}
           options={attributeDef.options}
           disabled={disabled}
         />

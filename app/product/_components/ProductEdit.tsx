@@ -59,8 +59,8 @@ export default function ProductEdit({
           attributes:
             product.attributes?.map((attr) => ({
               attributeId: attr.attributeId,
-              optionSlug: attr.optionSlug,
-              optionSlugs: attr.optionSlugs,
+              optionSlugValue: attr.optionSlugValue,
+              optionSlugValues: attr.optionSlugValues,
               numericValue: attr.numericValue,
               textValue: attr.textValue,
               booleanValue: attr.booleanValue,
@@ -123,17 +123,19 @@ export default function ProductEdit({
           ? value.attributes
               .filter(
                 (attr) =>
-                  attr.optionSlug !== undefined ||
-                  (attr.optionSlugs && attr.optionSlugs.length > 0) ||
+                  attr.optionSlugValue !== undefined ||
+                  (attr.optionSlugValues && attr.optionSlugValues.length > 0) ||
                   attr.numericValue !== undefined ||
                   attr.textValue !== undefined ||
                   attr.booleanValue !== undefined
               )
               .map((attr) => ({
                 attributeId: attr.attributeId,
-                optionSlug: attr.optionSlug,
-                optionSlugs:
-                  attr.optionSlugs && attr.optionSlugs.length > 0 ? attr.optionSlugs : undefined,
+                optionSlugValue: attr.optionSlugValue,
+                optionSlugValues:
+                  attr.optionSlugValues && attr.optionSlugValues.length > 0
+                    ? attr.optionSlugValues
+                    : undefined,
                 numericValue: attr.numericValue,
                 textValue: attr.textValue,
                 booleanValue: attr.booleanValue,
