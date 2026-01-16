@@ -31,41 +31,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return false;
     }
 
-    try {
-      const result = await refreshTokenAction(tokens.refreshToken);
-      if (!result.success || !result.data) {
-        clearTokens();
-        setState({
-          user: null,
-          tokens: null,
-          isLoading: false,
-          isAuthenticated: false,
-        });
-        return false;
-      }
-
-      const newTokens: AuthTokens = {
-        accessToken: result.data.accessToken,
-        refreshToken: result.data.refreshToken,
-        expiresAt: Date.now() + result.data.expiresIn * 1000,
-      };
-
-      saveTokens(newTokens);
-
-      // Get updated profile
-      const profileResult = await getProfileAction(newTokens.accessToken);
-      if (profileResult.success && profileResult.data) {
-        setState({
-          user: profileResult.data,
-          tokens: newTokens,
-          isLoading: false,
-          isAuthenticated: true,
-        });
-        return true;
-      }
-
-      return true;
-    } catch {
+    const result = await refreshTokenAction(tokens.refreshToken);
+    if (!result.success) {
       clearTokens();
       setState({
         user: null,
@@ -75,14 +42,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
       return false;
     }
+
+    const newTokens: AuthTokens = {
+      accessToken: result.data.accessToken,
+      refreshToken: result.data.refreshToken,
+      expiresAt: Date.now() + result.data.expiresIn * 1000,
+    };
+
+    saveTokens(newTokens);
+
+    // Get updated profile
+    const profileResult = await getProfileAction(newTokens.accessToken);
+    if (profileResult.success) {
+      setState({
+        user: profileResult.data,
+        tokens: newTokens,
+        isLoading: false,
+        isAuthenticated: true,
+      });
+      return true;
+    }
+
+    return true;
   }, []);
 
   const login = useCallback(
     async (email: string, password: string): Promise<void> => {
       const result = await loginAction(email, password);
 
-      if (!result.success || !result.data) {
-        throw new Error(result.error || 'Login failed');
+      if (!result.success) {
+        throw new Error(result.error.detail || result.error.title);
       }
 
       const tokens: AuthTokens = {
