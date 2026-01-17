@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+// Реєструє глобальний axios interceptor для авторизації
+import '@/lib/client/request';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

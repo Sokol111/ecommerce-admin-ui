@@ -10,7 +10,6 @@ import {
 } from '@sokol111/ecommerce-image-service-api';
 
 const baseURL = process.env.IMAGE_API_URL;
-
 const api = getImageServiceAPI();
 
 export async function createPresign(request: PresignRequest): Promise<PresignResponse> {

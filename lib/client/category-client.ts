@@ -8,7 +8,6 @@ import {
 } from '@sokol111/ecommerce-category-service-api';
 
 const baseURL = process.env.CATEGORY_API_URL;
-
 const api = getCategoryAPI();
 
 export async function getCategoryById(categoryId: string): Promise<CategoryResponse> {

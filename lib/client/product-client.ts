@@ -8,7 +8,6 @@ import {
 } from '@sokol111/ecommerce-product-service-api';
 
 const baseURL = process.env.PRODUCT_API_URL;
-
 const api = getProductAPI();
 
 export async function getProductById(productId: string): Promise<ProductResponse> {

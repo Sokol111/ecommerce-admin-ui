@@ -8,6 +8,12 @@ import {
   AdminUserProfile,
   TokenRefreshResponse,
 } from '@sokol111/ecommerce-auth-service-api';
+import {
+  clearTokenCookies,
+  getAccessToken,
+  getRefreshToken,
+  saveTokensToCookies,
+} from './cookie-storage';
 
 export async function loginAction(
   email: string,
@@ -15,30 +21,49 @@ export async function loginAction(
 ): Promise<ActionResult<AdminAuthResponse>> {
   try {
     const response = await apiLogin({ email, password });
+
+    // Зберігаємо токени в cookies
+    await saveTokensToCookies(response);
+
     return { success: true, data: response };
   } catch (error) {
     return { success: false, error: toProblem(error, 'Invalid email or password') };
   }
 }
 
-export async function getProfileAction(
-  accessToken: string
-): Promise<ActionResult<AdminUserProfile>> {
+export async function getProfileAction(): Promise<ActionResult<AdminUserProfile>> {
   try {
-    const profile = await getProfile(accessToken);
+    const token = await getAccessToken();
+    if (!token) {
+      return { success: false, error: { title: 'Not authenticated', status: 401 } };
+    }
+    const profile = await getProfile(token);
     return { success: true, data: profile };
   } catch (error) {
     return { success: false, error: toProblem(error, 'Failed to get profile') };
   }
 }
 
-export async function refreshTokenAction(
-  refreshTokenValue: string
-): Promise<ActionResult<TokenRefreshResponse>> {
+export async function refreshTokenAction(): Promise<ActionResult<TokenRefreshResponse>> {
   try {
-    const response = await refreshToken(refreshTokenValue);
+    const token = await getRefreshToken();
+    if (!token) {
+      return { success: false, error: { title: 'No refresh token', status: 401 } };
+    }
+
+    const response = await refreshToken(token);
+
+    // Оновлюємо токени в cookies
+    await saveTokensToCookies(response);
+
     return { success: true, data: response };
   } catch (error) {
+    // Якщо refresh не вдався - очищаємо cookies
+    await clearTokenCookies();
     return { success: false, error: toProblem(error, 'Failed to refresh token') };
   }
+}
+
+export async function logoutAction(): Promise<void> {
+  await clearTokenCookies();
 }
