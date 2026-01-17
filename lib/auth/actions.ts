@@ -3,11 +3,7 @@
 import { login as apiLogin, getProfile, refreshToken } from '@/lib/client/auth-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
-import {
-  AdminAuthResponse,
-  AdminUserProfile,
-  TokenRefreshResponse,
-} from '@sokol111/ecommerce-auth-service-api';
+import { AdminAuthResponse, AdminUserProfile } from '@sokol111/ecommerce-auth-service-api';
 import {
   clearTokenCookies,
   getAccessToken,
@@ -44,21 +40,18 @@ export async function getProfileAction(): Promise<ActionResult<AdminUserProfile>
   }
 }
 
-export async function refreshTokenAction(): Promise<ActionResult<TokenRefreshResponse>> {
+export async function refreshTokenAction(): Promise<ActionResult<{ expiresIn: number }>> {
   try {
     const token = await getRefreshToken();
     if (!token) {
       return { success: false, error: { title: 'No refresh token', status: 401 } };
     }
 
-    const response = await refreshToken(token);
+    const tokens = await refreshToken(token);
+    await saveTokensToCookies(tokens);
 
-    // Оновлюємо токени в cookies
-    await saveTokensToCookies(response);
-
-    return { success: true, data: response };
+    return { success: true, data: { expiresIn: tokens.expiresIn } };
   } catch (error) {
-    // Якщо refresh не вдався - очищаємо cookies
     await clearTokenCookies();
     return { success: false, error: toProblem(error, 'Failed to refresh token') };
   }
