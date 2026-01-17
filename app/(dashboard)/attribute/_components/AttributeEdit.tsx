@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormDescription } from '@/components/ui/form';
-import { createAttributeAction, updateAttributeAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -25,6 +24,7 @@ import {
   attributeSchema,
   generateSlug,
 } from '../_schemas/attribute.schema';
+import { createAttributeAction, updateAttributeAction } from '../actions';
 import { AttributeOptionRow } from './AttributeOptionRow';
 
 export type { AttributeFormData } from '../_schemas/attribute.schema';

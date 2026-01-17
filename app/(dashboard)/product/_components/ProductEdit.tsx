@@ -12,7 +12,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
-import { createProductAction, updateProductAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
@@ -24,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { ProductFormData, productSchema } from '../_schemas/product.schema';
+import { createProductAction, updateProductAction } from '../actions';
 import ProductAttributes from './ProductAttributes';
 
 export type { ProductFormData } from '../_schemas/product.schema';

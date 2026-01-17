@@ -20,7 +20,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteAttributeAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
 import { ColumnDef } from '@tanstack/react-table';
@@ -29,6 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { deleteAttributeAction } from '../actions';
 
 const typeLabels: Record<string, string> = {
   single: 'Single',

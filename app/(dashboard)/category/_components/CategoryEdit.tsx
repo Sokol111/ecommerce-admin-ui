@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { createCategoryAction, updateCategoryAction } from '@/lib/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
@@ -17,6 +16,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { CategoryFormData, categorySchema } from '../_schemas/category.schema';
+import { createCategoryAction, updateCategoryAction } from '../actions';
 import { CategoryAttributeRow } from './CategoryAttributeRow';
 
 export type { CategoryFormData } from '../_schemas/category.schema';

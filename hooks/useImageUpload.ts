@@ -1,5 +1,5 @@
-import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/actions';
 import { putToS3 } from '@/lib/client/s3-client';
+import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/image/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
