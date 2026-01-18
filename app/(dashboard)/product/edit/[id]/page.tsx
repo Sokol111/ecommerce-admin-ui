@@ -1,6 +1,4 @@
-import { getAttributeList } from '@/lib/client/attribute-client';
-import { getListCategories } from '@/lib/client/category-client';
-import { getProductById } from '@/lib/client/product-client';
+import { getAttributeList, getCategoryList, getProductById } from '@/lib/client/catalog-client';
 import ProductEdit from '../../_components/ProductEdit';
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -8,7 +6,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   const [product, categoriesResponse, attributesResponse] = await Promise.all([
     getProductById(id),
-    getListCategories({ size: 100 }),
+    getCategoryList({ size: 100 }),
     getAttributeList({ size: 100, enabled: true }),
   ]);
 

@@ -1,11 +1,14 @@
 'use server';
 
-import { createCategory, updateCategory } from '@/lib/client/category-client';
+import { createCategory, updateCategory } from '@/lib/client/catalog-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
-import { CreateCategoryBody, UpdateCategoryBody } from '@sokol111/ecommerce-category-service-api';
+import {
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+} from '@sokol111/ecommerce-catalog-service-api';
 
-export async function updateCategoryAction(category: UpdateCategoryBody): Promise<ActionResult> {
+export async function updateCategoryAction(category: UpdateCategoryRequest): Promise<ActionResult> {
   try {
     await updateCategory(category);
     return { success: true, data: undefined };
@@ -14,7 +17,7 @@ export async function updateCategoryAction(category: UpdateCategoryBody): Promis
   }
 }
 
-export async function createCategoryAction(category: CreateCategoryBody): Promise<ActionResult> {
+export async function createCategoryAction(category: CreateCategoryRequest): Promise<ActionResult> {
   try {
     await createCategory(category);
     return { success: true, data: undefined };

@@ -3,7 +3,7 @@
 import { NumberField, SelectField, SwitchField } from '@/components/form-fields';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
+import { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { Info, Trash2 } from 'lucide-react';
 import { Control } from 'react-hook-form';
 import { CategoryFormData } from '../_schemas/category.schema';

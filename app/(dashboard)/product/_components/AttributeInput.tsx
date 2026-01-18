@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
+import { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
 interface AttributeInputProps<TFieldValues extends FieldValues = FieldValues> {

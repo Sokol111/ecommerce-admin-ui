@@ -1,6 +1,6 @@
 import { AppPagination } from '@/components/common/AppPagination';
 import { DataTable } from '@/components/ui/data-table';
-import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { ProductResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { productColumns } from './product-columns';
 
 interface ProductListProps {

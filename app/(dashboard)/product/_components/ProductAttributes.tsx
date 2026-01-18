@@ -10,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
-import { CategoryAttribute } from '@sokol111/ecommerce-category-service-api';
+import { AttributeResponse, CategoryAttribute } from '@sokol111/ecommerce-catalog-service-api';
 import { Control, useFieldArray, UseFormWatch } from 'react-hook-form';
 import { ProductFormData } from '../_schemas/product.schema';
 import { AttributeRow } from './AttributeRow';

@@ -5,17 +5,19 @@ import {
   deleteAttribute,
   getAttributeList,
   updateAttribute,
-} from '@/lib/client/attribute-client';
+} from '@/lib/client/catalog-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
 import {
   AttributeListResponse,
-  CreateAttributeBody,
+  CreateAttributeRequest,
   GetAttributeListParams,
-  UpdateAttributeBody,
-} from '@sokol111/ecommerce-attribute-service-api';
+  UpdateAttributeRequest,
+} from '@sokol111/ecommerce-catalog-service-api';
 
-export async function createAttributeAction(attribute: CreateAttributeBody): Promise<ActionResult> {
+export async function createAttributeAction(
+  attribute: CreateAttributeRequest
+): Promise<ActionResult> {
   try {
     await createAttribute(attribute);
     return { success: true, data: undefined };
@@ -24,7 +26,9 @@ export async function createAttributeAction(attribute: CreateAttributeBody): Pro
   }
 }
 
-export async function updateAttributeAction(attribute: UpdateAttributeBody): Promise<ActionResult> {
+export async function updateAttributeAction(
+  attribute: UpdateAttributeRequest
+): Promise<ActionResult> {
   try {
     await updateAttribute(attribute);
     return { success: true, data: undefined };

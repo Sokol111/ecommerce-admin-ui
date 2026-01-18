@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import { ProductResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';

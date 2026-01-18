@@ -1,4 +1,4 @@
-import { getAttributeById } from '@/lib/client/attribute-client';
+import { getAttributeById } from '@/lib/client/catalog-client';
 import AttributeEdit from '../../_components/AttributeEdit';
 
 export default async function EditAttributePage({ params }: { params: Promise<{ id: string }> }) {

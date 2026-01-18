@@ -1,6 +1,6 @@
 import { AppPagination } from '@/components/common/AppPagination';
 import { DataTable } from '@/components/ui/data-table';
-import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
+import { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { categoryColumns } from './category-columns';
 
 interface CategoryListProps {

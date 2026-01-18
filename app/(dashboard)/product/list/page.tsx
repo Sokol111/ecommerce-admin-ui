@@ -1,12 +1,16 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getListProducts } from '@/lib/client/product-client';
-import { GetListOrder, GetListParams, GetListSort } from '@sokol111/ecommerce-product-service-api';
+import { getProductList } from '@/lib/client/catalog-client';
+import {
+  GetProductListOrder,
+  GetProductListParams,
+  GetProductListSort,
+} from '@sokol111/ecommerce-catalog-service-api';
 import Link from 'next/link';
 import ProductList from '../_components/ProductList';
 
 type SearchParamsType = {
-  [K in keyof GetListParams]?: string;
+  [K in keyof GetProductListParams]?: string;
 };
 
 interface ProductListPageProps {
@@ -18,11 +22,11 @@ export default async function ProductListPage({ searchParams }: ProductListPageP
 
   const page = params.page ? parseInt(params.page, 10) : undefined;
   const size = params.size ? parseInt(params.size, 10) : undefined;
-  const sort = params.sort as GetListSort | undefined;
-  const order = params.order as GetListOrder | undefined;
+  const sort = params.sort as GetProductListSort | undefined;
+  const order = params.order as GetProductListOrder | undefined;
   const enabled = params.enabled === 'true' ? true : params.enabled === 'false' ? false : undefined;
 
-  const productList = await getListProducts({ page, size, sort, order, enabled });
+  const productList = await getProductList({ page, size, sort, order, enabled });
 
   return (
     <div>

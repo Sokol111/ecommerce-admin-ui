@@ -1,11 +1,14 @@
 'use server';
 
-import { createProduct, updateProduct } from '@/lib/client/product-client';
+import { createProduct, updateProduct } from '@/lib/client/catalog-client';
 import { ActionResult } from '@/lib/types/action-result';
 import { toProblem } from '@/lib/types/problem';
-import { CreateProductBody, UpdateProductBody } from '@sokol111/ecommerce-product-service-api';
+import {
+  CreateProductRequest,
+  UpdateProductRequest,
+} from '@sokol111/ecommerce-catalog-service-api';
 
-export async function updateProductAction(product: UpdateProductBody): Promise<ActionResult> {
+export async function updateProductAction(product: UpdateProductRequest): Promise<ActionResult> {
   try {
     await updateProduct(product);
     return { success: true, data: undefined };
@@ -14,7 +17,7 @@ export async function updateProductAction(product: UpdateProductBody): Promise<A
   }
 }
 
-export async function createProductAction(product: CreateProductBody): Promise<ActionResult> {
+export async function createProductAction(product: CreateProductRequest): Promise<ActionResult> {
   try {
     await createProduct(product);
     return { success: true, data: undefined };

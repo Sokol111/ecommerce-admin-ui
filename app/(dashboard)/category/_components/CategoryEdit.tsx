@@ -7,8 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
-import { CategoryAttributeInput, CategoryResponse } from '@sokol111/ecommerce-category-service-api';
+import {
+  AttributeResponse,
+  CategoryAttributeInput,
+  CategoryResponse,
+} from '@sokol111/ecommerce-catalog-service-api';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

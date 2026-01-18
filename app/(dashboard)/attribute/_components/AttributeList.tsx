@@ -1,6 +1,6 @@
 import { AppPagination } from '@/components/common/AppPagination';
 import { DataTable } from '@/components/ui/data-table';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
+import { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { attributeColumns } from './attribute-columns';
 
 interface AttributeListProps {

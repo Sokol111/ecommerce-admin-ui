@@ -1,12 +1,16 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getListCategories } from '@/lib/client/category-client';
-import { GetListOrder, GetListParams, GetListSort } from '@sokol111/ecommerce-category-service-api';
+import { getCategoryList } from '@/lib/client/catalog-client';
+import {
+  GetCategoryListOrder,
+  GetCategoryListParams,
+  GetCategoryListSort,
+} from '@sokol111/ecommerce-catalog-service-api';
 import Link from 'next/link';
 import CategoryList from '../_components/CategoryList';
 
 type SearchParamsType = {
-  [K in keyof GetListParams]?: string;
+  [K in keyof GetCategoryListParams]?: string;
 };
 
 interface CategoryListPageProps {
@@ -18,11 +22,11 @@ export default async function CategoryListPage({ searchParams }: CategoryListPag
 
   const page = params.page ? parseInt(params.page, 10) : undefined;
   const size = params.size ? parseInt(params.size, 10) : undefined;
-  const sort = params.sort as GetListSort | undefined;
-  const order = params.order as GetListOrder | undefined;
+  const sort = params.sort as GetCategoryListSort | undefined;
+  const order = params.order as GetCategoryListOrder | undefined;
   const enabled = params.enabled === 'true' ? true : params.enabled === 'false' ? false : undefined;
 
-  const categoryList = await getListCategories({ page, size, sort, order, enabled });
+  const categoryList = await getCategoryList({ page, size, sort, order, enabled });
 
   return (
     <div>

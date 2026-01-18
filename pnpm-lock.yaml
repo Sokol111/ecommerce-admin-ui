@@ -5,11 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@sokol111/ecommerce-attribute-service-api': file:../ecommerce-attribute-service-api/gen/typescript
   '@sokol111/ecommerce-auth-service-api': file:../ecommerce-auth-service-api/gen/typescript
-  '@sokol111/ecommerce-category-service-api': file:../ecommerce-category-service-api/gen/typescript
   '@sokol111/ecommerce-image-service-api': file:../ecommerce-image-service-api/gen/typescript
-  '@sokol111/ecommerce-product-service-api': file:../ecommerce-product-service-api/gen/typescript
+  '@sokol111/ecommerce-catalog-service-api': file:../ecommerce-catalog-service-api/gen/typescript
 
 importers:
 
@@ -54,21 +52,15 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.7
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      '@sokol111/ecommerce-attribute-service-api':
-        specifier: file:../ecommerce-attribute-service-api/gen/typescript
-        version: file:../ecommerce-attribute-service-api/gen/typescript
       '@sokol111/ecommerce-auth-service-api':
         specifier: file:../ecommerce-auth-service-api/gen/typescript
         version: file:../ecommerce-auth-service-api/gen/typescript
-      '@sokol111/ecommerce-category-service-api':
-        specifier: file:../ecommerce-category-service-api/gen/typescript
-        version: file:../ecommerce-category-service-api/gen/typescript
+      '@sokol111/ecommerce-catalog-service-api':
+        specifier: file:../ecommerce-catalog-service-api/gen/typescript
+        version: file:../ecommerce-catalog-service-api/gen/typescript
       '@sokol111/ecommerce-image-service-api':
         specifier: file:../ecommerce-image-service-api/gen/typescript
         version: file:../ecommerce-image-service-api/gen/typescript
-      '@sokol111/ecommerce-product-service-api':
-        specifier: file:../ecommerce-product-service-api/gen/typescript
-        version: file:../ecommerce-product-service-api/gen/typescript
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -907,20 +899,14 @@ packages:
   '@rushstack/eslint-patch@1.15.0':
     resolution: {integrity: sha512-ojSshQPKwVvSMR8yT2L/QtUkV5SXi/IfDiJ4/8d6UbTPjiHVmxZzUAzGD8Tzks1b9+qQkZa0isUOvYObedITaw==}
 
-  '@sokol111/ecommerce-attribute-service-api@file:../ecommerce-attribute-service-api/gen/typescript':
-    resolution: {directory: ../ecommerce-attribute-service-api/gen/typescript, type: directory}
-
   '@sokol111/ecommerce-auth-service-api@file:../ecommerce-auth-service-api/gen/typescript':
     resolution: {directory: ../ecommerce-auth-service-api/gen/typescript, type: directory}
 
-  '@sokol111/ecommerce-category-service-api@file:../ecommerce-category-service-api/gen/typescript':
-    resolution: {directory: ../ecommerce-category-service-api/gen/typescript, type: directory}
+  '@sokol111/ecommerce-catalog-service-api@file:../ecommerce-catalog-service-api/gen/typescript':
+    resolution: {directory: ../ecommerce-catalog-service-api/gen/typescript, type: directory}
 
   '@sokol111/ecommerce-image-service-api@file:../ecommerce-image-service-api/gen/typescript':
     resolution: {directory: ../ecommerce-image-service-api/gen/typescript, type: directory}
-
-  '@sokol111/ecommerce-product-service-api@file:../ecommerce-product-service-api/gen/typescript':
-    resolution: {directory: ../ecommerce-product-service-api/gen/typescript, type: directory}
 
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
@@ -3228,31 +3214,19 @@ snapshots:
 
   '@rushstack/eslint-patch@1.15.0': {}
 
-  '@sokol111/ecommerce-attribute-service-api@file:../ecommerce-attribute-service-api/gen/typescript':
-    dependencies:
-      axios: 1.13.2
-    transitivePeerDependencies:
-      - debug
-
   '@sokol111/ecommerce-auth-service-api@file:../ecommerce-auth-service-api/gen/typescript':
     dependencies:
       axios: 1.13.2
     transitivePeerDependencies:
       - debug
 
-  '@sokol111/ecommerce-category-service-api@file:../ecommerce-category-service-api/gen/typescript':
+  '@sokol111/ecommerce-catalog-service-api@file:../ecommerce-catalog-service-api/gen/typescript':
     dependencies:
       axios: 1.13.2
     transitivePeerDependencies:
       - debug
 
   '@sokol111/ecommerce-image-service-api@file:../ecommerce-image-service-api/gen/typescript':
-    dependencies:
-      axios: 1.13.2
-    transitivePeerDependencies:
-      - debug
-
-  '@sokol111/ecommerce-product-service-api@file:../ecommerce-product-service-api/gen/typescript':
     dependencies:
       axios: 1.13.2
     transitivePeerDependencies:

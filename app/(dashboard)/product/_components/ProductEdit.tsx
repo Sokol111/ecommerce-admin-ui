@@ -14,9 +14,12 @@ import { Form } from '@/components/ui/form';
 import { DraftFormAdapter, useImageUpload } from '@/hooks/useImageUpload';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
-import { CategoryResponse } from '@sokol111/ecommerce-category-service-api';
-import { ProductAttributeInput, ProductResponse } from '@sokol111/ecommerce-product-service-api';
+import {
+  AttributeResponse,
+  CategoryResponse,
+  ProductAttributeInput,
+  ProductResponse,
+} from '@sokol111/ecommerce-catalog-service-api';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';

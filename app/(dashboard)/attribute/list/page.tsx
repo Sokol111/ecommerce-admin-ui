@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getAttributeList } from '@/lib/client/attribute-client';
+import { getAttributeList } from '@/lib/client/catalog-client';
 import {
   GetAttributeListOrder,
   GetAttributeListParams,
   GetAttributeListSort,
   GetAttributeListType,
-} from '@sokol111/ecommerce-attribute-service-api';
+} from '@sokol111/ecommerce-catalog-service-api';
 import Link from 'next/link';
 import AttributeList from '../_components/AttributeList';
 

@@ -1,5 +1,4 @@
-import { getAttributeList } from '@/lib/client/attribute-client';
-import { getCategoryById } from '@/lib/client/category-client';
+import { getAttributeList, getCategoryById } from '@/lib/client/catalog-client';
 import CategoryEdit from '../../_components/CategoryEdit';
 
 async function getAllAttributes() {

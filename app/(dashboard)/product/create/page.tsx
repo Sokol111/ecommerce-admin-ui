@@ -1,10 +1,9 @@
-import { getAttributeList } from '@/lib/client/attribute-client';
-import { getListCategories } from '@/lib/client/category-client';
+import { getAttributeList, getCategoryList } from '@/lib/client/catalog-client';
 import ProductEdit from '../_components/ProductEdit';
 
 export default async function CreateProductPage() {
   const [categoriesResponse, attributesResponse] = await Promise.all([
-    getListCategories({ size: 100 }),
+    getCategoryList({ size: 100 }),
     getAttributeList({ size: 100, enabled: true }),
   ]);
 

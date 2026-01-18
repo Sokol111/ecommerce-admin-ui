@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
-import { AttributeResponse } from '@sokol111/ecommerce-attribute-service-api';
+import { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';

@@ -10,8 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AttributeOptionInput,
   AttributeResponse,
-  CreateAttributeBodyType,
-} from '@sokol111/ecommerce-attribute-service-api';
+  CreateAttributeRequestType,
+} from '@sokol111/ecommerce-catalog-service-api';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -116,7 +116,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
         id: value.id,
         name: value.name,
         slug: value.slug,
-        type: value.type as CreateAttributeBodyType,
+        type: value.type as CreateAttributeRequestType,
         unit: showUnit ? value.unit || undefined : undefined,
         enabled: value.enabled,
         options,
