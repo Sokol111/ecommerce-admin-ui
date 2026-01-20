@@ -2,7 +2,13 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-import { getProfileAction, loginAction, logoutAction, refreshTokenAction } from './actions';
+import {
+  getProfileAction,
+  getTokenExpiresInAction,
+  loginAction,
+  logoutAction,
+  refreshTokenAction,
+} from './actions';
 import { AuthContextType, AuthState } from './types';
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -26,9 +32,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [tokenExpiresIn, setTokenExpiresIn] = useState<number | null>(null);
 
   const refreshSession = useCallback(async (): Promise<boolean> => {
-    // Токени зберігаються в httpOnly cookies, тому ми не маємо до них прямого доступу
-    // Але можемо спробувати оновити сесію через server action
-    // Якщо refresh token є в cookies, сервер його використає
     const result = await refreshTokenAction();
     if (!result.success) {
       setState({
@@ -42,19 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Зберігаємо expiresIn для планування наступного рефрешу
     setTokenExpiresIn(result.data.expiresIn);
-
-    // Отримати оновлений профіль
-    const profileResult = await getProfileAction();
-    if (profileResult.success) {
-      setState({
-        user: profileResult.data,
-        isLoading: false,
-        isAuthenticated: true,
-      });
-      return true;
-    }
-
-    return false;
+    return true;
   }, []);
 
   const login = useCallback(
@@ -103,6 +94,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           isLoading: false,
           isAuthenticated: true,
         });
+
+        // Отримуємо expiresIn з cookie для планування auto-refresh
+        const expiresIn = await getTokenExpiresInAction();
+        if (expiresIn) {
+          setTokenExpiresIn(expiresIn);
+        }
       } else {
         // Спробуємо оновити токен
         const refreshed = await refreshSession();
@@ -130,11 +127,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Auto-refresh token - на основі expiresIn від сервера
   useEffect(() => {
-    if (!state.isAuthenticated || !tokenExpiresIn) return;
+    if (!state.isAuthenticated || tokenExpiresIn === null) return;
 
     // Оновлюємо токен за 60 секунд до закінчення терміну дії
     const refreshBeforeExpiry = 60; // секунд
-    const refreshInterval = Math.max((tokenExpiresIn - refreshBeforeExpiry) * 1000, 60 * 1000);
+
+    // Якщо токен вже expired або скоро expire — оновлюємо одразу
+    if (tokenExpiresIn <= refreshBeforeExpiry) {
+      refreshSession();
+      return;
+    }
+
+    const refreshInterval = (tokenExpiresIn - refreshBeforeExpiry) * 1000;
 
     const timeoutId = setTimeout(() => {
       refreshSession();

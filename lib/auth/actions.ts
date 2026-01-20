@@ -7,6 +7,7 @@ import { AdminAuthResponse, AdminUserProfile } from '@sokol111/ecommerce-auth-se
 import {
   clearTokenCookies,
   getAccessToken,
+  getAccessTokenExpiresAt,
   getRefreshToken,
   saveTokensToCookies,
 } from './cookie-storage';
@@ -55,6 +56,15 @@ export async function refreshTokenAction(): Promise<ActionResult<{ expiresIn: nu
     await clearTokenCookies();
     return { success: false, error: toProblem(error, 'Failed to refresh token') };
   }
+}
+
+export async function getTokenExpiresInAction(): Promise<number | null> {
+  const expiresAt = await getAccessTokenExpiresAt();
+  if (!expiresAt) return null;
+
+  // Повертаємо скільки секунд залишилось до закінчення
+  const expiresInMs = expiresAt - Date.now();
+  return expiresInMs > 0 ? Math.floor(expiresInMs / 1000) : null;
 }
 
 export async function logoutAction(): Promise<void> {

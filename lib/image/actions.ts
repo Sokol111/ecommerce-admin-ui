@@ -59,7 +59,7 @@ export async function presignImageAction({
       contentType: vContentType,
     } = PresignImageSchema.parse({ ownerId, filename, size, contentType });
     const data = await createPresign({
-      ownerType: 'productDraft',
+      ownerType: 'draft',
       ownerId: vOwnerId,
       filename: vFilename,
       contentType: vContentType,
