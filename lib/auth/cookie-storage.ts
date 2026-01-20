@@ -2,19 +2,11 @@
 
 import { TokenRefreshResponse } from '@sokol111/ecommerce-auth-service-api';
 import { cookies } from 'next/headers';
-
-const ACCESS_TOKEN_KEY = 'auth_access_token';
-const REFRESH_TOKEN_KEY = 'auth_refresh_token';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, getCookieOptions } from './constants';
 
 export async function saveTokensToCookies(tokens: TokenRefreshResponse): Promise<void> {
   const cookieStore = await cookies();
-
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    path: '/',
-  };
+  const cookieOptions = getCookieOptions();
 
   // Access token - час життя з API
   cookieStore.set(ACCESS_TOKEN_KEY, tokens.accessToken, {

@@ -1,9 +1,10 @@
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, getCookieOptions } from '@/lib/auth/constants';
+import { refreshToken } from '@/lib/client/auth-client';
 import { NextRequest, NextResponse } from 'next/server';
 
 const PUBLIC_PATHS = ['/login'];
-const ACCESS_TOKEN_KEY = 'auth_access_token';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Пропускаємо статичні файли та API routes
@@ -13,17 +14,45 @@ export function middleware(request: NextRequest) {
 
   const isPublicPath = PUBLIC_PATHS.some((path) => pathname === path);
   const accessToken = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
+  const refreshTokenValue = request.cookies.get(REFRESH_TOKEN_KEY)?.value;
 
-  // Якщо немає токена і не публічний шлях - редірект на логін
+  // Якщо є access token — пропускаємо
+  if (accessToken) {
+    // Якщо на сторінці логіна — редірект на головну
+    if (pathname === '/login') {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Якщо немає access token, але є refresh token — пробуємо оновити
+  if (!accessToken && refreshTokenValue && !isPublicPath) {
+    try {
+      const tokens = await refreshToken(refreshTokenValue);
+      const response = NextResponse.next();
+      const cookieOptions = getCookieOptions();
+
+      response.cookies.set(ACCESS_TOKEN_KEY, tokens.accessToken, {
+        ...cookieOptions,
+        maxAge: tokens.expiresIn,
+      });
+
+      response.cookies.set(REFRESH_TOKEN_KEY, tokens.refreshToken, {
+        ...cookieOptions,
+        maxAge: tokens.refreshExpiresIn,
+      });
+
+      return response;
+    } catch {
+      // Refresh не вдався — перенаправляємо на логін нижче
+    }
+  }
+
+  // Якщо немає токенів і не публічний шлях — редірект на логін
   if (!accessToken && !isPublicPath) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
-  }
-
-  // Якщо є токен і на сторінці логіна - редірект на головну
-  if (accessToken && pathname === '/login') {
-    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return NextResponse.next();
