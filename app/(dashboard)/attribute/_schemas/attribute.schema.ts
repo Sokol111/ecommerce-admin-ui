@@ -21,7 +21,6 @@ export const attributeOptionSchema = z.object({
     .optional()
     .or(z.literal('')),
   sortOrder: z.number().int().min(0).max(10000).optional(),
-  enabled: z.boolean(),
 });
 
 export const attributeSchema = z.object({

@@ -55,7 +55,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
               slug: opt.slug,
               colorCode: opt.colorCode ?? '',
               sortOrder: opt.sortOrder,
-              enabled: opt.enabled,
             })) ?? [],
         }
       : {
@@ -93,7 +92,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
       slug: '',
       colorCode: '',
       sortOrder: fields.length,
-      enabled: true,
     });
   };
 
@@ -108,7 +106,6 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
             slug: opt.slug,
             colorCode: opt.colorCode || undefined,
             sortOrder: opt.sortOrder,
-            enabled: opt.enabled,
           }))
         : undefined;
 

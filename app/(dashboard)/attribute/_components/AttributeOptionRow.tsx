@@ -1,6 +1,6 @@
 'use client';
 
-import { SwitchField, TextField } from '@/components/form-fields';
+import { TextField } from '@/components/form-fields';
 import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -91,16 +91,6 @@ export function AttributeOptionRow({
             )}
           />
         )}
-
-        <div className="flex items-end gap-2">
-          <SwitchField
-            control={control}
-            name={`options.${index}.enabled`}
-            label="Enabled"
-            disabled={disabled}
-            className="pb-2"
-          />
-        </div>
       </div>
       <Button
         type="button"
