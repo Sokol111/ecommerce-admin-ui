@@ -16,8 +16,8 @@ import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AttributeResponse,
+  AttributeValueInput,
   CategoryResponse,
-  ProductAttributeInput,
   ProductResponse,
 } from '@sokol111/ecommerce-catalog-service-api';
 import { useRouter } from 'next/navigation';
@@ -121,7 +121,7 @@ export default function ProductEdit({
     try {
       value.price = Number(value.price.toFixed(2));
 
-      const attributes: ProductAttributeInput[] | undefined =
+      const attributes: AttributeValueInput[] | undefined =
         value.attributes && value.attributes.length > 0
           ? value.attributes
               .filter(

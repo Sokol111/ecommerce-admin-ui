@@ -107,19 +107,17 @@ function SingleSelectInput<TFieldValues extends FieldValues>({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options
-                ?.filter((opt) => opt.enabled)
-                .map((opt) => (
-                  <SelectItem key={opt.slug} value={opt.slug}>
-                    {opt.colorCode && (
-                      <span
-                        className="inline-block w-3 h-3 rounded-full mr-2"
-                        style={{ backgroundColor: opt.colorCode }}
-                      />
-                    )}
-                    {opt.name}
-                  </SelectItem>
-                ))}
+              {options?.map((opt) => (
+                <SelectItem key={opt.slug} value={opt.slug}>
+                  {opt.colorCode && (
+                    <span
+                      className="inline-block w-3 h-3 rounded-full mr-2"
+                      style={{ backgroundColor: opt.colorCode }}
+                    />
+                  )}
+                  {opt.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <FormMessage />
@@ -152,33 +150,31 @@ function MultipleSelectInput<TFieldValues extends FieldValues>({
         return (
           <FormItem className="flex-1">
             <div className="flex flex-wrap gap-2">
-              {options
-                ?.filter((opt) => opt.enabled)
-                .map((opt) => {
-                  const isChecked = selectedValues.includes(opt.slug);
-                  return (
-                    <label key={opt.slug} className="flex items-center gap-1.5 cursor-pointer">
-                      <Checkbox
-                        checked={isChecked}
-                        disabled={disabled}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            field.onChange([...selectedValues, opt.slug]);
-                          } else {
-                            field.onChange(selectedValues.filter((v) => v !== opt.slug));
-                          }
-                        }}
+              {options?.map((opt) => {
+                const isChecked = selectedValues.includes(opt.slug);
+                return (
+                  <label key={opt.slug} className="flex items-center gap-1.5 cursor-pointer">
+                    <Checkbox
+                      checked={isChecked}
+                      disabled={disabled}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          field.onChange([...selectedValues, opt.slug]);
+                        } else {
+                          field.onChange(selectedValues.filter((v) => v !== opt.slug));
+                        }
+                      }}
+                    />
+                    {opt.colorCode && (
+                      <span
+                        className="inline-block w-3 h-3 rounded-full"
+                        style={{ backgroundColor: opt.colorCode }}
                       />
-                      {opt.colorCode && (
-                        <span
-                          className="inline-block w-3 h-3 rounded-full"
-                          style={{ backgroundColor: opt.colorCode }}
-                        />
-                      )}
-                      <span className="text-sm">{opt.name}</span>
-                    </label>
-                  );
-                })}
+                    )}
+                    <span className="text-sm">{opt.name}</span>
+                  </label>
+                );
+              })}
             </div>
             <FormMessage />
           </FormItem>
