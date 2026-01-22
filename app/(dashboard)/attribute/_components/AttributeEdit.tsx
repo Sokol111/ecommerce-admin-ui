@@ -177,9 +177,15 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                   name="slug"
                   label="Slug"
                   placeholder="e.g., color, size, memory"
-                  disabled={isBusy}
+                  disabled={isBusy || isEditMode}
                 />
-                <FormDescription className="mt-1">URL-friendly identifier</FormDescription>
+                {isEditMode ? (
+                  <FormDescription className="mt-1">
+                    Slug cannot be changed after creation
+                  </FormDescription>
+                ) : (
+                  <FormDescription className="mt-1">URL-friendly identifier</FormDescription>
+                )}
               </div>
             </div>
 
@@ -256,6 +262,7 @@ export default function AttributeEdit({ attribute }: AttributeEditProps) {
                       fieldId={field.id}
                       showColorCode={showColorCode}
                       disabled={isBusy}
+                      isEditMode={isEditMode}
                       onRemove={() => remove(index)}
                       setValue={form.setValue}
                     />

@@ -14,6 +14,7 @@ interface AttributeOptionRowProps {
   fieldId: string;
   showColorCode: boolean;
   disabled?: boolean;
+  isEditMode?: boolean;
   onRemove: () => void;
   setValue: UseFormSetValue<AttributeFormData>;
 }
@@ -24,6 +25,7 @@ export function AttributeOptionRow({
   fieldId,
   showColorCode,
   disabled,
+  isEditMode,
   onRemove,
   setValue,
 }: AttributeOptionRowProps) {
@@ -60,13 +62,16 @@ export function AttributeOptionRow({
           )}
         />
 
-        <TextField
-          control={control}
-          name={`options.${index}.slug`}
-          label="Slug"
-          placeholder="e.g., red"
-          disabled={disabled}
-        />
+        <div>
+          <TextField
+            control={control}
+            name={`options.${index}.slug`}
+            label="Slug"
+            placeholder="e.g., red"
+            disabled={disabled || isEditMode}
+          />
+          {isEditMode && <p className="text-xs text-muted-foreground mt-1">Immutable</p>}
+        </div>
 
         {showColorCode && (
           <FormField
