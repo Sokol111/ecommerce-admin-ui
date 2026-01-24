@@ -1,4 +1,4 @@
-import { putToS3 } from '@/lib/client/s3-client';
+import { postToS3 } from '@/lib/client/s3-client';
 import { confirmUploadAction, getDeliveryUrlAction, presignImageAction } from '@/lib/image/actions';
 import { problemToDescription } from '@/lib/utils/toast-helpers';
 import { useEffect, useState } from 'react';
@@ -68,7 +68,7 @@ export function useImageUpload(
         return;
       }
 
-      await putToS3(presignResponse.data.uploadUrl, presignResponse.data.requiredHeaders, file);
+      await postToS3(presignResponse.data.uploadUrl, presignResponse.data.formData, file);
 
       const imageResult = await confirmUploadAction({
         uploadToken: presignResponse.data.uploadToken,
