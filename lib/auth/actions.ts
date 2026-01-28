@@ -52,6 +52,7 @@ export async function refreshTokenAction(): Promise<ActionResult<{ expiresIn: nu
   try {
     const token = await getRefreshToken();
     if (!token) {
+      await clearTokenCookies();
       return { success: false, error: { title: 'No refresh token', status: 401 } };
     }
 
