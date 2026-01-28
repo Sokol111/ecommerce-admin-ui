@@ -12,7 +12,7 @@ import {
 export async function saveTokensToCookies(tokens: TokenRefreshResponse): Promise<void> {
   const cookieStore = await cookies();
   const cookieOptions = getCookieOptions();
-  const expiresAt = Date.now() + tokens.expiresIn * 1000;
+  const expiresAt = new Date(tokens.expiresAt).getTime();
 
   // Access token - час життя з API
   cookieStore.set(ACCESS_TOKEN_KEY, tokens.accessToken, {

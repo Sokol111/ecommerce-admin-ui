@@ -29,3 +29,7 @@ export async function refreshToken(refreshToken: string): Promise<TokenRefreshRe
   const response = await api.tokenRefresh({ refreshToken }, { baseURL });
   return response.data;
 }
+
+export async function logout(): Promise<void> {
+  await api.adminLogout({ baseURL });
+}

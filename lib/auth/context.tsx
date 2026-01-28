@@ -2,48 +2,65 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-import {
-  getProfileAction,
-  getTokenExpiresInAction,
-  loginAction,
-  logoutAction,
-  refreshTokenAction,
-} from './actions';
+import { getProfileAction, loginAction, logoutAction, refreshTokenAction } from './actions';
+import { TOKEN_EXPIRY_BUFFER_MS } from './constants';
 import { AuthContextType, AuthState } from './types';
 
-const AuthContext = createContext<AuthContextType | null>(null);
+// ============================================================================
+// Constants
+// ============================================================================
 
+const AuthContext = createContext<AuthContextType | null>(null);
 const PUBLIC_PATHS = ['/login'];
+
+// ============================================================================
+// Initial State
+// ============================================================================
+
+const initialState: AuthState = {
+  user: null,
+  isLoading: true,
+  isAuthenticated: false,
+};
+
+const unauthenticatedState: AuthState = {
+  user: null,
+  isLoading: false,
+  isAuthenticated: false,
+};
+
+// ============================================================================
+// Provider Props
+// ============================================================================
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+// ============================================================================
+// Auth Provider
+// ============================================================================
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    isLoading: true,
-    isAuthenticated: false,
-  });
-
+  const [state, setState] = useState<AuthState>(initialState);
   const [tokenExpiresIn, setTokenExpiresIn] = useState<number | null>(null);
+
+  // --------------------------------------------------------------------------
+  // Auth Actions
+  // --------------------------------------------------------------------------
 
   const refreshSession = useCallback(async (): Promise<boolean> => {
     const result = await refreshTokenAction();
+
     if (!result.success) {
-      setState({
-        user: null,
-        isLoading: false,
-        isAuthenticated: false,
-      });
+      setState(unauthenticatedState);
       setTokenExpiresIn(null);
       return false;
     }
 
-    // Зберігаємо expiresIn для планування наступного рефрешу
     setTokenExpiresIn(result.data.expiresIn);
     return true;
   }, []);
@@ -56,10 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(result.error.detail || result.error.title);
       }
 
-      // Зберігаємо expiresIn для планування рефрешу
       setTokenExpiresIn(result.data.expiresIn);
-
-      // Токени збережено в cookies через loginAction
       setState({
         user: result.data.user,
         isLoading: false,
@@ -73,46 +87,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(async (): Promise<void> => {
     await logoutAction();
-    setState({
-      user: null,
-      isLoading: false,
-      isAuthenticated: false,
-    });
+    setState(unauthenticatedState);
     setTokenExpiresIn(null);
     router.push('/login');
   }, [router]);
 
-  // Initialize auth state on mount
+  // --------------------------------------------------------------------------
+  // Initialize Auth State
+  // --------------------------------------------------------------------------
+
   useEffect(() => {
     const initAuth = async () => {
-      // Спробуємо отримати профіль - якщо токен є в cookies, запит пройде
       const profileResult = await getProfileAction();
 
-      if (profileResult.success && profileResult.data) {
+      if (profileResult.success) {
         setState({
-          user: profileResult.data,
+          user: profileResult.data.user,
           isLoading: false,
           isAuthenticated: true,
         });
-
-        // Отримуємо expiresIn з cookie для планування auto-refresh
-        const expiresIn = await getTokenExpiresInAction();
-        if (expiresIn) {
-          setTokenExpiresIn(expiresIn);
-        }
+        setTokenExpiresIn(profileResult.data.expiresIn);
       } else {
-        // Спробуємо оновити токен
-        const refreshed = await refreshSession();
-        if (!refreshed) {
-          setState((prev) => ({ ...prev, isLoading: false }));
-        }
+        setState(unauthenticatedState);
       }
     };
 
     initAuth();
-  }, [refreshSession]);
+  }, []);
 
-  // Handle route protection - тепер middleware це робить, але залишимо для клієнтської навігації
+  // --------------------------------------------------------------------------
+  // Client-Side Route Protection
+  // --------------------------------------------------------------------------
+
   useEffect(() => {
     if (state.isLoading) return;
 
@@ -125,41 +131,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [state.isAuthenticated, state.isLoading, pathname, router]);
 
-  // Auto-refresh token - на основі expiresIn від сервера
+  // --------------------------------------------------------------------------
+  // Auto-Refresh Token
+  // --------------------------------------------------------------------------
+
   useEffect(() => {
     if (!state.isAuthenticated || tokenExpiresIn === null) return;
 
-    // Оновлюємо токен за 60 секунд до закінчення терміну дії
-    const refreshBeforeExpiry = 60; // секунд
+    const bufferSeconds = TOKEN_EXPIRY_BUFFER_MS / 1000;
 
-    // Якщо токен вже expired або скоро expire — оновлюємо одразу
-    if (tokenExpiresIn <= refreshBeforeExpiry) {
+    // Token already expired or expiring soon → refresh immediately
+    if (tokenExpiresIn <= bufferSeconds) {
       refreshSession();
       return;
     }
 
-    const refreshInterval = (tokenExpiresIn - refreshBeforeExpiry) * 1000;
-
-    const timeoutId = setTimeout(() => {
-      refreshSession();
-    }, refreshInterval);
+    // Schedule refresh before token expires
+    const refreshDelayMs = (tokenExpiresIn - bufferSeconds) * 1000;
+    const timeoutId = setTimeout(refreshSession, refreshDelayMs);
 
     return () => clearTimeout(timeoutId);
   }, [state.isAuthenticated, tokenExpiresIn, refreshSession]);
 
+  // --------------------------------------------------------------------------
+  // Render
+  // --------------------------------------------------------------------------
+
   return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        login,
-        logout,
-        refreshSession,
-      }}
-    >
+    <AuthContext.Provider value={{ ...state, login, logout, refreshSession }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+// ============================================================================
+// Hook
+// ============================================================================
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);

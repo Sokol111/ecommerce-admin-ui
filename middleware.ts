@@ -3,82 +3,150 @@ import {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
   getCookieOptions,
+  isTokenExpired,
 } from '@/lib/auth/constants';
 import { refreshToken } from '@/lib/client/auth-client';
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/login'];
-const TOKEN_EXPIRY_BUFFER_MS = 30000; // 30 секунд буфер
+// ============================================================================
+// Configuration
+// ============================================================================
 
-function isTokenExpired(expiresAt: string | undefined): boolean {
-  if (!expiresAt) return true;
-  const expiresAtMs = parseInt(expiresAt, 10);
-  // Додаємо буфер, щоб оновити токен трохи раніше
-  return expiresAtMs < Date.now() + TOKEN_EXPIRY_BUFFER_MS;
+const PUBLIC_PATHS = ['/login'];
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+interface AuthTokens {
+  accessToken: string | undefined;
+  accessTokenExpiresAt: string | undefined;
+  refreshToken: string | undefined;
 }
+
+function getAuthTokens(request: NextRequest): AuthTokens {
+  return {
+    accessToken: request.cookies.get(ACCESS_TOKEN_KEY)?.value,
+    accessTokenExpiresAt: request.cookies.get(ACCESS_TOKEN_EXPIRES_AT_KEY)?.value,
+    refreshToken: request.cookies.get(REFRESH_TOKEN_KEY)?.value,
+  };
+}
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.includes(pathname);
+}
+
+function hasValidAccessToken(tokens: AuthTokens): boolean {
+  return Boolean(tokens.accessToken) && !isTokenExpired(tokens.accessTokenExpiresAt);
+}
+
+function redirectToLogin(request: NextRequest, callbackPath: string): NextResponse {
+  const loginUrl = new URL('/login', request.url);
+  loginUrl.searchParams.set('callbackUrl', callbackPath);
+
+  const response = NextResponse.redirect(loginUrl);
+
+  // Clear expired/invalid auth cookies
+  response.cookies.delete(ACCESS_TOKEN_KEY);
+  response.cookies.delete(ACCESS_TOKEN_EXPIRES_AT_KEY);
+  response.cookies.delete(REFRESH_TOKEN_KEY);
+
+  return response;
+}
+
+function redirectToHome(request: NextRequest): NextResponse {
+  return NextResponse.redirect(new URL('/', request.url));
+}
+
+// ============================================================================
+// Token Refresh
+// ============================================================================
+
+interface RefreshResult {
+  success: boolean;
+  response?: NextResponse;
+}
+
+async function tryRefreshTokens(refreshTokenValue: string): Promise<RefreshResult> {
+  try {
+    const tokens = await refreshToken(refreshTokenValue);
+    const response = NextResponse.next();
+    const cookieOptions = getCookieOptions();
+    const expiresAt = new Date(tokens.expiresAt).getTime();
+
+    // Access Token
+    response.cookies.set(ACCESS_TOKEN_KEY, tokens.accessToken, {
+      ...cookieOptions,
+      maxAge: tokens.expiresIn,
+    });
+
+    // Access Token expiry time (accessible from JS)
+    response.cookies.set(ACCESS_TOKEN_EXPIRES_AT_KEY, expiresAt.toString(), {
+      ...cookieOptions,
+      httpOnly: false,
+      maxAge: tokens.expiresIn,
+    });
+
+    // Refresh Token
+    response.cookies.set(REFRESH_TOKEN_KEY, tokens.refreshToken, {
+      ...cookieOptions,
+      maxAge: tokens.refreshExpiresIn,
+    });
+
+    return { success: true, response };
+  } catch {
+    return { success: false };
+  }
+}
+
+// ============================================================================
+// Middleware
+// ============================================================================
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const tokens = getAuthTokens(request);
+  const isPublic = isPublicPath(pathname);
 
-  // Пропускаємо статичні файли та API routes
-  if (pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname.includes('.')) {
-    return NextResponse.next();
-  }
-
-  const isPublicPath = PUBLIC_PATHS.some((path) => pathname === path);
-  const accessToken = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
-  const accessTokenExpiresAt = request.cookies.get(ACCESS_TOKEN_EXPIRES_AT_KEY)?.value;
-  const refreshTokenValue = request.cookies.get(REFRESH_TOKEN_KEY)?.value;
-
-  // Якщо є валідний access token — пропускаємо
-  if (accessToken && !isTokenExpired(accessTokenExpiresAt)) {
-    // Якщо на сторінці логіна — редірект на головну
+  // 1. User is already authenticated
+  if (hasValidAccessToken(tokens)) {
+    // Authenticated user on login page → redirect to home
     if (pathname === '/login') {
-      return NextResponse.redirect(new URL('/', request.url));
+      return redirectToHome(request);
     }
     return NextResponse.next();
   }
 
-  // Якщо немає access token або він expired, але є refresh token — пробуємо оновити
-  if (refreshTokenValue && !isPublicPath) {
-    try {
-      const tokens = await refreshToken(refreshTokenValue);
-      const response = NextResponse.next();
-      const cookieOptions = getCookieOptions();
-      const expiresAt = Date.now() + tokens.expiresIn * 1000;
-
-      response.cookies.set(ACCESS_TOKEN_KEY, tokens.accessToken, {
-        ...cookieOptions,
-        maxAge: tokens.expiresIn,
-      });
-
-      response.cookies.set(ACCESS_TOKEN_EXPIRES_AT_KEY, expiresAt.toString(), {
-        ...cookieOptions,
-        httpOnly: false, // Можна читати з JS якщо потрібно
-        maxAge: tokens.expiresIn,
-      });
-
-      response.cookies.set(REFRESH_TOKEN_KEY, tokens.refreshToken, {
-        ...cookieOptions,
-        maxAge: tokens.refreshExpiresIn,
-      });
-
-      return response;
-    } catch {
-      // Refresh не вдався — перенаправляємо на логін нижче
+  // 2. Access token missing/expired, but refresh token exists → try to refresh
+  if (tokens.refreshToken && !isPublic) {
+    const refreshResult = await tryRefreshTokens(tokens.refreshToken);
+    if (refreshResult.success && refreshResult.response) {
+      return refreshResult.response;
     }
+    // Refresh failed → proceed to login redirect
   }
 
-  // Якщо немає токенів (або expired) і не публічний шлях — редірект на логін
-  if ((!accessToken || isTokenExpired(accessTokenExpiresAt)) && !isPublicPath) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(loginUrl);
+  // 3. Unauthenticated on protected route → redirect to login
+  if (!isPublic) {
+    return redirectToLogin(request, pathname);
   }
 
+  // 4. Public route → allow access
   return NextResponse.next();
 }
 
+// ============================================================================
+// Route Configuration
+// ============================================================================
+
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    /*
+     * Match all paths except:
+     * - _next (Next.js internals)
+     * - api (API routes)
+     * - Static files (favicon.ico, images, etc.)
+     */
+    '/((?!_next|api|.*\\..*).*)',
+  ],
 };
