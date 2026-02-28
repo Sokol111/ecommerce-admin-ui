@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { CategoryAttributeFormData, CategoryFormData } from '~/schemas/category.schema'
+import CategoryForm from '../_components/CategoryForm.vue'
 
-const route = useRoute()
+const route = useRoute('category-id-edit')
 const notify = useNotify()
 
-const categoryId = computed(() => route.params.id as string)
+const categoryId = computed(() => route.params.id)
 
 // Fetch category and attributes
 const [{ data: category, error: categoryError }, { data: attributesData }] = await Promise.all([

@@ -31,7 +31,27 @@ export default defineNuxtConfig({
     '/login': { ssr: true }
   },
 
+  experimental: {
+    typedPages: true
+  },
+
   compatibilityDate: '2025-01-15',
+
+  hooks: {
+    'pages:extend': function (pages) {
+      function removePagesWithComponents(pages: any[]) {
+        for (let i = pages.length - 1; i >= 0; i--) {
+          const page = pages[i]
+          if (page.path.includes('_components') || page.name?.includes('_components')) {
+            pages.splice(i, 1)
+          } else if (page.children) {
+            removePagesWithComponents(page.children)
+          }
+        }
+      }
+      removePagesWithComponents(pages)
+    }
+  },
 
   eslint: {
     config: {

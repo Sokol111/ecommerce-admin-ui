@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { ProductFormData } from '~/schemas/product.schema'
+import ProductForm from './_components/ProductForm.vue'
 
 const notify = useNotify()
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { CategoryAttributeFormData, CategoryFormData } from '~/schemas/category.schema'
+import CategoryForm from './_components/CategoryForm.vue'
 
 const notify = useNotify()
 

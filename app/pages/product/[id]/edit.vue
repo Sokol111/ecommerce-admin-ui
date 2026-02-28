@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { ProductFormData } from '~/schemas/product.schema'
+import ProductForm from '../_components/ProductForm.vue'
 
-const route = useRoute()
+const route = useRoute('product-id-edit')
 const notify = useNotify()
 
-const productId = computed(() => route.params.id as string)
+const productId = computed(() => route.params.id)
 
 // Fetch product and categories
 const [{ data: product, error: productError }, { data: categoriesData }] = await Promise.all([

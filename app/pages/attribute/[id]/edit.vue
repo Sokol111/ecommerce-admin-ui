@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { AttributeFormData, AttributeOptionFormData } from '~/schemas/attribute.schema'
+import AttributeForm from '../_components/AttributeForm.vue'
 
-const route = useRoute()
+const route = useRoute('attribute-id-edit')
 const notify = useNotify()
 
-const attributeId = computed(() => route.params.id as string)
+const attributeId = computed(() => route.params.id)
 
 // Fetch attribute
 const { data: attribute, error: attributeError } = await useFetch(

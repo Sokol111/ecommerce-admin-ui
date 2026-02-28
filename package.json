@@ -15,10 +15,10 @@
     "@iconify-json/simple-icons": "^1.2.70",
     "@nuxt/ui": "^4.4.0",
     "@pinia/nuxt": "0.11.3",
-    "@vueuse/nuxt": "14.2.1",
     "@sokol111/ecommerce-auth-service-api": "link:../ecommerce-auth-service-api/gen/typescript",
     "@sokol111/ecommerce-catalog-service-api": "link:../ecommerce-catalog-service-api/gen/typescript",
     "@sokol111/ecommerce-image-service-api": "link:../ecommerce-image-service-api/gen/typescript",
+    "@vueuse/nuxt": "14.2.1",
     "axios": "^1.10.0",
     "nuxt": "^4.3.1",
     "tailwindcss": "^4.1.18",
@@ -28,6 +28,7 @@
     "@nuxt/eslint": "^1.15.1",
     "eslint": "^10.0.0",
     "typescript": "^5.9.3",
+    "unplugin-vue-router": "^0.19.2",
     "vue-tsc": "^3.2.4"
   },
   "pnpm": {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { AttributeFormData, AttributeOptionFormData } from '~/schemas/attribute.schema'
+import AttributeForm from './_components/AttributeForm.vue'
 
 const notify = useNotify()
 
