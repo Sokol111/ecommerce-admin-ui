@@ -37,6 +37,12 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-01-15',
 
+  vite: {
+    server: {
+      allowedHosts: true
+    }
+  },
+
   hooks: {
     'pages:extend': function (pages) {
       function removePagesWithComponents(pages: any[]) {
