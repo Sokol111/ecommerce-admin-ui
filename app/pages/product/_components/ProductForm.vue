@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { productSchema, type ProductFormData } from '~/schemas/product.schema';
+import ProductImageUpload from './ProductImageUpload.vue';
 
 const props = defineProps<{
   initialData?: Partial<ProductFormData>
@@ -14,6 +15,10 @@ const emit = defineEmits<{
 
 const notify = useNotify()
 const isSubmitting = ref(false)
+
+// Always upload to draft — promotion to product happens server-side after save
+const draftId = useId()
+const imageOwnerId = draftId
 
 // Form state
 const state = reactive<ProductFormData>({
@@ -66,6 +71,16 @@ async function onSubmit() {
 <template>
   <UForm :schema="productSchema" :state="state" class="space-y-6" @submit="onSubmit">
     <div class="grid gap-6 md:grid-cols-2">
+      <!-- Product Image -->
+      <UFormField label="Product Image" name="imageId" class="md:col-span-2">
+        <ProductImageUpload
+          :image-id="state.imageId"
+          :owner-id="imageOwnerId"
+          :disabled="isSubmitting"
+          @update:image-id="(id: string | undefined) => state.imageId = id"
+        />
+      </UFormField>
+
       <!-- Name -->
       <UFormField label="Name" name="name" required class="md:col-span-2">
         <UInput
