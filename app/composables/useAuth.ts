@@ -1,9 +1,4 @@
 import type { AdminUserProfile } from '@sokol111/ecommerce-auth-service-api'
-import {
-  ACCESS_TOKEN_EXPIRES_AT_KEY,
-  isTokenExpired
-} from '~/utils/auth/constants'
-import { readCookie } from '~/utils/cookie'
 
 export function useAuth() {
   const user = useState<AdminUserProfile | null>('auth:user', () => null)
@@ -46,18 +41,10 @@ export function useAuth() {
   }
 
   const ensureAuthenticated = async (): Promise<boolean> => {
-    const headers = getHeaders()
-
     try {
-      // Token expired or missing - try refresh
-      if (isTokenExpired(readCookie(ACCESS_TOKEN_EXPIRES_AT_KEY))) {
-        await $fetch('/api/auth/refresh', { method: 'POST', headers })
-      }
-
-      // Load profile if not already loaded
-      if (!user.value) {
-        user.value = await $fetch<AdminUserProfile>('/api/auth/profile', { headers })
-      }
+      user.value = await $fetch<AdminUserProfile>('/api/auth/session', {
+        headers: getHeaders()
+      })
 
       return true
     } catch {

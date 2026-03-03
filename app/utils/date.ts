@@ -12,11 +12,13 @@ export function formatDate(dateStr: string, locale = 'en-US'): FormattedDate {
     date: date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'UTC'
     }),
     time: date.toLocaleTimeString(locale, {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'UTC'
     })
   }
 }
@@ -31,7 +33,8 @@ export function formatDateTime(dateStr: string, locale = 'en-US'): string {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: 'UTC'
   })
 }
 

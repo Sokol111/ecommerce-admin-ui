@@ -47,7 +47,7 @@ export function useListPage<T>(endpoint: string, options: UseListPageOptions = {
         {
           label: 'Edit',
           icon: 'i-lucide-pencil',
-          click: () => navigateTo(`${basePath}/${row.id}/edit`)
+          onSelect: () => navigateTo(`${basePath}/${row.id}/edit`)
         }
       ]
     ]
