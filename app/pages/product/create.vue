@@ -14,7 +14,6 @@ async function handleSubmit(data: ProductFormData) {
   const { data: result, error } = await useFetch('/api/catalog/products', {
     method: 'POST',
     body: {
-      id: data.id,
       name: data.name,
       description: data.description || undefined,
       price: data.price,

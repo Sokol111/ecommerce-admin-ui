@@ -1,7 +1,11 @@
-import { TOKEN_EXPIRY_BUFFER_MS } from '~/utils/auth/constants'
+import {
+  ACCESS_TOKEN_EXPIRES_AT_KEY,
+  TOKEN_EXPIRY_BUFFER_MS
+} from '~/utils/auth/constants'
+import { readCookie } from '~/utils/cookie'
 
 export default defineNuxtPlugin(() => {
-  const { isAuthenticated, tokenExpiresAt, ensureAuthenticated } = useAuth()
+  const { isAuthenticated, ensureAuthenticated } = useAuth()
 
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
@@ -11,20 +15,19 @@ export default defineNuxtPlugin(() => {
       timeoutId = null
     }
 
-    if (!isAuthenticated.value || !tokenExpiresAt.value) {
+    const raw = readCookie(ACCESS_TOKEN_EXPIRES_AT_KEY)
+    const expiresAt = raw ? parseInt(raw, 10) : null
+    if (!isAuthenticated.value || !expiresAt || Number.isNaN(expiresAt)) {
       return
     }
 
-    const refreshAt = Math.max(0, tokenExpiresAt.value - TOKEN_EXPIRY_BUFFER_MS - Date.now())
+    const refreshAt = Math.max(0, expiresAt - TOKEN_EXPIRY_BUFFER_MS - Date.now())
 
-    timeoutId = setTimeout(() => {
-      ensureAuthenticated()
+    timeoutId = setTimeout(async () => {
+      await ensureAuthenticated()
+      scheduleRefresh()
     }, refreshAt)
   }
 
-  watch(
-    [isAuthenticated, tokenExpiresAt],
-    () => scheduleRefresh(),
-    { immediate: true }
-  )
+  watch(isAuthenticated, () => scheduleRefresh(), { immediate: true })
 })

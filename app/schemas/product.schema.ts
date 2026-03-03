@@ -13,7 +13,7 @@ export const productAttributeSchema = z.object({
 // Schema for product form
 export const productSchema = z
   .object({
-    id: z.string().uuid(),
+    id: z.string().uuid().optional(),
     version: z.number().int().min(0, 'Version is required'),
     imageId: z.string().uuid().nullish(),
     categoryId: z.string().uuid().nullish(),

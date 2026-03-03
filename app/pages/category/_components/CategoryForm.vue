@@ -15,14 +15,9 @@ const emit = defineEmits<{
 const notify = useNotify()
 const isSubmitting = ref(false)
 
-// Generate UUID for new categories
-function generateUUID() {
-  return crypto.randomUUID()
-}
-
 // Form state
 const state = reactive<CategoryFormData>({
-  id: props.initialData?.id || generateUUID(),
+  id: props.initialData?.id,
   version: props.initialData?.version || 0,
   name: props.initialData?.name || '',
   enabled: props.initialData?.enabled || false,

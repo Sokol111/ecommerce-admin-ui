@@ -30,7 +30,7 @@ export const attributeOptionSchema = z.object({
 })
 
 export const attributeSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().optional(),
   version: z.number().int().min(0),
   name: z
     .string()

@@ -9,7 +9,6 @@ async function handleSubmit(data: AttributeFormData) {
   const { data: result, error } = await useFetch('/api/catalog/attributes', {
     method: 'POST',
     body: {
-      id: data.id,
       name: data.name,
       slug: data.slug,
       type: data.type,

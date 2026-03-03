@@ -14,7 +14,6 @@ async function handleSubmit(data: CategoryFormData) {
   const { data: result, error } = await useFetch('/api/catalog/categories', {
     method: 'POST',
     body: {
-      id: data.id,
       name: data.name,
       enabled: data.enabled,
       attributes: data.attributes.map((attr: CategoryAttributeFormData) => ({

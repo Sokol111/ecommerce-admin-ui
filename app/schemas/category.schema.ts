@@ -12,7 +12,7 @@ export const categoryAttributeSchema = z.object({
 
 // Schema for category form
 export const categorySchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().optional(),
   version: z.number().int().min(0, 'Version is required'),
   name: z
     .string()
