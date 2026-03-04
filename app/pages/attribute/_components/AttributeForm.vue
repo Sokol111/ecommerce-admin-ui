@@ -163,7 +163,7 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField v-if="state.type === 'range'" label="Unit" name="unit">
+      <UFormField label="Unit" name="unit">
         <UInput
           v-model="state.unit"
           class="w-full"

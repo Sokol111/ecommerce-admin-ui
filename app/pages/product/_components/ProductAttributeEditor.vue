@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {
-    AttributeResponse,
-    CategoryAttribute
+  AttributeResponse,
+  CategoryAttribute
 } from '@sokol111/ecommerce-catalog-service-api';
 import type { ProductAttributeData } from '~/schemas/product.schema';
 
@@ -99,7 +99,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Single select -->
         <UFormField
           v-if="definition!.type === 'single'"
-          :label="`${definition!.name}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <USelect
@@ -115,7 +115,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Multiple select -->
         <UFormField
           v-else-if="definition!.type === 'multiple'"
-          :label="`${definition!.name}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <USelectMenu
@@ -152,7 +152,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Boolean -->
         <UFormField
           v-else-if="definition!.type === 'boolean'"
-          :label="`${definition!.name}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <div class="flex items-center gap-2 pt-1">
@@ -170,7 +170,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Text -->
         <UFormField
           v-else-if="definition!.type === 'text'"
-          :label="`${definition!.name}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
           class="md:col-span-2"
         >
