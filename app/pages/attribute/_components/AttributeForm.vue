@@ -30,15 +30,27 @@ const state = reactive<AttributeFormData>({
   options: props.initialData?.options || []
 })
 
-// Watch name and auto-generate slug if empty
+// Track whether the user manually edited the slug
+const slugManuallyEdited = ref(false)
+
+// Watch name and auto-generate slug
 watch(
   () => state.name,
   (newName) => {
-    if (!props.isEditMode && newName && !state.slug) {
-      state.slug = generateSlug(newName)
+    if (!props.isEditMode && !slugManuallyEdited.value) {
+      state.slug = newName ? generateSlug(newName) : ''
     }
   }
 )
+
+// Detect manual slug edits
+function onSlugInput(event: Event) {
+  const input = event.target as HTMLInputElement
+  const expected = generateSlug(state.name)
+  if (input.value !== expected) {
+    slugManuallyEdited.value = true
+  }
+}
 
 // Type options
 const typeOptions = ATTRIBUTE_TYPES.map(t => ({
@@ -50,6 +62,12 @@ const typeOptions = ATTRIBUTE_TYPES.map(t => ({
 const showOptions = computed(() =>
   state.type === 'single' || state.type === 'multiple'
 )
+
+// Track the number of initial options (their slugs are immutable in edit mode)
+const initialOptionCount = props.isEditMode ? (props.initialData?.options?.length || 0) : 0
+
+// Track which option slugs were manually edited
+const optionSlugManuallyEdited = ref<Set<number>>(new Set())
 
 // Add option
 function addOption() {
@@ -65,13 +83,36 @@ function addOption() {
 // Remove option
 function removeOption(index: number) {
   state.options?.splice(index, 1)
+  // Rebuild the manual edit tracking for shifted indices
+  const newSet = new Set<number>()
+  for (const i of optionSlugManuallyEdited.value) {
+    if (i < index) newSet.add(i)
+    else if (i > index) newSet.add(i - 1)
+  }
+  optionSlugManuallyEdited.value = newSet
 }
 
-// Auto-generate option slug
-function generateOptionSlug(index: number) {
+// Check if option is an existing one (slug should be immutable)
+function isExistingOption(index: number): boolean {
+  return props.isEditMode === true && index < initialOptionCount
+}
+
+// Auto-generate option slug on name input
+function onOptionNameInput(index: number) {
   const option = state.options?.[index]
-  if (option && option.name && !option.slug) {
-    option.slug = generateSlug(option.name)
+  if (option && !isExistingOption(index) && !optionSlugManuallyEdited.value.has(index)) {
+    option.slug = option.name ? generateSlug(option.name) : ''
+  }
+}
+
+// Detect manual option slug edits
+function onOptionSlugInput(index: number) {
+  const option = state.options?.[index]
+  if (option) {
+    const expected = generateSlug(option.name)
+    if (option.slug !== expected) {
+      optionSlugManuallyEdited.value.add(index)
+    }
   }
 }
 
@@ -96,6 +137,7 @@ async function onSubmit() {
       <UFormField label="Name" name="name" required>
         <UInput
           v-model="state.name"
+          class="w-full"
           placeholder="Attribute name"
           :disabled="isSubmitting"
         />
@@ -104,14 +146,17 @@ async function onSubmit() {
       <UFormField label="Slug" name="slug" required>
         <UInput
           v-model="state.slug"
+          class="w-full"
           placeholder="attribute-slug"
-          :disabled="isSubmitting"
+          :disabled="isSubmitting || isEditMode"
+          @input="onSlugInput"
         />
       </UFormField>
 
       <UFormField label="Type" name="type" required>
         <USelect
           v-model="state.type"
+          class="w-full"
           :items="typeOptions"
           value-key="value"
           :disabled="isSubmitting || isEditMode"
@@ -121,6 +166,7 @@ async function onSubmit() {
       <UFormField v-if="state.type === 'range'" label="Unit" name="unit">
         <UInput
           v-model="state.unit"
+          class="w-full"
           placeholder="e.g. cm, kg, ml"
           :disabled="isSubmitting"
         />
@@ -162,9 +208,10 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Name' : ''" :name="`options.${index}.name`">
                 <UInput
                   v-model="option.name"
+                  class="w-full"
                   placeholder="Option name"
                   :disabled="isSubmitting"
-                  @blur="generateOptionSlug(index)"
+                  @input="onOptionNameInput(index)"
                 />
               </UFormField>
 
@@ -172,8 +219,10 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Slug' : ''" :name="`options.${index}.slug`">
                 <UInput
                   v-model="option.slug"
+                  class="w-full"
                   placeholder="option-slug"
-                  :disabled="isSubmitting"
+                  :disabled="isSubmitting || isExistingOption(index)"
+                  @input="onOptionSlugInput(index)"
                 />
               </UFormField>
 
@@ -199,6 +248,7 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Sort' : ''" :name="`options.${index}.sortOrder`">
                 <UInput
                   v-model.number="option.sortOrder"
+                  class="w-full"
                   type="number"
                   min="0"
                   :disabled="isSubmitting"

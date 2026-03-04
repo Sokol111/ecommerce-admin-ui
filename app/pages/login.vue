@@ -51,6 +51,7 @@ async function onSubmit() {
       <UFormField label="Email" name="email">
         <UInput
           v-model="state.email"
+          class="w-full"
           type="email"
           placeholder="admin@example.com"
           icon="i-lucide-mail"
@@ -61,6 +62,7 @@ async function onSubmit() {
       <UFormField label="Password" name="password">
         <UInput
           v-model="state.password"
+          class="w-full"
           type="password"
           placeholder="Enter your password"
           icon="i-lucide-lock"

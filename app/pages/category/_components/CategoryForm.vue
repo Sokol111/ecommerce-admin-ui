@@ -87,6 +87,7 @@ async function onSubmit() {
       <UFormField label="Name" name="name" required class="md:col-span-2">
         <UInput
           v-model="state.name"
+          class="w-full"
           placeholder="Category name"
           :disabled="isSubmitting"
         />
@@ -128,6 +129,7 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Attribute' : ''" :name="`attributes.${index}.attributeId`">
                 <USelect
                   v-model="attr.attributeId"
+                  class="w-full"
                   :items="[
                     { value: attr.attributeId, label: getAttributeName(attr.attributeId) },
                     ...availableAttributeOptions
@@ -141,6 +143,7 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Role' : ''" :name="`attributes.${index}.role`">
                 <USelect
                   v-model="attr.role"
+                  class="w-full"
                   :items="roleOptions"
                   value-key="value"
                   :disabled="isSubmitting"
@@ -151,6 +154,7 @@ async function onSubmit() {
               <UFormField :label="index === 0 ? 'Sort Order' : ''" :name="`attributes.${index}.sortOrder`">
                 <UInput
                   v-model.number="attr.sortOrder"
+                  class="w-full"
                   type="number"
                   min="0"
                   :disabled="isSubmitting"

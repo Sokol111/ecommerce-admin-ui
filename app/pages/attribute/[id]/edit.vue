@@ -44,8 +44,6 @@ async function handleSubmit(data: AttributeFormData) {
       id: data.id,
       version: data.version,
       name: data.name,
-      slug: data.slug,
-      type: data.type,
       unit: data.unit || undefined,
       enabled: data.enabled,
       options: data.options?.map((opt: AttributeOptionFormData) => ({
