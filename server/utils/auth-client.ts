@@ -4,17 +4,20 @@ import type {
   LoginRequest,
   TokenRefreshResponse
 } from '@sokol111/ecommerce-auth-service-api'
-import { getAuthAPI } from '@sokol111/ecommerce-auth-service-api'
+import {
+  getAdminGetProfileUrl,
+  getAdminLoginUrl,
+  getAdminLogoutUrl,
+  getTokenRefreshUrl
+} from '@sokol111/ecommerce-auth-service-api'
 import type { H3Event } from 'h3'
-
-const api = getAuthAPI()
 
 export function useAuthClient(event: H3Event) {
   const { authApiUrl: baseURL } = useRuntimeConfig()
   const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
   const refreshTokenValue = getCookie(event, REFRESH_TOKEN_KEY)
 
-  function getAuthHeaders() {
+  function getAuthHeaders(): HeadersInit {
     if (!accessToken) {
       throw createError({ statusCode: 401, message: 'Not authenticated' })
     }
@@ -23,29 +26,35 @@ export function useAuthClient(event: H3Event) {
 
   return {
     async login(credentials: LoginRequest): Promise<AdminAuthResponse> {
-      const response = await api.adminLogin(credentials, { baseURL })
-      return response.data
+      return $fetch<AdminAuthResponse>(getAdminLoginUrl(), {
+        baseURL,
+        method: 'POST',
+        body: credentials
+      })
     },
 
     async getProfile(): Promise<AdminUserProfile> {
-      const response = await api.adminGetProfile({
+      return $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
         baseURL,
         headers: getAuthHeaders()
       })
-      return response.data
     },
 
     async refreshToken(): Promise<TokenRefreshResponse> {
       if (!refreshTokenValue) {
         throw new Error('No refresh token available')
       }
-      const response = await api.tokenRefresh({ refreshToken: refreshTokenValue }, { baseURL })
-      return response.data
+      return $fetch<TokenRefreshResponse>(getTokenRefreshUrl(), {
+        baseURL,
+        method: 'POST',
+        body: { refreshToken: refreshTokenValue }
+      })
     },
 
     async logout(): Promise<void> {
-      await api.adminLogout({
+      await $fetch(getAdminLogoutUrl(), {
         baseURL,
+        method: 'POST',
         headers: getAuthHeaders()
       })
     }

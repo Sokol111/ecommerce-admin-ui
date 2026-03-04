@@ -5,10 +5,14 @@ import ProductForm from './_components/ProductForm.vue'
 
 const notify = useNotify()
 
-// Fetch categories for the form
-const { data: categoriesData } = await useFetch('/api/catalog/categories')
+// Fetch categories and attributes for the form
+const [{ data: categoriesData }, { data: attributesData }] = await Promise.all([
+  useFetch('/api/catalog/categories'),
+  useFetch('/api/catalog/attributes')
+])
 
 const categories = computed(() => categoriesData.value?.items || [])
+const attributes = computed(() => attributesData.value?.items || [])
 
 async function handleSubmit(data: ProductFormData) {
   const { data: result, error } = await useFetch('/api/catalog/products', {
@@ -57,6 +61,7 @@ async function handleSubmit(data: ProductFormData) {
     <UCard>
       <ProductForm
         :categories="categories"
+        :available-attributes="attributes"
         @submit="handleSubmit"
       />
     </UCard>

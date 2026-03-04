@@ -1,7 +1,5 @@
-import type { AdminUserProfile } from '@sokol111/ecommerce-auth-service-api'
-import { getAuthAPI } from '@sokol111/ecommerce-auth-service-api'
-
-const api = getAuthAPI()
+import type { AdminUserProfile, TokenRefreshResponse } from '@sokol111/ecommerce-auth-service-api'
+import { getAdminGetProfileUrl, getTokenRefreshUrl } from '@sokol111/ecommerce-auth-service-api'
 
 export default defineEventHandler(async (event): Promise<AdminUserProfile> => {
   const { authApiUrl: baseURL } = useRuntimeConfig()
@@ -21,9 +19,13 @@ export default defineEventHandler(async (event): Promise<AdminUserProfile> => {
   if (!token || isTokenExpired(expiresAt)) {
     try {
       console.log('[session] refreshing token...')
-      const response = await api.tokenRefresh({ refreshToken: refreshToken! }, { baseURL })
-      setAuthCookies(event, response.data)
-      token = response.data.accessToken
+      const data = await $fetch<TokenRefreshResponse>(getTokenRefreshUrl(), {
+        baseURL,
+        method: 'POST',
+        body: { refreshToken: refreshToken! }
+      })
+      setAuthCookies(event, data)
+      token = data.accessToken
       console.log('[session] refresh success')
     } catch (error) {
       console.error('[session] refresh failed:', error)
@@ -34,12 +36,12 @@ export default defineEventHandler(async (event): Promise<AdminUserProfile> => {
 
   try {
     console.log('[session] fetching profile...')
-    const response = await api.adminGetProfile({
+    const data = await $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
       baseURL,
       headers: { Authorization: `Bearer ${token}` }
     })
     console.log('[session] profile success')
-    return response.data
+    return data
   } catch (error) {
     console.error('[session] profile failed:', error)
     throw createError({ statusCode: 401, message: 'Failed to get profile' })

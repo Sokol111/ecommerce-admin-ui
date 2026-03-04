@@ -19,7 +19,6 @@
     "@sokol111/ecommerce-catalog-service-api": "link:../ecommerce-catalog-service-api/gen/typescript",
     "@sokol111/ecommerce-image-service-api": "link:../ecommerce-image-service-api/gen/typescript",
     "@vueuse/nuxt": "14.2.1",
-    "axios": "^1.10.0",
     "nuxt": "^4.3.1",
     "tailwindcss": "^4.1.18",
     "zod": "^3.24.0"

@@ -8,10 +8,11 @@ const notify = useNotify()
 
 const productId = computed(() => route.params.id)
 
-// Fetch product and categories
-const [{ data: product, error: productError }, { data: categoriesData }] = await Promise.all([
+// Fetch product, categories, and attributes
+const [{ data: product, error: productError }, { data: categoriesData }, { data: attributesData }] = await Promise.all([
   useFetch(`/api/catalog/products/${productId.value}`),
-  useFetch('/api/catalog/categories')
+  useFetch('/api/catalog/categories'),
+  useFetch('/api/catalog/attributes')
 ])
 
 if (productError.value || !product.value) {
@@ -22,6 +23,7 @@ if (productError.value || !product.value) {
 }
 
 const categories = computed(() => categoriesData.value?.items || [])
+const attributes = computed(() => attributesData.value?.items || [])
 
 // Convert product to form data
 const initialData = computed(() => ({
@@ -94,6 +96,7 @@ async function handleSubmit(data: ProductFormData) {
       <ProductForm
         :initial-data="initialData"
         :categories="categories"
+        :available-attributes="attributes"
         is-edit-mode
         @submit="handleSubmit"
       />

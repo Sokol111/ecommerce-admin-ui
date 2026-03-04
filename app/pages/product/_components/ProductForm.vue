@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
+import type { AttributeResponse, CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
 import { productSchema, type ProductFormData } from '~/schemas/product.schema';
+import ProductAttributeEditor from './ProductAttributeEditor.vue';
 import ProductImageUpload from './ProductImageUpload.vue';
 
 const props = defineProps<{
   initialData?: Partial<ProductFormData>
   categories: CategoryResponse[]
+  availableAttributes: AttributeResponse[]
   isEditMode?: boolean
 }>()
 
@@ -50,6 +52,15 @@ const categoryId = computed({
     state.categoryId = value
   }
 })
+
+// Selected category and its attributes
+const selectedCategory = computed(() =>
+  props.categories.find((c) => c.id === state.categoryId)
+)
+
+const categoryAttributes = computed(() =>
+  selectedCategory.value?.attributes || []
+)
 
 async function onSubmit() {
   isSubmitting.value = true
@@ -146,6 +157,15 @@ async function onSubmit() {
         </div>
       </UFormField>
     </div>
+
+    <!-- Product Attributes (shown when a category is selected) -->
+    <ProductAttributeEditor
+      v-if="state.categoryId && categoryAttributes.length > 0"
+      v-model="state.attributes"
+      :category-attributes="categoryAttributes"
+      :all-attributes="availableAttributes"
+      :disabled="isSubmitting"
+    />
 
     <!-- Actions -->
     <div class="flex justify-end gap-3 pt-4 border-t border-default">

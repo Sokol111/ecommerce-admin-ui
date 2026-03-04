@@ -7,16 +7,19 @@ import type {
   PromoteImages200,
   PromoteRequest
 } from '@sokol111/ecommerce-image-service-api'
-import { getImageServiceAPI } from '@sokol111/ecommerce-image-service-api'
+import {
+  getConfirmUploadUrl,
+  getCreatePresignUrl,
+  getGetDeliveryUrlUrl,
+  getPromoteImagesUrl
+} from '@sokol111/ecommerce-image-service-api'
 import type { H3Event } from 'h3'
-
-const api = getImageServiceAPI()
 
 export function useImageClient(event: H3Event) {
   const { imageApiUrl: baseURL } = useRuntimeConfig()
   const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
 
-  function getHeaders() {
+  function getHeaders(): HeadersInit {
     if (!accessToken) {
       throw createError({ statusCode: 401, message: 'Not authenticated' })
     }
@@ -25,39 +28,43 @@ export function useImageClient(event: H3Event) {
 
   return {
     async createPresign(request: PresignRequest): Promise<PresignResponse> {
-      const response = await api.createPresign(request, {
+      return $fetch<PresignResponse>(getCreatePresignUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: request
       })
-      return response.data
     },
 
     async confirmUpload(request: ConfirmRequest): Promise<Image> {
-      const response = await api.confirmUpload(request, {
+      return $fetch<Image>(getConfirmUploadUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: request
       })
-      return response.data
     },
 
     async promoteImages(request: PromoteRequest): Promise<PromoteImages200> {
-      const response = await api.promoteImages(request, {
+      return $fetch<PromoteImages200>(getPromoteImagesUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: request
       })
-      return response.data
     },
 
     async getDeliveryUrl(params: {
       imageId: string
       options: { w: number, quality: number }
     }): Promise<GetDeliveryUrl200> {
-      const response = await api.getDeliveryUrl(
+      return $fetch<GetDeliveryUrl200>(getGetDeliveryUrlUrl(
         params.imageId,
-        { w: params.options.w, quality: params.options.quality },
-        { baseURL, headers: getHeaders() }
-      )
-      return response.data
+        { w: params.options.w, quality: params.options.quality }
+      ), {
+        baseURL,
+        headers: getHeaders()
+      })
     }
   }
 }

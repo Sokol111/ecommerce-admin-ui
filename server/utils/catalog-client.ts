@@ -15,16 +15,27 @@ import type {
   UpdateCategoryRequest,
   UpdateProductRequest
 } from '@sokol111/ecommerce-catalog-service-api'
-import { getCatalogAPI } from '@sokol111/ecommerce-catalog-service-api'
+import {
+  getCreateAttributeUrl,
+  getCreateCategoryUrl,
+  getCreateProductUrl,
+  getGetAttributeByIdUrl,
+  getGetAttributeListUrl,
+  getGetCategoryByIdUrl,
+  getGetCategoryListUrl,
+  getGetProductByIdUrl,
+  getGetProductListUrl,
+  getUpdateAttributeUrl,
+  getUpdateCategoryUrl,
+  getUpdateProductUrl
+} from '@sokol111/ecommerce-catalog-service-api'
 import type { H3Event } from 'h3'
-
-const api = getCatalogAPI()
 
 export function useCatalogClient(event: H3Event) {
   const { catalogApiUrl: baseURL } = useRuntimeConfig()
   const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
 
-  function getHeaders() {
+  function getHeaders(): HeadersInit {
     if (!accessToken) {
       throw createError({ statusCode: 401, message: 'Not authenticated' })
     }
@@ -35,140 +46,140 @@ export function useCatalogClient(event: H3Event) {
     // ==================== PRODUCTS ====================
 
     async getProductById(productId: string): Promise<ProductResponse> {
-      const response = await api.getProductById(productId, {
+      return $fetch<ProductResponse>(getGetProductByIdUrl(productId), {
         baseURL,
         headers: getHeaders()
       })
-      return response.data
     },
 
     async getProductList(
       params?: Partial<GetProductListParams>
     ): Promise<ProductListResponse> {
-      const response = await api.getProductList(
-        {
-          page: params?.page ?? 1,
-          size: params?.size ?? 10,
-          sort: params?.sort,
-          order: params?.order,
-          enabled: params?.enabled,
-          categoryId: params?.categoryId
-        },
-        { baseURL, headers: getHeaders() }
-      )
-      return response.data
+      return $fetch<ProductListResponse>(getGetProductListUrl({
+        page: params?.page ?? 1,
+        size: params?.size ?? 10,
+        sort: params?.sort,
+        order: params?.order,
+        enabled: params?.enabled,
+        categoryId: params?.categoryId
+      }), {
+        baseURL,
+        headers: getHeaders()
+      })
     },
 
     async createProduct(
       newProduct: CreateProductRequest
     ): Promise<ProductResponse> {
-      const response = await api.createProduct(newProduct, {
+      return $fetch<ProductResponse>(getCreateProductUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: newProduct
       })
-      return response.data
     },
 
     async updateProduct(
       updatedProduct: UpdateProductRequest
     ): Promise<ProductResponse> {
-      const response = await api.updateProduct(updatedProduct, {
+      return $fetch<ProductResponse>(getUpdateProductUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'PUT',
+        headers: getHeaders(),
+        body: updatedProduct
       })
-      return response.data
     },
 
     // ==================== CATEGORIES ====================
 
     async getCategoryById(categoryId: string): Promise<CategoryResponse> {
-      const response = await api.getCategoryById(categoryId, {
+      return $fetch<CategoryResponse>(getGetCategoryByIdUrl(categoryId), {
         baseURL,
         headers: getHeaders()
       })
-      return response.data
     },
 
     async getCategoryList(
       params?: Partial<GetCategoryListParams>
     ): Promise<CategoryListResponse> {
-      const response = await api.getCategoryList(
-        {
-          page: params?.page ?? 1,
-          size: params?.size ?? 10,
-          sort: params?.sort,
-          order: params?.order,
-          enabled: params?.enabled
-        },
-        { baseURL, headers: getHeaders() }
-      )
-      return response.data
+      return $fetch<CategoryListResponse>(getGetCategoryListUrl({
+        page: params?.page ?? 1,
+        size: params?.size ?? 10,
+        sort: params?.sort,
+        order: params?.order,
+        enabled: params?.enabled
+      }), {
+        baseURL,
+        headers: getHeaders()
+      })
     },
 
     async createCategory(
       newCategory: CreateCategoryRequest
     ): Promise<CategoryResponse> {
-      const response = await api.createCategory(newCategory, {
+      return $fetch<CategoryResponse>(getCreateCategoryUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: newCategory
       })
-      return response.data
     },
 
     async updateCategory(
       updatedCategory: UpdateCategoryRequest
     ): Promise<CategoryResponse> {
-      const response = await api.updateCategory(updatedCategory, {
+      return $fetch<CategoryResponse>(getUpdateCategoryUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'PUT',
+        headers: getHeaders(),
+        body: updatedCategory
       })
-      return response.data
     },
 
     // ==================== ATTRIBUTES ====================
 
     async getAttributeById(attributeId: string): Promise<AttributeResponse> {
-      const response = await api.getAttributeById(attributeId, {
+      return $fetch<AttributeResponse>(getGetAttributeByIdUrl(attributeId), {
         baseURL,
         headers: getHeaders()
       })
-      return response.data
     },
 
     async getAttributeList(
       params?: Partial<GetAttributeListParams>
     ): Promise<AttributeListResponse> {
-      const response = await api.getAttributeList(
-        {
-          page: params?.page ?? 1,
-          size: params?.size ?? 10,
-          sort: params?.sort,
-          order: params?.order,
-          enabled: params?.enabled
-        },
-        { baseURL, headers: getHeaders() }
-      )
-      return response.data
+      return $fetch<AttributeListResponse>(getGetAttributeListUrl({
+        page: params?.page ?? 1,
+        size: params?.size ?? 10,
+        sort: params?.sort,
+        order: params?.order,
+        enabled: params?.enabled
+      }), {
+        baseURL,
+        headers: getHeaders()
+      })
     },
 
     async createAttribute(
       newAttribute: CreateAttributeRequest
     ): Promise<AttributeResponse> {
-      const response = await api.createAttribute(newAttribute, {
+      return $fetch<AttributeResponse>(getCreateAttributeUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'POST',
+        headers: getHeaders(),
+        body: newAttribute
       })
-      return response.data
     },
 
     async updateAttribute(
       updatedAttribute: UpdateAttributeRequest
     ): Promise<AttributeResponse> {
-      const response = await api.updateAttribute(updatedAttribute, {
+      return $fetch<AttributeResponse>(getUpdateAttributeUrl(), {
         baseURL,
-        headers: getHeaders()
+        method: 'PUT',
+        headers: getHeaders(),
+        body: updatedAttribute
       })
-      return response.data
     }
   }
 }
