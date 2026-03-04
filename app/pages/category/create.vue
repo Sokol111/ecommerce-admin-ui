@@ -19,7 +19,6 @@ async function handleSubmit(data: CategoryFormData) {
       attributes: data.attributes.map((attr: CategoryAttributeFormData) => ({
         attributeId: attr.attributeId,
         role: attr.role,
-        required: attr.required,
         sortOrder: attr.sortOrder,
         filterable: attr.filterable,
         searchable: attr.searchable

@@ -32,7 +32,6 @@ const initialData = computed(() => ({
   attributes: category.value!.attributes?.map((attr) => ({
     attributeId: attr.attributeId,
     role: attr.role as 'variant' | 'specification',
-    required: attr.required,
     sortOrder: attr.sortOrder,
     filterable: attr.filterable,
     searchable: attr.searchable
@@ -50,7 +49,6 @@ async function handleSubmit(data: CategoryFormData) {
       attributes: data.attributes.map((attr: CategoryAttributeFormData) => ({
         attributeId: attr.attributeId,
         role: attr.role,
-        required: attr.required,
         sortOrder: attr.sortOrder,
         filterable: attr.filterable,
         searchable: attr.searchable

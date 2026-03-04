@@ -4,7 +4,6 @@ import { z } from 'zod'
 export const categoryAttributeSchema = z.object({
   attributeId: z.string().uuid('Please select an attribute'),
   role: z.enum(['variant', 'specification'], { message: 'Please select role' }),
-  required: z.boolean(),
   sortOrder: z.number().int().min(0).max(10000),
   filterable: z.boolean(),
   searchable: z.boolean()

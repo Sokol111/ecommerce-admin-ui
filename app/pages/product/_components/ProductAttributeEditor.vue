@@ -99,7 +99,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Single select -->
         <UFormField
           v-if="definition!.type === 'single'"
-          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <USelect
@@ -115,7 +115,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Multiple select -->
         <UFormField
           v-else-if="definition!.type === 'multiple'"
-          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <USelectMenu
@@ -132,7 +132,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Range (numeric with unit) -->
         <UFormField
           v-else-if="definition!.type === 'range'"
-          :label="`${definition!.name}${categoryAttr.required ? ' *' : ''}${definition!.unit ? ` (${definition!.unit})` : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <UInput
@@ -152,7 +152,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Boolean -->
         <UFormField
           v-else-if="definition!.type === 'boolean'"
-          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
           <div class="flex items-center gap-2 pt-1">
@@ -170,7 +170,7 @@ function getOptionItems(def: AttributeResponse) {
         <!-- Text -->
         <UFormField
           v-else-if="definition!.type === 'text'"
-          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}${categoryAttr.required ? ' *' : ''}`"
+          :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
           class="md:col-span-2"
         >
@@ -193,9 +193,6 @@ function getOptionItems(def: AttributeResponse) {
             size="sm"
           >
             {{ categoryAttr.role }}
-          </UBadge>
-          <UBadge v-if="categoryAttr.required" color="warning" variant="subtle" size="sm">
-            required
           </UBadge>
         </div>
       </div>

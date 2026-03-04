@@ -49,7 +49,6 @@ function addAttribute() {
   state.attributes.push({
     attributeId: firstOption.value,
     role: 'specification',
-    required: false,
     sortOrder: state.attributes.length,
     filterable: false,
     searchable: false
@@ -164,10 +163,6 @@ async function onSubmit() {
 
             <!-- Toggles -->
             <div class="flex items-center gap-4 pt-6">
-              <label class="flex items-center gap-2 text-sm">
-                <UCheckbox v-model="attr.required" :disabled="isSubmitting" />
-                Required
-              </label>
               <label class="flex items-center gap-2 text-sm">
                 <UCheckbox v-model="attr.filterable" :disabled="isSubmitting" />
                 Filterable
