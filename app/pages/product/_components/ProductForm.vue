@@ -96,6 +96,7 @@ async function onSubmit() {
       <UFormField label="Name" name="name" required class="md:col-span-2">
         <UInput
           v-model="state.name"
+          class="w-full"
           placeholder="Product name"
           :disabled="isSubmitting"
         />
@@ -105,6 +106,7 @@ async function onSubmit() {
       <UFormField label="Description" name="description" class="md:col-span-2">
         <UTextarea
           v-model="state.description"
+          class="w-full"
           placeholder="Product description"
           :rows="4"
           :disabled="isSubmitting"
