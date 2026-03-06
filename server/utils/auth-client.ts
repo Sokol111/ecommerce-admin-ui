@@ -1,28 +1,17 @@
 import type {
   AdminAuthResponse,
   AdminUserProfile,
-  LoginRequest,
-  TokenRefreshResponse
+  LoginRequest
 } from '@sokol111/ecommerce-auth-service-api'
 import {
   getAdminGetProfileUrl,
   getAdminLoginUrl,
-  getAdminLogoutUrl,
-  getTokenRefreshUrl
+  getAdminLogoutUrl
 } from '@sokol111/ecommerce-auth-service-api'
 import type { H3Event } from 'h3'
 
 export function useAuthClient(event: H3Event) {
   const { authApiUrl: baseURL } = useRuntimeConfig()
-  const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
-  const refreshTokenValue = getCookie(event, REFRESH_TOKEN_KEY)
-
-  function getAuthHeaders(): HeadersInit {
-    if (!accessToken) {
-      throw createError({ statusCode: 401, message: 'Not authenticated' })
-    }
-    return { Authorization: `Bearer ${accessToken}` }
-  }
 
   return {
     async login(credentials: LoginRequest): Promise<AdminAuthResponse> {
@@ -33,30 +22,26 @@ export function useAuthClient(event: H3Event) {
       })
     },
 
-    async getProfile(): Promise<AdminUserProfile> {
-      return $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
-        baseURL,
-        headers: getAuthHeaders()
-      })
-    },
-
-    async refreshToken(): Promise<TokenRefreshResponse> {
-      if (!refreshTokenValue) {
-        throw new Error('No refresh token available')
-      }
-      return $fetch<TokenRefreshResponse>(getTokenRefreshUrl(), {
-        baseURL,
-        method: 'POST',
-        body: { refreshToken: refreshTokenValue }
-      })
-    },
-
     async logout(): Promise<void> {
+      const token = useAuthToken(event)
       await $fetch(getAdminLogoutUrl(), {
         baseURL,
         method: 'POST',
-        headers: getAuthHeaders()
+        headers: { Authorization: `Bearer ${token}` }
       })
+    },
+
+    async getAuthenticatedProfile(): Promise<AdminUserProfile> {
+      const token = useAuthToken(event)
+      try {
+        return await $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
+          baseURL,
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      } catch {
+        clearAuthCookies(event)
+        throw createError({ statusCode: 401, message: 'Failed to get profile' })
+      }
     }
   }
 }

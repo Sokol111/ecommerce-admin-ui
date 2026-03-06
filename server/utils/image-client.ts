@@ -17,21 +17,15 @@ import type { H3Event } from 'h3'
 
 export function useImageClient(event: H3Event) {
   const { imageApiUrl: baseURL } = useRuntimeConfig()
-  const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
-
-  function getHeaders(): HeadersInit {
-    if (!accessToken) {
-      throw createError({ statusCode: 401, message: 'Not authenticated' })
-    }
-    return { Authorization: `Bearer ${accessToken}` }
-  }
+  const token = useAuthToken(event)
+  const headers: HeadersInit = { Authorization: `Bearer ${token}` }
 
   return {
     async createPresign(request: PresignRequest): Promise<PresignResponse> {
       return $fetch<PresignResponse>(getCreatePresignUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: request
       })
     },
@@ -40,7 +34,7 @@ export function useImageClient(event: H3Event) {
       return $fetch<Image>(getConfirmUploadUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: request
       })
     },
@@ -49,7 +43,7 @@ export function useImageClient(event: H3Event) {
       return $fetch<PromoteImages200>(getPromoteImagesUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: request
       })
     },
@@ -63,7 +57,7 @@ export function useImageClient(event: H3Event) {
         { w: params.options.w, quality: params.options.quality }
       ), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     }
   }

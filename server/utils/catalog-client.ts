@@ -33,14 +33,8 @@ import type { H3Event } from 'h3'
 
 export function useCatalogClient(event: H3Event) {
   const { catalogApiUrl: baseURL } = useRuntimeConfig()
-  const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
-
-  function getHeaders(): HeadersInit {
-    if (!accessToken) {
-      throw createError({ statusCode: 401, message: 'Not authenticated' })
-    }
-    return { Authorization: `Bearer ${accessToken}` }
-  }
+  const token = useAuthToken(event)
+  const headers: HeadersInit = { Authorization: `Bearer ${token}` }
 
   return {
     // ==================== PRODUCTS ====================
@@ -48,7 +42,7 @@ export function useCatalogClient(event: H3Event) {
     async getProductById(productId: string): Promise<ProductResponse> {
       return $fetch<ProductResponse>(getGetProductByIdUrl(productId), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -64,7 +58,7 @@ export function useCatalogClient(event: H3Event) {
         categoryId: params?.categoryId
       }), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -74,7 +68,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<ProductResponse>(getCreateProductUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: newProduct
       })
     },
@@ -85,7 +79,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<ProductResponse>(getUpdateProductUrl(), {
         baseURL,
         method: 'PUT',
-        headers: getHeaders(),
+        headers,
         body: updatedProduct
       })
     },
@@ -95,7 +89,7 @@ export function useCatalogClient(event: H3Event) {
     async getCategoryById(categoryId: string): Promise<CategoryResponse> {
       return $fetch<CategoryResponse>(getGetCategoryByIdUrl(categoryId), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -110,7 +104,7 @@ export function useCatalogClient(event: H3Event) {
         enabled: params?.enabled
       }), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -120,7 +114,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<CategoryResponse>(getCreateCategoryUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: newCategory
       })
     },
@@ -131,7 +125,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<CategoryResponse>(getUpdateCategoryUrl(), {
         baseURL,
         method: 'PUT',
-        headers: getHeaders(),
+        headers,
         body: updatedCategory
       })
     },
@@ -141,7 +135,7 @@ export function useCatalogClient(event: H3Event) {
     async getAttributeById(attributeId: string): Promise<AttributeResponse> {
       return $fetch<AttributeResponse>(getGetAttributeByIdUrl(attributeId), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -156,7 +150,7 @@ export function useCatalogClient(event: H3Event) {
         enabled: params?.enabled
       }), {
         baseURL,
-        headers: getHeaders()
+        headers
       })
     },
 
@@ -166,7 +160,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<AttributeResponse>(getCreateAttributeUrl(), {
         baseURL,
         method: 'POST',
-        headers: getHeaders(),
+        headers,
         body: newAttribute
       })
     },
@@ -177,7 +171,7 @@ export function useCatalogClient(event: H3Event) {
       return $fetch<AttributeResponse>(getUpdateAttributeUrl(), {
         baseURL,
         method: 'PUT',
-        headers: getHeaders(),
+        headers,
         body: updatedAttribute
       })
     }

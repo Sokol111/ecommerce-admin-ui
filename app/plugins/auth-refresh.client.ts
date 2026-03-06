@@ -24,7 +24,11 @@ export default defineNuxtPlugin(() => {
     const refreshAt = Math.max(0, expiresAt - TOKEN_EXPIRY_BUFFER_MS - Date.now())
 
     timeoutId = setTimeout(async () => {
-      await ensureAuthenticated()
+      const isAuth = await ensureAuthenticated()
+      if (!isAuth) {
+        await navigateTo('/login')
+        return
+      }
       scheduleRefresh()
     }, refreshAt)
   }
