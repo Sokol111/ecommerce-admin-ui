@@ -12,7 +12,7 @@ const {
   totalPages,
   handlePageChange,
   createRowActions
-} = useListPage<ProductResponse>('/api/catalog/products')
+} = await useListPage<ProductResponse>('/api/catalog/products')
 
 // Table columns
 const columns: TableColumn<ProductResponse>[] = [

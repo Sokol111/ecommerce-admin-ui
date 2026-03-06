@@ -12,7 +12,7 @@ const {
   totalPages,
   handlePageChange,
   createRowActions
-} = useListPage<AttributeResponse>('/api/catalog/attributes')
+} = await useListPage<AttributeResponse>('/api/catalog/attributes')
 
 // Table columns
 const columns: TableColumn<AttributeResponse>[] = [

@@ -12,7 +12,7 @@ const {
   totalPages,
   handlePageChange,
   createRowActions
-} = useListPage<CategoryResponse>('/api/catalog/categories')
+} = await useListPage<CategoryResponse>('/api/catalog/categories')
 
 // Table columns
 const columns: TableColumn<CategoryResponse>[] = [

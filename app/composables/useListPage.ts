@@ -9,7 +9,7 @@ export interface UseListPageOptions {
   defaultSize?: number
 }
 
-export function useListPage<T>(endpoint: string, options: UseListPageOptions = {}) {
+export async function useListPage<T>(endpoint: string, options: UseListPageOptions = {}) {
   const { defaultSize = 10 } = options
   const route = useRoute()
 
@@ -18,7 +18,7 @@ export function useListPage<T>(endpoint: string, options: UseListPageOptions = {
   const size = computed(() => Number(route.query.size) || defaultSize)
 
   // Fetch data
-  const { data, pending, error, refresh } = useFetch<PaginatedResponse<T>>(endpoint, {
+  const { data, pending, error, refresh } = await useFetch<PaginatedResponse<T>>(endpoint, {
     query: {
       page,
       size

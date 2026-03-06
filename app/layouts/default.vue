@@ -80,7 +80,9 @@ const userMenuItems = computed(() => [
         <div />
 
         <div class="flex items-center gap-4">
-          <UColorModeButton />
+          <ClientOnly>
+            <UColorModeButton />
+          </ClientOnly>
 
           <UDropdownMenu
             v-if="isAuthenticated && !isLoading"
