@@ -96,10 +96,10 @@ const typeLabels: Record<string, string> = {
       <template v-if="totalPages > 1" #footer>
         <div class="flex justify-center">
           <UPagination
-            :model-value="page"
+            :default-page="page"
             :total="total"
             :items-per-page="size"
-            @update:model-value="handlePageChange"
+            @update:page="handlePageChange"
           />
         </div>
       </template>
