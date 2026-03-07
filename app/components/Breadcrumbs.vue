@@ -13,17 +13,9 @@ defineProps<{
 <template>
   <UBreadcrumb :items="items" class="mb-4">
     <template #item="{ item, active }">
-      <ULink
-        v-if="!active && item.to"
-        :to="item.to"
-        class="flex items-center gap-1.5 text-muted hover:text-default transition-colors"
-      >
-        <UIcon v-if="item.icon" :name="item.icon" class="h-4 w-4" />
-        <span>{{ item.label }}</span>
-      </ULink>
       <span
-        v-else
-        class="flex items-center gap-1.5 font-medium"
+        class="flex items-center gap-1.5"
+        :class="active ? 'font-medium' : 'text-muted hover:text-default transition-colors'"
       >
         <UIcon v-if="item.icon" :name="item.icon" class="h-4 w-4" />
         <span>{{ item.label }}</span>
