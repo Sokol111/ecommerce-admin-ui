@@ -23,7 +23,8 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
       page,
       size
     },
-    getCachedData: () => undefined
+    getCachedData: () => undefined,
+    server: false
   })
 
   // Computed

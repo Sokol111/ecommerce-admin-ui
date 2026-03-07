@@ -27,13 +27,15 @@ const columns: TableColumn<ProductResponse>[] = [
 
 <template>
   <div>
-    <ListPageHeader
-      title="Products"
-      :total="total"
-      create-to="/product/create"
-      create-label="Create Product"
-      :error="error"
-    />
+    <ClientOnly>
+      <ListPageHeader
+        title="Products"
+        :total="total"
+        create-to="/product/create"
+        create-label="Create Product"
+        :error="error"
+      />
+    </ClientOnly>
 
     <!-- Table -->
     <UCard>
@@ -42,42 +44,42 @@ const columns: TableColumn<ProductResponse>[] = [
           :columns="columns"
           :data="items"
         >
-        <template #name-cell="{ row }">
-          <span class="font-medium">{{ row.original.name }}</span>
-        </template>
+          <template #name-cell="{ row }">
+            <span class="font-medium">{{ row.original.name }}</span>
+          </template>
 
-        <template #price-cell="{ row }">
-          ${{ row.original.price.toFixed(2) }}
-        </template>
+          <template #price-cell="{ row }">
+            ${{ row.original.price.toFixed(2) }}
+          </template>
 
-        <template #quantity-cell="{ row }">
-          <UBadge color="neutral" variant="subtle">
-            {{ row.original.quantity }}
-          </UBadge>
-        </template>
+          <template #quantity-cell="{ row }">
+            <UBadge color="neutral" variant="subtle">
+              {{ row.original.quantity }}
+            </UBadge>
+          </template>
 
-        <template #enabled-cell="{ row }">
-          <StatusBadge :enabled="row.original.enabled" />
-        </template>
+          <template #enabled-cell="{ row }">
+            <StatusBadge :enabled="row.original.enabled" />
+          </template>
 
-        <template #createdAt-cell="{ row }">
-          <div class="text-sm">
-            <div>{{ formatDate(row.original.createdAt).date }}</div>
-            <div class="text-muted">{{ formatDate(row.original.createdAt).time }}</div>
-          </div>
-        </template>
+          <template #createdAt-cell="{ row }">
+            <div class="text-sm">
+              <div>{{ formatDate(row.original.createdAt).date }}</div>
+              <div class="text-muted">{{ formatDate(row.original.createdAt).time }}</div>
+            </div>
+          </template>
 
-        <template #actions-cell="{ row }">
-          <UDropdownMenu :items="createRowActions(row.original, '/product')">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              icon="i-lucide-more-horizontal"
-              size="sm"
-            />
-          </UDropdownMenu>
-        </template>
-      </UTable>
+          <template #actions-cell="{ row }">
+            <UDropdownMenu :items="createRowActions(row.original, '/product')">
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-more-horizontal"
+                size="sm"
+              />
+            </UDropdownMenu>
+          </template>
+        </UTable>
 
         <template #fallback>
           <TableSkeleton :columns="6" />
