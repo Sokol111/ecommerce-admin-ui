@@ -37,12 +37,11 @@ const columns: TableColumn<ProductResponse>[] = [
 
     <!-- Table -->
     <UCard>
-      <TableSkeleton v-if="pending" :columns="6" />
-      <UTable
-        v-else
-        :columns="columns"
-        :data="items"
-      >
+      <ClientOnly>
+        <UTable
+          :columns="columns"
+          :data="items"
+        >
         <template #name-cell="{ row }">
           <span class="font-medium">{{ row.original.name }}</span>
         </template>
@@ -79,6 +78,11 @@ const columns: TableColumn<ProductResponse>[] = [
           </UDropdownMenu>
         </template>
       </UTable>
+
+        <template #fallback>
+          <TableSkeleton :columns="6" />
+        </template>
+      </ClientOnly>
 
       <!-- Pagination -->
       <template v-if="totalPages > 1" #footer>
