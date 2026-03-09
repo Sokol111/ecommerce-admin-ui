@@ -1,5 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (to.meta.auth === false) return
+  if (to.path.startsWith('/api/')) {
+    return
+  }
+
+  if (to.meta.auth === false) {
+    return
+  }
 
   const { ensureAuthenticated } = useAuth()
   const isAuthenticated = await ensureAuthenticated()

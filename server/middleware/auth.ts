@@ -4,8 +4,12 @@ import { getTokenRefreshUrl } from '@sokol111/ecommerce-auth-service-api'
 const PUBLIC_ROUTES = ['/api/auth/login', '/api/health']
 
 export default defineEventHandler(async (event) => {
-  if (!event.path.startsWith('/api/')) return
-  if (PUBLIC_ROUTES.includes(event.path)) return
+  if (!event.path.startsWith('/api/')) {
+    return
+  }
+  if (PUBLIC_ROUTES.includes(event.path) || event.path.startsWith('/api/_nuxt_icon/')) {
+    return
+  }
 
   const accessToken = getCookie(event, ACCESS_TOKEN_KEY)
   const expiresAt = getCookie(event, ACCESS_TOKEN_EXPIRES_AT_KEY)
@@ -16,6 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const refreshToken = getCookie(event, REFRESH_TOKEN_KEY)
+
   if (!refreshToken) {
     clearAuthCookies(event)
     throw createError({ statusCode: 401, message: 'Not authenticated' })

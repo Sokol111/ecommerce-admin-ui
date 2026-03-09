@@ -1,3 +1,5 @@
+import { getCookie as getH3Cookie } from 'h3'
+
 /**
  * Read a cookie value universally (server & client).
  *
@@ -8,7 +10,7 @@ export function readCookie(name: string): string | undefined {
   if (import.meta.server) {
     const event = useRequestEvent()
     if (!event) return undefined
-    return getCookie(event, name)
+    return getH3Cookie(event, name)
   }
   const match = document.cookie.match(
     new RegExp(`(?:^|;\\s*)${name}=([^;]*)`)

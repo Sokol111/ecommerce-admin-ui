@@ -34,10 +34,11 @@ export function useAuthClient(event: H3Event) {
     async getAuthenticatedProfile(): Promise<AdminUserProfile> {
       const token = useAuthToken(event)
       try {
-        return await $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
+        const profile = await $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
           baseURL,
           headers: { Authorization: `Bearer ${token}` }
         })
+        return profile
       } catch {
         clearAuthCookies(event)
         throw createError({ statusCode: 401, message: 'Failed to get profile' })

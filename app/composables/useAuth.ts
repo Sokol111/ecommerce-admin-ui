@@ -43,8 +43,19 @@ export function useAuth() {
   }
 
   const ensureAuthenticated = async (): Promise<boolean> => {
-    const tokenExpired = import.meta.client && isTokenExpired(readCookie(ACCESS_TOKEN_EXPIRES_AT_KEY))
-    if (user.value && !tokenExpired) return true
+    const expiresAtRaw = readCookie(ACCESS_TOKEN_EXPIRES_AT_KEY)
+    const tokenExpired = isTokenExpired(expiresAtRaw)
+
+    if (user.value && !tokenExpired) {
+      return true
+    }
+
+    // No cookies at all — skip the API call, we know user is not authenticated
+    if (!expiresAtRaw) {
+      user.value = null
+      isLoading.value = false
+      return false
+    }
 
     try {
       user.value = await $fetch<AdminUserProfile>('/api/auth/session', {

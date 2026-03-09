@@ -69,5 +69,9 @@ export default defineNuxtConfig({
         arrowParens: true
       }
     }
+  },
+
+  icon: {
+    serverBundle: 'local'
   }
 })
