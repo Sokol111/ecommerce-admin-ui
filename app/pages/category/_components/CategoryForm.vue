@@ -167,10 +167,7 @@ async function onSubmit() {
                 <UCheckbox v-model="attr.filterable" :disabled="isSubmitting" />
                 Filterable
               </label>
-              <label class="flex items-center gap-2 text-sm">
-                <UCheckbox v-model="attr.searchable" :disabled="isSubmitting" />
-                Searchable
-              </label>
+
             </div>
 
             <!-- Remove button -->
