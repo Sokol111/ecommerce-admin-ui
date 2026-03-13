@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt', '@vueuse/nuxt'],
 
   devtools: {
-    enabled: true
+    enabled: process.env.NODE_ENV !== 'production'
   },
 
   css: ['~/assets/css/main.css'],
@@ -15,16 +15,9 @@ export default defineNuxtConfig({
     catalogApiUrl: '',
     imageApiUrl: '',
 
-    // Cookie settings
-    cookieSecure: false,
-    cookieSameSite: 'lax',
-
-    // Public (exposed to client)
-    public: {
-      authApiUrl: '',
-      catalogApiUrl: '',
-      imageApiUrl: ''
-    }
+    // Cookie settings (override with NUXT_COOKIE_SECURE=false for local dev)
+    cookieSecure: true,
+    cookieSameSite: 'lax'
   },
 
   routeRules: {

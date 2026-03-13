@@ -64,12 +64,10 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         size: file.size,
         role: options.role || 'main'
       }
-      console.log('[upload] Step 1: presign request', presignBody)
       const presignResult = await $fetch('/api/images/presign', {
         method: 'POST',
         body: presignBody
       }) as { success: boolean, data?: PresignResponse, error?: { title?: string, detail?: string } }
-      console.log('[upload] Step 1: presign response', presignResult)
 
       if (!presignResult.success || !presignResult.data) {
         throw new Error(presignResult.error?.detail || 'Failed to get upload URL')
@@ -79,8 +77,6 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
 
       // Step 2: Upload file directly to S3/MinIO
       uploadState.value = 'uploading'
-      console.log('[upload] Step 2: uploading to', uploadUrl)
-      console.log('[upload] Step 2: formData fields', Object.keys(formData))
       const multipartForm = new FormData()
 
       // Form fields must be added BEFORE the file
@@ -99,7 +95,6 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         })
 
         xhr.addEventListener('load', () => {
-          console.log('[upload] Step 2: XHR response status', xhr.status, xhr.responseText?.substring(0, 500))
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve()
           } else {
@@ -108,7 +103,6 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         })
 
         xhr.addEventListener('error', () => {
-          console.error('[upload] Step 2: XHR network error')
           reject(new Error('Upload failed'))
         })
         xhr.addEventListener('abort', () => reject(new Error('Upload aborted')))
@@ -124,12 +118,10 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         alt: params.alt || file.name.replace(/\.[^.]+$/, ''),
         role: options.role || 'main'
       }
-      console.log('[upload] Step 3: confirm request', { ...confirmBody, uploadToken: confirmBody.uploadToken.substring(0, 20) + '...' })
       const confirmResult = await $fetch('/api/images/confirm', {
         method: 'POST',
         body: confirmBody
       }) as { success: boolean, data?: { id: string }, error?: { title?: string, detail?: string } }
-      console.log('[upload] Step 3: confirm response', confirmResult)
 
       if (!confirmResult.success || !confirmResult.data) {
         throw new Error(confirmResult.error?.detail || 'Failed to confirm upload')
@@ -145,7 +137,6 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
     } catch (err) {
       uploadState.value = 'error'
       errorMessage.value = err instanceof Error ? err.message : 'Upload failed'
-      console.error('[upload] Error:', err)
       notify.error(errorMessage.value, 'Upload Error')
       return null
     }
