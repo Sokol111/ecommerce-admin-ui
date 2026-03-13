@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - package.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    uses: Sokol111/ecommerce-infrastructure/.github/workflows/nuxt-ci.yml@master
+    with:
+      node-version: '22'
+
+  release:
+    needs: ci
+    uses: Sokol111/ecommerce-infrastructure/.github/workflows/nuxt-release.yml@master
+    secrets:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
