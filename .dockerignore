@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# Allow only what's needed for the build
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!.npmrc
+!nuxt.config.ts
+!tsconfig.json
+!app/
+!public/
+!server/
+!layers/
+!modules/

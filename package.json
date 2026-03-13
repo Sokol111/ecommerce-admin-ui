@@ -8,7 +8,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "link:local": "pnpm link ../ecommerce-auth-service-api/gen/typescript ../ecommerce-catalog-service-api/gen/typescript ../ecommerce-image-service-api/gen/typescript",
+    "unlink:local": "rm -f node_modules/@sokol111/ecommerce-auth-service-api node_modules/@sokol111/ecommerce-catalog-service-api node_modules/@sokol111/ecommerce-image-service-api && pnpm install"
   },
   "dependencies": {
     "@date-fns/utc": "^2.1.1",
@@ -16,9 +18,9 @@
     "@iconify-json/simple-icons": "^1.2.70",
     "@nuxt/ui": "^4.4.0",
     "@pinia/nuxt": "0.11.3",
-    "@sokol111/ecommerce-auth-service-api": "link:../ecommerce-auth-service-api/gen/typescript",
-    "@sokol111/ecommerce-catalog-service-api": "link:../ecommerce-catalog-service-api/gen/typescript",
-    "@sokol111/ecommerce-image-service-api": "link:../ecommerce-image-service-api/gen/typescript",
+    "@sokol111/ecommerce-auth-service-api": "1.1.1",
+    "@sokol111/ecommerce-catalog-service-api": "1.1.1",
+    "@sokol111/ecommerce-image-service-api": "1.1.1",
     "@vueuse/nuxt": "14.2.1",
     "date-fns": "^4.1.0",
     "nuxt": "^4.3.1",
@@ -31,13 +33,6 @@
     "typescript": "^5.9.3",
     "unplugin-vue-router": "^0.19.2",
     "vue-tsc": "^3.2.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "@sokol111/ecommerce-auth-service-api": "link:../ecommerce-auth-service-api/gen/typescript",
-      "@sokol111/ecommerce-catalog-service-api": "link:../ecommerce-catalog-service-api/gen/typescript",
-      "@sokol111/ecommerce-image-service-api": "link:../ecommerce-image-service-api/gen/typescript"
-    }
   },
   "packageManager": "pnpm@10.29.3"
 }
