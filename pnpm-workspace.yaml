@@ -4,8 +4,3 @@ ignoredBuiltDependencies:
   - esbuild
   - unrs-resolver
   - vue-demi
-
-overrides:
-  '@sokol111/ecommerce-auth-service-api': link:../ecommerce-auth-service-api/gen/typescript
-  '@sokol111/ecommerce-catalog-service-api': link:../ecommerce-catalog-service-api/gen/typescript
-  '@sokol111/ecommerce-image-service-api': link:../ecommerce-image-service-api/gen/typescript
