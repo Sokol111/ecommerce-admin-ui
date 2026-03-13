@@ -5,7 +5,7 @@ import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
 const {
   items,
   total,
-  pending,
+  pending: _pending,
   error,
   page,
   size,
@@ -47,7 +47,10 @@ const columns: TableColumn<CategoryResponse>[] = [
           </template>
 
           <template #attributes-cell="{ row }">
-            <UBadge color="neutral" variant="subtle">
+            <UBadge
+              color="neutral"
+              variant="subtle"
+            >
               {{ row.original.attributes?.length || 0 }}
             </UBadge>
           </template>
@@ -74,7 +77,10 @@ const columns: TableColumn<CategoryResponse>[] = [
       </ClientOnly>
 
       <!-- Pagination -->
-      <template v-if="totalPages > 1" #footer>
+      <template
+        v-if="totalPages > 1"
+        #footer
+      >
         <div class="flex justify-center">
           <UPagination
             :default-page="page"

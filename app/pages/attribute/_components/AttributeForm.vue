@@ -4,7 +4,7 @@ import {
   attributeSchema,
   generateSlug,
   type AttributeFormData
-} from '~/schemas/attribute.schema';
+} from '~/schemas/attribute.schema'
 
 const props = defineProps<{
   initialData?: Partial<AttributeFormData>
@@ -53,7 +53,7 @@ function onSlugInput(event: Event) {
 }
 
 // Type options
-const typeOptions = ATTRIBUTE_TYPES.map(t => ({
+const typeOptions = ATTRIBUTE_TYPES.map((t) => ({
   value: t.value,
   label: t.label
 }))
@@ -131,10 +131,19 @@ async function onSubmit() {
 </script>
 
 <template>
-  <UForm :schema="attributeSchema" :state="state" class="space-y-6" @submit="onSubmit">
+  <UForm
+    :schema="attributeSchema"
+    :state="state"
+    class="space-y-6"
+    @submit="onSubmit"
+  >
     <!-- Basic Info -->
     <div class="grid gap-6 md:grid-cols-2">
-      <UFormField label="Name" name="name" required>
+      <UFormField
+        label="Name"
+        name="name"
+        required
+      >
         <UInput
           v-model="state.name"
           class="w-full"
@@ -143,7 +152,11 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Slug" name="slug" required>
+      <UFormField
+        label="Slug"
+        name="slug"
+        required
+      >
         <UInput
           v-model="state.slug"
           class="w-full"
@@ -153,7 +166,11 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Type" name="type" required>
+      <UFormField
+        label="Type"
+        name="type"
+        required
+      >
         <USelect
           v-model="state.type"
           class="w-full"
@@ -163,7 +180,10 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Unit" name="unit">
+      <UFormField
+        label="Unit"
+        name="unit"
+      >
         <UInput
           v-model="state.unit"
           class="w-full"
@@ -172,18 +192,29 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Status" name="enabled">
+      <UFormField
+        label="Status"
+        name="enabled"
+      >
         <div class="flex items-center gap-2">
-          <USwitch v-model="state.enabled" :disabled="isSubmitting" />
+          <USwitch
+            v-model="state.enabled"
+            :disabled="isSubmitting"
+          />
           <span class="text-sm">{{ state.enabled ? 'Enabled' : 'Disabled' }}</span>
         </div>
       </UFormField>
     </div>
 
     <!-- Options Section (for single/multiple types) -->
-    <div v-if="showOptions" class="space-y-4">
+    <div
+      v-if="showOptions"
+      class="space-y-4"
+    >
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">Options</h3>
+        <h3 class="text-lg font-semibold">
+          Options
+        </h3>
         <UButton
           type="button"
           variant="outline"
@@ -196,16 +227,29 @@ async function onSubmit() {
         </UButton>
       </div>
 
-      <div v-if="!state.options?.length" class="text-muted text-sm py-4 text-center border border-dashed rounded-lg">
+      <div
+        v-if="!state.options?.length"
+        class="text-muted text-sm py-4 text-center border border-dashed rounded-lg"
+      >
         No options added yet
       </div>
 
-      <div v-else class="space-y-3">
-        <UCard v-for="(option, index) in state.options" :key="index" class="p-4">
+      <div
+        v-else
+        class="space-y-3"
+      >
+        <UCard
+          v-for="(option, index) in state.options"
+          :key="index"
+          class="p-4"
+        >
           <div class="flex items-start gap-4">
             <div class="flex-1 grid gap-4 md:grid-cols-4">
               <!-- Name -->
-              <UFormField :label="index === 0 ? 'Name' : ''" :name="`options.${index}.name`">
+              <UFormField
+                :label="index === 0 ? 'Name' : ''"
+                :name="`options.${index}.name`"
+              >
                 <UInput
                   v-model="option.name"
                   class="w-full"
@@ -216,7 +260,10 @@ async function onSubmit() {
               </UFormField>
 
               <!-- Slug -->
-              <UFormField :label="index === 0 ? 'Slug' : ''" :name="`options.${index}.slug`">
+              <UFormField
+                :label="index === 0 ? 'Slug' : ''"
+                :name="`options.${index}.slug`"
+              >
                 <UInput
                   v-model="option.slug"
                   class="w-full"
@@ -227,7 +274,10 @@ async function onSubmit() {
               </UFormField>
 
               <!-- Color Code -->
-              <UFormField :label="index === 0 ? 'Color' : ''" :name="`options.${index}.colorCode`">
+              <UFormField
+                :label="index === 0 ? 'Color' : ''"
+                :name="`options.${index}.colorCode`"
+              >
                 <div class="flex gap-2">
                   <input
                     v-model="option.colorCode"
@@ -245,7 +295,10 @@ async function onSubmit() {
               </UFormField>
 
               <!-- Sort Order -->
-              <UFormField :label="index === 0 ? 'Sort' : ''" :name="`options.${index}.sortOrder`">
+              <UFormField
+                :label="index === 0 ? 'Sort' : ''"
+                :name="`options.${index}.sortOrder`"
+              >
                 <UInput
                   v-model.number="option.sortOrder"
                   class="w-full"

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { AttributeResponse, CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
-import { productSchema, type ProductFormData } from '~/schemas/product.schema';
-import ProductAttributeEditor from './ProductAttributeEditor.vue';
-import ProductImageUpload from './ProductImageUpload.vue';
+import type { AttributeResponse, CategoryResponse } from '@sokol111/ecommerce-catalog-service-api'
+import { productSchema, type ProductFormData } from '~/schemas/product.schema'
+import ProductAttributeEditor from './ProductAttributeEditor.vue'
+import ProductImageUpload from './ProductImageUpload.vue'
 
 const props = defineProps<{
   initialData?: Partial<ProductFormData>
@@ -80,10 +80,19 @@ async function onSubmit() {
 </script>
 
 <template>
-  <UForm :schema="productSchema" :state="state" class="space-y-6" @submit="onSubmit">
+  <UForm
+    :schema="productSchema"
+    :state="state"
+    class="space-y-6"
+    @submit="onSubmit"
+  >
     <div class="grid gap-6 md:grid-cols-2">
       <!-- Product Image -->
-      <UFormField label="Product Image" name="imageId" class="md:col-span-2">
+      <UFormField
+        label="Product Image"
+        name="imageId"
+        class="md:col-span-2"
+      >
         <ProductImageUpload
           :image-id="state.imageId"
           :owner-id="imageOwnerId"
@@ -93,7 +102,12 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Name -->
-      <UFormField label="Name" name="name" required class="md:col-span-2">
+      <UFormField
+        label="Name"
+        name="name"
+        required
+        class="md:col-span-2"
+      >
         <UInput
           v-model="state.name"
           class="w-full"
@@ -103,7 +117,11 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Description -->
-      <UFormField label="Description" name="description" class="md:col-span-2">
+      <UFormField
+        label="Description"
+        name="description"
+        class="md:col-span-2"
+      >
         <UTextarea
           v-model="state.description"
           class="w-full"
@@ -114,7 +132,10 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Category -->
-      <UFormField label="Category" name="categoryId">
+      <UFormField
+        label="Category"
+        name="categoryId"
+      >
         <USelect
           v-model="categoryId"
           :items="categoryOptions"
@@ -125,7 +146,11 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Price -->
-      <UFormField label="Price" name="price" required>
+      <UFormField
+        label="Price"
+        name="price"
+        required
+      >
         <UInput
           v-model.number="state.price"
           type="number"
@@ -141,7 +166,11 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Quantity -->
-      <UFormField label="Quantity" name="quantity" required>
+      <UFormField
+        label="Quantity"
+        name="quantity"
+        required
+      >
         <UInput
           v-model.number="state.quantity"
           type="number"
@@ -152,9 +181,15 @@ async function onSubmit() {
       </UFormField>
 
       <!-- Enabled -->
-      <UFormField label="Status" name="enabled">
+      <UFormField
+        label="Status"
+        name="enabled"
+      >
         <div class="flex items-center gap-2">
-          <USwitch v-model="state.enabled" :disabled="isSubmitting" />
+          <USwitch
+            v-model="state.enabled"
+            :disabled="isSubmitting"
+          />
           <span class="text-sm">{{ state.enabled ? 'Enabled' : 'Disabled' }}</span>
         </div>
       </UFormField>

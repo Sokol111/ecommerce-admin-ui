@@ -49,8 +49,14 @@ const userMenuItems = computed(() => [
       <div class="flex flex-col h-full">
         <!-- Logo -->
         <div class="flex items-center h-16 px-4 border-b border-default">
-          <NuxtLink to="/" class="flex items-center gap-2">
-            <UIcon name="i-lucide-store" class="h-6 w-6 text-primary" />
+          <NuxtLink
+            to="/"
+            class="flex items-center gap-2"
+          >
+            <UIcon
+              name="i-lucide-store"
+              class="h-6 w-6 text-primary"
+            />
             <span class="font-semibold text-lg">Admin Panel</span>
           </NuxtLink>
         </div>
@@ -58,13 +64,19 @@ const userMenuItems = computed(() => [
         <!-- Navigation -->
         <nav class="flex-1 p-4">
           <ul class="space-y-1">
-            <li v-for="item in navigation" :key="item.to">
+            <li
+              v-for="item in navigation"
+              :key="item.to"
+            >
               <ULink
                 :to="item.to"
                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-elevated"
                 active-class="bg-primary/10 text-primary"
               >
-                <UIcon :name="item.icon" class="h-5 w-5" />
+                <UIcon
+                  :name="item.icon"
+                  class="h-5 w-5"
+                />
                 {{ item.label }}
               </ULink>
             </li>

@@ -2,8 +2,8 @@
 import type {
   AttributeResponse,
   CategoryAttribute
-} from '@sokol111/ecommerce-catalog-service-api';
-import type { ProductAttributeData } from '~/schemas/product.schema';
+} from '@sokol111/ecommerce-catalog-service-api'
+import type { ProductAttributeData } from '~/schemas/product.schema'
 
 const props = defineProps<{
   categoryAttributes: CategoryAttribute[]
@@ -77,7 +77,9 @@ function getOptionItems(def: AttributeResponse) {
 <template>
   <div class="space-y-4">
     <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold">Attributes</h3>
+      <h3 class="text-lg font-semibold">
+        Attributes
+      </h3>
       <span class="text-muted text-sm">
         {{ resolvedAttributes.length }} attribute{{ resolvedAttributes.length !== 1 ? 's' : '' }} from category
       </span>
@@ -90,7 +92,10 @@ function getOptionItems(def: AttributeResponse) {
       No attributes defined for this category
     </div>
 
-    <div v-else class="space-y-3">
+    <div
+      v-else
+      class="space-y-3"
+    >
       <div
         v-for="{ categoryAttr, definition } in resolvedAttributes"
         :key="categoryAttr.attributeId"
@@ -143,7 +148,10 @@ function getOptionItems(def: AttributeResponse) {
             :disabled="disabled"
             @update:model-value="(v: string | number) => updateAttrValue(categoryAttr.attributeId, { numericValue: v !== '' && v != null ? Number(v) : undefined })"
           >
-            <template v-if="definition!.unit" #trailing>
+            <template
+              v-if="definition!.unit"
+              #trailing
+            >
               <span class="text-muted text-sm">{{ definition!.unit }}</span>
             </template>
           </UInput>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api';
-import { categorySchema, type CategoryFormData } from '~/schemas/category.schema';
+import type { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api'
+import { categorySchema, type CategoryFormData } from '~/schemas/category.schema'
 
 const props = defineProps<{
   initialData?: Partial<CategoryFormData>
@@ -26,10 +26,10 @@ const state = reactive<CategoryFormData>({
 
 // Available attributes for select (exclude already added)
 const availableAttributeOptions = computed(() => {
-  const usedIds = state.attributes.map(a => a.attributeId)
+  const usedIds = state.attributes.map((a) => a.attributeId)
   return props.availableAttributes
-    .filter(a => !usedIds.includes(a.id))
-    .map(a => ({
+    .filter((a) => !usedIds.includes(a.id))
+    .map((a) => ({
       value: a.id,
       label: a.name
     }))
@@ -62,7 +62,7 @@ function removeAttribute(index: number) {
 
 // Get attribute name by ID
 function getAttributeName(id: string): string {
-  return props.availableAttributes.find(a => a.id === id)?.name || 'Unknown'
+  return props.availableAttributes.find((a) => a.id === id)?.name || 'Unknown'
 }
 
 async function onSubmit() {
@@ -80,10 +80,20 @@ async function onSubmit() {
 </script>
 
 <template>
-  <UForm :schema="categorySchema" :state="state" class="space-y-6" @submit="onSubmit">
+  <UForm
+    :schema="categorySchema"
+    :state="state"
+    class="space-y-6"
+    @submit="onSubmit"
+  >
     <!-- Basic Info -->
     <div class="grid gap-6 md:grid-cols-2">
-      <UFormField label="Name" name="name" required class="md:col-span-2">
+      <UFormField
+        label="Name"
+        name="name"
+        required
+        class="md:col-span-2"
+      >
         <UInput
           v-model="state.name"
           class="w-full"
@@ -92,9 +102,15 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Status" name="enabled">
+      <UFormField
+        label="Status"
+        name="enabled"
+      >
         <div class="flex items-center gap-2">
-          <USwitch v-model="state.enabled" :disabled="isSubmitting" />
+          <USwitch
+            v-model="state.enabled"
+            :disabled="isSubmitting"
+          />
           <span class="text-sm">{{ state.enabled ? 'Enabled' : 'Disabled' }}</span>
         </div>
       </UFormField>
@@ -103,7 +119,9 @@ async function onSubmit() {
     <!-- Attributes Section -->
     <div class="space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">Attributes</h3>
+        <h3 class="text-lg font-semibold">
+          Attributes
+        </h3>
         <UButton
           type="button"
           variant="outline"
@@ -116,16 +134,29 @@ async function onSubmit() {
         </UButton>
       </div>
 
-      <div v-if="state.attributes.length === 0" class="text-muted text-sm py-4 text-center border border-dashed rounded-lg">
+      <div
+        v-if="state.attributes.length === 0"
+        class="text-muted text-sm py-4 text-center border border-dashed rounded-lg"
+      >
         No attributes added yet
       </div>
 
-      <div v-else class="space-y-3">
-        <UCard v-for="(attr, index) in state.attributes" :key="index" class="p-4">
+      <div
+        v-else
+        class="space-y-3"
+      >
+        <UCard
+          v-for="(attr, index) in state.attributes"
+          :key="index"
+          class="p-4"
+        >
           <div class="flex items-start gap-4">
             <div class="flex-1 grid gap-4 md:grid-cols-3">
               <!-- Attribute Select -->
-              <UFormField :label="index === 0 ? 'Attribute' : ''" :name="`attributes.${index}.attributeId`">
+              <UFormField
+                :label="index === 0 ? 'Attribute' : ''"
+                :name="`attributes.${index}.attributeId`"
+              >
                 <USelect
                   v-model="attr.attributeId"
                   class="w-full"
@@ -139,7 +170,10 @@ async function onSubmit() {
               </UFormField>
 
               <!-- Role Select -->
-              <UFormField :label="index === 0 ? 'Role' : ''" :name="`attributes.${index}.role`">
+              <UFormField
+                :label="index === 0 ? 'Role' : ''"
+                :name="`attributes.${index}.role`"
+              >
                 <USelect
                   v-model="attr.role"
                   class="w-full"
@@ -150,7 +184,10 @@ async function onSubmit() {
               </UFormField>
 
               <!-- Sort Order -->
-              <UFormField :label="index === 0 ? 'Sort Order' : ''" :name="`attributes.${index}.sortOrder`">
+              <UFormField
+                :label="index === 0 ? 'Sort Order' : ''"
+                :name="`attributes.${index}.sortOrder`"
+              >
                 <UInput
                   v-model.number="attr.sortOrder"
                   class="w-full"
@@ -164,10 +201,12 @@ async function onSubmit() {
             <!-- Toggles -->
             <div class="flex items-center gap-4 pt-6">
               <label class="flex items-center gap-2 text-sm">
-                <UCheckbox v-model="attr.filterable" :disabled="isSubmitting" />
+                <UCheckbox
+                  v-model="attr.filterable"
+                  :disabled="isSubmitting"
+                />
                 Filterable
               </label>
-
             </div>
 
             <!-- Remove button -->

@@ -61,11 +61,11 @@ async function handleSubmit(data: ProductFormData) {
       categoryId: data.categoryId || undefined,
       attributes: data.attributes?.filter(
         (attr) =>
-          attr.optionSlugValue !== undefined ||
-          (attr.optionSlugValues && attr.optionSlugValues.length > 0) ||
-          attr.numericValue !== undefined ||
-          attr.textValue !== undefined ||
-          attr.booleanValue !== undefined
+          attr.optionSlugValue !== undefined
+          || (attr.optionSlugValues && attr.optionSlugValues.length > 0)
+          || attr.numericValue !== undefined
+          || attr.textValue !== undefined
+          || attr.booleanValue !== undefined
       )
     }
   })

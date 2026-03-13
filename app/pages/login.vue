@@ -40,15 +40,25 @@ async function onSubmit() {
   <UCard class="w-full max-w-md">
     <template #header>
       <div class="text-center">
-        <h1 class="text-2xl font-bold">Sign in</h1>
+        <h1 class="text-2xl font-bold">
+          Sign in
+        </h1>
         <p class="text-muted mt-1">
           Enter your credentials to access the admin panel
         </p>
       </div>
     </template>
 
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <UFormField label="Email" name="email">
+    <UForm
+      :schema="schema"
+      :state="state"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
+      <UFormField
+        label="Email"
+        name="email"
+      >
         <UInput
           v-model="state.email"
           class="w-full"
@@ -59,7 +69,10 @@ async function onSubmit() {
         />
       </UFormField>
 
-      <UFormField label="Password" name="password">
+      <UFormField
+        label="Password"
+        name="password"
+      >
         <UInput
           v-model="state.password"
           class="w-full"

@@ -121,7 +121,10 @@ const hasImage = computed(() => !!previewUrl.value || !!props.imageId)
         v-if="isLoadingPreview && !previewUrl"
         class="w-full h-full flex items-center justify-center"
       >
-        <UIcon name="i-lucide-loader-2" class="size-8 animate-spin text-muted" />
+        <UIcon
+          name="i-lucide-loader-2"
+          class="size-8 animate-spin text-muted"
+        />
       </div>
 
       <!-- Image preview -->
@@ -171,16 +174,28 @@ const hasImage = computed(() => !!previewUrl.value || !!props.imageId)
     >
       <!-- Upload progress -->
       <template v-if="isUploading">
-        <UIcon name="i-lucide-loader-2" class="size-8 animate-spin text-primary mb-2" />
+        <UIcon
+          name="i-lucide-loader-2"
+          class="size-8 animate-spin text-primary mb-2"
+        />
         <span class="text-sm text-muted">{{ statusLabel }}</span>
-        <div v-if="uploadState === 'uploading'" class="w-32 mt-2">
-          <UProgress :value="uploadProgress" size="xs" />
+        <div
+          v-if="uploadState === 'uploading'"
+          class="w-32 mt-2"
+        >
+          <UProgress
+            :value="uploadProgress"
+            size="xs"
+          />
         </div>
       </template>
 
       <!-- Default state -->
       <template v-else>
-        <UIcon name="i-lucide-image-plus" class="size-8 text-muted mb-2" />
+        <UIcon
+          name="i-lucide-image-plus"
+          class="size-8 text-muted mb-2"
+        />
         <span class="text-sm text-muted text-center px-2">
           Drop image here or click to upload
         </span>

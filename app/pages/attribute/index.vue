@@ -5,7 +5,7 @@ import type { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api'
 const {
   items,
   total,
-  pending,
+  pending: _pending,
   error,
   page,
   size,
@@ -62,13 +62,19 @@ const typeLabels: Record<string, string> = {
           </template>
 
           <template #type-cell="{ row }">
-            <UBadge color="info" variant="subtle">
+            <UBadge
+              color="info"
+              variant="subtle"
+            >
               {{ typeLabels[row.original.type] || row.original.type }}
             </UBadge>
           </template>
 
           <template #options-cell="{ row }">
-            <UBadge color="neutral" variant="subtle">
+            <UBadge
+              color="neutral"
+              variant="subtle"
+            >
               {{ row.original.options?.length || 0 }}
             </UBadge>
           </template>
@@ -95,7 +101,10 @@ const typeLabels: Record<string, string> = {
       </ClientOnly>
 
       <!-- Pagination -->
-      <template v-if="totalPages > 1" #footer>
+      <template
+        v-if="totalPages > 1"
+        #footer
+      >
         <div class="flex justify-center">
           <UPagination
             :default-page="page"

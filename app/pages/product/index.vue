@@ -5,7 +5,7 @@ import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api';
 const {
   items,
   total,
-  pending,
+  pending: _pending,
   error,
   page,
   size,
@@ -53,7 +53,10 @@ const columns: TableColumn<ProductResponse>[] = [
           </template>
 
           <template #quantity-cell="{ row }">
-            <UBadge color="neutral" variant="subtle">
+            <UBadge
+              color="neutral"
+              variant="subtle"
+            >
               {{ row.original.quantity }}
             </UBadge>
           </template>
@@ -65,7 +68,9 @@ const columns: TableColumn<ProductResponse>[] = [
           <template #createdAt-cell="{ row }">
             <div class="text-sm">
               <div>{{ formatDate(row.original.createdAt).date }}</div>
-              <div class="text-muted">{{ formatDate(row.original.createdAt).time }}</div>
+              <div class="text-muted">
+                {{ formatDate(row.original.createdAt).time }}
+              </div>
             </div>
           </template>
 
@@ -87,7 +92,10 @@ const columns: TableColumn<ProductResponse>[] = [
       </ClientOnly>
 
       <!-- Pagination -->
-      <template v-if="totalPages > 1" #footer>
+      <template
+        v-if="totalPages > 1"
+        #footer
+      >
         <div class="flex justify-center">
           <UPagination
             :default-page="page"

@@ -55,7 +55,10 @@ const stats = computed(() => [
         <UCard class="hover:bg-elevated transition-colors">
           <div class="flex items-center gap-4">
             <div class="p-3 rounded-lg bg-primary/10">
-              <UIcon :name="stat.icon" class="h-6 w-6 text-primary" />
+              <UIcon
+                :name="stat.icon"
+                class="h-6 w-6 text-primary"
+              />
             </div>
             <div>
               <p class="text-muted text-sm">{{ stat.label }}</p>

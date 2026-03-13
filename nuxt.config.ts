@@ -38,7 +38,7 @@ export default defineNuxtConfig({
 
   hooks: {
     'pages:extend': function (pages) {
-      function removePagesWithComponents(pages: any[]) {
+      function removePagesWithComponents(pages: { path: string, name?: string, children?: unknown[] }[]) {
         for (let i = pages.length - 1; i >= 0; i--) {
           const page = pages[i]
           if (page.path.includes('_components') || page.name?.includes('_components')) {
