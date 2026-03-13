@@ -1,3 +1,5 @@
+import type { GetCategoryListSort } from '@sokol111/ecommerce-catalog-service-api'
+
 export default defineEventHandler(async (event) => {
   const catalogClient = useCatalogClient(event)
   const query = getQuery(event)
@@ -6,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const result = await catalogClient.getCategoryList({
       page: query.page ? Number(query.page) : 1,
       size: query.size ? Number(query.size) : 100, // Get all categories for select
-      sort: query.sort as string | undefined,
+      sort: query.sort as GetCategoryListSort | undefined,
       order: query.order as 'asc' | 'desc' | undefined,
       enabled:
         query.enabled === 'true'

@@ -1,3 +1,5 @@
+import type { GetProductListSort } from '@sokol111/ecommerce-catalog-service-api'
+
 export default defineEventHandler(async (event) => {
   const catalogClient = useCatalogClient(event)
   const query = getQuery(event)
@@ -6,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const result = await catalogClient.getProductList({
       page: query.page ? Number(query.page) : undefined,
       size: query.size ? Number(query.size) : undefined,
-      sort: query.sort as string | undefined,
+      sort: query.sort as GetProductListSort | undefined,
       order: query.order as 'asc' | 'desc' | undefined,
       enabled:
         query.enabled === 'true'
