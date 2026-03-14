@@ -21,5 +21,4 @@ jobs:
     needs: ci
     uses: Sokol111/ecommerce-infrastructure/.github/workflows/nuxt-release.yml@master
     secrets:
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
