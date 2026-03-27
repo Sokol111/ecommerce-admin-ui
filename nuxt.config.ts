@@ -65,6 +65,10 @@ export default defineNuxtConfig({
     }
   },
 
+  fonts: {
+    provider: 'none'
+  },
+
   icon: {
     serverBundle: 'local'
   }
