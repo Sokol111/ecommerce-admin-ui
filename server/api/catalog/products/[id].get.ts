@@ -1,3 +1,7 @@
+import { consola } from 'consola'
+
+const logger = consola.withTag('api:catalog:products:[id]')
+
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
@@ -17,6 +21,7 @@ export default defineEventHandler(async (event) => {
     const err = error as {
       response?: { status?: number, data?: { detail?: string } }
     }
+    logger.error(`Failed to fetch product ${id}`, error)
     throw createError({
       statusCode: err.response?.status || 500,
       message: err.response?.data?.detail || 'Failed to fetch product'

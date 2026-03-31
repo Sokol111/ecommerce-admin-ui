@@ -26,10 +26,10 @@ const isLoading = ref(false)
 async function onSubmit() {
   isLoading.value = true
 
-  const success = await login(state.email, state.password)
+  const result = await login(state.email, state.password)
 
-  if (!success) {
-    notify.error('Login failed')
+  if (!result.success) {
+    notify.error(result.message || 'Login failed')
   }
 
   isLoading.value = false

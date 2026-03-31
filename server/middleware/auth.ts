@@ -1,5 +1,8 @@
 import type { TokenRefreshResponse } from '@sokol111/ecommerce-auth-service-api'
 import { getTokenRefreshUrl } from '@sokol111/ecommerce-auth-service-api'
+import { consola } from 'consola'
+
+const logger = consola.withTag('middleware:auth')
 
 const PUBLIC_ROUTES = ['/api/auth/login', '/api/health']
 
@@ -36,6 +39,7 @@ export default defineEventHandler(async (event) => {
     setAuthCookies(event, data)
     event.context.authToken = data.accessToken
   } catch {
+    logger.warn('Token refresh failed, clearing auth cookies')
     clearAuthCookies(event)
     throw createError({ statusCode: 401, message: 'Failed to refresh token' })
   }

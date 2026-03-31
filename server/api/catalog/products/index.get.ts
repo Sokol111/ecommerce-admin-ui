@@ -1,4 +1,7 @@
 import type { GetProductListSort } from '@sokol111/ecommerce-catalog-service-api'
+import { consola } from 'consola'
+
+const logger = consola.withTag('api:catalog:products')
 
 export default defineEventHandler(async (event) => {
   const catalogClient = useCatalogClient(event)
@@ -23,6 +26,7 @@ export default defineEventHandler(async (event) => {
     const err = error as {
       response?: { status?: number, data?: { detail?: string } }
     }
+    logger.error('Failed to fetch products', error)
     throw createError({
       statusCode: err.response?.status || 500,
       message: err.response?.data?.detail || 'Failed to fetch products'

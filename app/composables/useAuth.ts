@@ -15,7 +15,7 @@ export function useAuth() {
     return undefined
   }
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean, message?: string }> => {
     try {
       const response = await $fetch('/api/auth/login', {
         method: 'POST',
@@ -24,9 +24,10 @@ export function useAuth() {
 
       user.value = response.user
       await navigateTo('/')
-      return true
-    } catch {
-      return false
+      return { success: true }
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } }
+      return { success: false, message: err.data?.message || 'Login failed' }
     } finally {
       isLoading.value = false
     }

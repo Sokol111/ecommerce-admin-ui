@@ -1,4 +1,7 @@
 import type { AdminUserProfile } from '@sokol111/ecommerce-auth-service-api'
+import { consola } from 'consola'
+
+const logger = consola.withTag('api:auth:login')
 
 export interface LoginResponse {
   user: AdminUserProfile
@@ -33,6 +36,7 @@ export default defineEventHandler(async (event): Promise<LoginResponse> => {
     const err = error as {
       response?: { status?: number, data?: { detail?: string } }
     }
+    logger.error(`Login failed for ${body.email}`, error)
     throw createError({
       statusCode: err.response?.status || 401,
       message: err.response?.data?.detail || 'Invalid email or password'

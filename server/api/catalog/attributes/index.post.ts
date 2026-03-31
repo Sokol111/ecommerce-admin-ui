@@ -1,3 +1,7 @@
+import { consola } from 'consola'
+
+const logger = consola.withTag('api:catalog:attributes:create')
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const catalogClient = useCatalogClient(event)
@@ -16,6 +20,7 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
+    logger.error('Failed to create attribute', error)
     return {
       success: false,
       error: {

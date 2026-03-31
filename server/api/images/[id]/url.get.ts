@@ -1,3 +1,7 @@
+import { consola } from 'consola'
+
+const logger = consola.withTag('api:images:url')
+
 export default defineEventHandler(async (event) => {
   const imageId = getRouterParam(event, 'id')
   const query = getQuery(event)
@@ -20,6 +24,7 @@ export default defineEventHandler(async (event) => {
     const err = error as {
       response?: { status?: number, data?: { detail?: string } }
     }
+    logger.error(`Failed to get image URL for ${imageId}`, error)
     throw createError({
       statusCode: err.response?.status || 500,
       message: err.response?.data?.detail || 'Failed to get image URL'
