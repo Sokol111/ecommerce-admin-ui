@@ -33,8 +33,8 @@ importers:
         specifier: 1.1.1
         version: 1.1.1
       '@sokol111/ecommerce-image-service-api':
-        specifier: 1.1.1
-        version: 1.1.1
+        specifier: 1.1.5
+        version: 1.1.5
       '@vueuse/nuxt':
         specifier: 14.2.1
         version: 14.2.1(magicast@0.5.2)(nuxt@4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6(@babel/core@7.29.0))(@parcel/watcher@2.5.6)(@vue/compiler-sfc@3.5.30)(cac@6.7.14)(db0@0.3.4)(eslint@10.0.3(jiti@2.6.1))(ioredis@5.10.0)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(rollup-plugin-visualizer@6.0.11(rollup@4.59.0))(rollup@4.59.0)(terser@5.46.0)(typescript@5.9.3)(vite@7.3.1(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(yaml@2.8.2))(vue-tsc@3.2.5(typescript@5.9.3))(yaml@2.8.2))(vue@3.5.30(typescript@5.9.3))
@@ -1468,8 +1468,8 @@ packages:
   '@sokol111/ecommerce-catalog-service-api@1.1.1':
     resolution: {integrity: sha512-fCNL/w4nZt0huZFAYSZmpB64iImmXykoZomfPZF0+MpG5EJY/ruBaQ+/2gIULTeiB+LfjAFJ4wljZsLCYnuNvw==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-catalog-service-api/1.1.1/adf209580de96f65d4a1cc80841e11ee27eb9faa}
 
-  '@sokol111/ecommerce-image-service-api@1.1.1':
-    resolution: {integrity: sha512-M0JwyYHJTLHIwbsidtEsZGJd7E3y9EXDpoNmrVB/KjJFUZpwBmJl0Y/xh8ahHODRsm65+j2TCD7cP5nsvTmWCw==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-image-service-api/1.1.1/f1aea39047a3e538f923cd630181a51e56066056}
+  '@sokol111/ecommerce-image-service-api@1.1.5':
+    resolution: {integrity: sha512-qkKqA3HfmAlW2SjPN/nL/k+ZwU8gKdjM/GtJwEZtIthETQZtBO90LApI2YOXS37ougAoAnkmKxeolM/PsPp7Sw==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-image-service-api/1.1.5/943abdb6720cf35b93cbe2e3c9bed6d9ed7cb853}
 
   '@speed-highlight/core@1.2.14':
     resolution: {integrity: sha512-G4ewlBNhUtlLvrJTb88d2mdy2KRijzs4UhnlrOSRT4bmjh/IqNElZa3zkrZ+TC47TwtlDWzVLFADljF1Ijp5hA==}
@@ -6620,7 +6620,7 @@ snapshots:
 
   '@sokol111/ecommerce-catalog-service-api@1.1.1': {}
 
-  '@sokol111/ecommerce-image-service-api@1.1.1': {}
+  '@sokol111/ecommerce-image-service-api@1.1.5': {}
 
   '@speed-highlight/core@1.2.14': {}
 

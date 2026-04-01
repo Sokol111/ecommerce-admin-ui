@@ -21,7 +21,7 @@
     "@pinia/nuxt": "0.11.3",
     "@sokol111/ecommerce-auth-service-api": "1.1.1",
     "@sokol111/ecommerce-catalog-service-api": "1.1.1",
-    "@sokol111/ecommerce-image-service-api": "1.1.1",
+    "@sokol111/ecommerce-image-service-api": "1.1.5",
     "@vueuse/nuxt": "14.2.1",
     "date-fns": "^4.1.0",
     "nuxt": "^4.3.1",
@@ -36,5 +36,5 @@
     "vue-tsc": "^3.2.4"
   },
   "packageManager": "pnpm@10.29.3",
-  "version": "0.1.4"
+  "version": "0.1.5"
 }

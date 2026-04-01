@@ -73,17 +73,10 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         throw new Error(presignResult.error?.detail || 'Failed to get upload URL')
       }
 
-      const { uploadUrl, uploadToken, formData } = presignResult.data
+      const { uploadUrl, uploadToken } = presignResult.data
 
-      // Step 2: Upload file directly to S3/MinIO
+      // Step 2: Upload file directly to S3/R2 via presigned PUT
       uploadState.value = 'uploading'
-      const multipartForm = new FormData()
-
-      // Form fields must be added BEFORE the file
-      for (const [key, value] of Object.entries(formData)) {
-        multipartForm.append(key, value)
-      }
-      multipartForm.append('file', file)
 
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest()
@@ -107,8 +100,9 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         })
         xhr.addEventListener('abort', () => reject(new Error('Upload aborted')))
 
-        xhr.open('POST', uploadUrl)
-        xhr.send(multipartForm)
+        xhr.open('PUT', uploadUrl)
+        xhr.setRequestHeader('Content-Type', file.type)
+        xhr.send(file)
       })
 
       // Step 3: Confirm upload
