@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { TableColumn } from '@nuxt/ui';
+import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
 
 const {
   items,
@@ -38,44 +38,40 @@ const columns: TableColumn<CategoryResponse>[] = [
     <!-- Table -->
     <UCard>
       <ClientOnly>
-        <Transition
-          name="fade"
-          mode="out-in"
+        <UTable
+          :columns="columns"
+          :data="items"
+          class="transition-opacity duration-200"
+          :class="{ 'opacity-50': _pending }"
         >
-          <UTable
-            :key="page"
-            :columns="columns"
-            :data="items"
-          >
-            <template #name-cell="{ row }">
-              <span class="font-medium">{{ row.original.name }}</span>
-            </template>
+          <template #name-cell="{ row }">
+            <span class="font-medium">{{ row.original.name }}</span>
+          </template>
 
-            <template #attributes-cell="{ row }">
-              <UBadge
+          <template #attributes-cell="{ row }">
+            <UBadge
+              color="neutral"
+              variant="subtle"
+            >
+              {{ row.original.attributes?.length || 0 }}
+            </UBadge>
+          </template>
+
+          <template #enabled-cell="{ row }">
+            <StatusBadge :enabled="row.original.enabled" />
+          </template>
+
+          <template #actions-cell="{ row }">
+            <UDropdownMenu :items="createRowActions(row.original, '/category')">
+              <UButton
                 color="neutral"
-                variant="subtle"
-              >
-                {{ row.original.attributes?.length || 0 }}
-              </UBadge>
-            </template>
-
-            <template #enabled-cell="{ row }">
-              <StatusBadge :enabled="row.original.enabled" />
-            </template>
-
-            <template #actions-cell="{ row }">
-              <UDropdownMenu :items="createRowActions(row.original, '/category')">
-                <UButton
-                  color="neutral"
-                  variant="ghost"
-                  icon="i-lucide-more-horizontal"
-                  size="sm"
-                />
-              </UDropdownMenu>
-            </template>
-          </UTable>
-        </Transition>
+                variant="ghost"
+                icon="i-lucide-more-horizontal"
+                size="sm"
+              />
+            </UDropdownMenu>
+          </template>
+        </UTable>
 
         <template #fallback>
           <TableSkeleton :columns="4" />
