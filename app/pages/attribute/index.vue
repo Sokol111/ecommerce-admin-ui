@@ -49,51 +49,57 @@ const typeLabels: Record<string, string> = {
     <!-- Table -->
     <UCard>
       <ClientOnly>
-        <UTable
-          :columns="columns"
-          :data="items"
+        <Transition
+          name="fade"
+          mode="out-in"
         >
-          <template #name-cell="{ row }">
-            <span class="font-medium">{{ row.original.name }}</span>
-          </template>
+          <UTable
+            :key="page"
+            :columns="columns"
+            :data="items"
+          >
+            <template #name-cell="{ row }">
+              <span class="font-medium">{{ row.original.name }}</span>
+            </template>
 
-          <template #slug-cell="{ row }">
-            <code class="text-sm bg-muted px-2 py-0.5 rounded">{{ row.original.slug }}</code>
-          </template>
+            <template #slug-cell="{ row }">
+              <code class="text-sm bg-muted px-2 py-0.5 rounded">{{ row.original.slug }}</code>
+            </template>
 
-          <template #type-cell="{ row }">
-            <UBadge
-              color="info"
-              variant="subtle"
-            >
-              {{ typeLabels[row.original.type] || row.original.type }}
-            </UBadge>
-          </template>
+            <template #type-cell="{ row }">
+              <UBadge
+                color="info"
+                variant="subtle"
+              >
+                {{ typeLabels[row.original.type] || row.original.type }}
+              </UBadge>
+            </template>
 
-          <template #options-cell="{ row }">
-            <UBadge
-              color="neutral"
-              variant="subtle"
-            >
-              {{ row.original.options?.length || 0 }}
-            </UBadge>
-          </template>
-
-          <template #enabled-cell="{ row }">
-            <StatusBadge :enabled="row.original.enabled" />
-          </template>
-
-          <template #actions-cell="{ row }">
-            <UDropdownMenu :items="createRowActions(row.original, '/attribute')">
-              <UButton
+            <template #options-cell="{ row }">
+              <UBadge
                 color="neutral"
-                variant="ghost"
-                icon="i-lucide-more-horizontal"
-                size="sm"
-              />
-            </UDropdownMenu>
-          </template>
-        </UTable>
+                variant="subtle"
+              >
+                {{ row.original.options?.length || 0 }}
+              </UBadge>
+            </template>
+
+            <template #enabled-cell="{ row }">
+              <StatusBadge :enabled="row.original.enabled" />
+            </template>
+
+            <template #actions-cell="{ row }">
+              <UDropdownMenu :items="createRowActions(row.original, '/attribute')">
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  icon="i-lucide-more-horizontal"
+                  size="sm"
+                />
+              </UDropdownMenu>
+            </template>
+          </UTable>
+        </Transition>
 
         <template #fallback>
           <TableSkeleton :columns="6" />

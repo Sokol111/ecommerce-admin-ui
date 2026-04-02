@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { TableColumn } from '@nuxt/ui';
+import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api';
 
 const {
   items,
@@ -44,51 +44,57 @@ const columns: TableColumn<ProductResponse>[] = [
     <!-- Table -->
     <UCard>
       <ClientOnly>
-        <UTable
-          :columns="columns"
-          :data="items"
+        <Transition
+          name="fade"
+          mode="out-in"
         >
-          <template #name-cell="{ row }">
-            <span class="font-medium">{{ row.original.name }}</span>
-          </template>
+          <UTable
+            :key="page"
+            :columns="columns"
+            :data="items"
+          >
+            <template #name-cell="{ row }">
+              <span class="font-medium">{{ row.original.name }}</span>
+            </template>
 
-          <template #price-cell="{ row }">
-            ${{ row.original.price.toFixed(2) }}
-          </template>
+            <template #price-cell="{ row }">
+              ${{ row.original.price.toFixed(2) }}
+            </template>
 
-          <template #quantity-cell="{ row }">
-            <UBadge
-              color="neutral"
-              variant="subtle"
-            >
-              {{ row.original.quantity }}
-            </UBadge>
-          </template>
-
-          <template #enabled-cell="{ row }">
-            <StatusBadge :enabled="row.original.enabled" />
-          </template>
-
-          <template #createdAt-cell="{ row }">
-            <div class="text-sm">
-              <div>{{ formatDate(row.original.createdAt).date }}</div>
-              <div class="text-muted">
-                {{ formatDate(row.original.createdAt).time }}
-              </div>
-            </div>
-          </template>
-
-          <template #actions-cell="{ row }">
-            <UDropdownMenu :items="createRowActions(row.original, '/product', { deleteEndpoint: '/api/catalog/products' })">
-              <UButton
+            <template #quantity-cell="{ row }">
+              <UBadge
                 color="neutral"
-                variant="ghost"
-                icon="i-lucide-more-horizontal"
-                size="sm"
-              />
-            </UDropdownMenu>
-          </template>
-        </UTable>
+                variant="subtle"
+              >
+                {{ row.original.quantity }}
+              </UBadge>
+            </template>
+
+            <template #enabled-cell="{ row }">
+              <StatusBadge :enabled="row.original.enabled" />
+            </template>
+
+            <template #createdAt-cell="{ row }">
+              <div class="text-sm">
+                <div>{{ formatDate(row.original.createdAt).date }}</div>
+                <div class="text-muted">
+                  {{ formatDate(row.original.createdAt).time }}
+                </div>
+              </div>
+            </template>
+
+            <template #actions-cell="{ row }">
+              <UDropdownMenu :items="createRowActions(row.original, '/product', { deleteEndpoint: '/api/catalog/products' })">
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  icon="i-lucide-more-horizontal"
+                  size="sm"
+                />
+              </UDropdownMenu>
+            </template>
+          </UTable>
+        </Transition>
 
         <template #fallback>
           <TableSkeleton :columns="6" />
