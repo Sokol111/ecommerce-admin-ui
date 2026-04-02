@@ -24,6 +24,11 @@ export default defineNuxtConfig({
     '/login': { ssr: true }
   },
 
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
+  },
+
   experimental: {
     typedPages: true
   },
