@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const { user, logout, isLoading, isAuthenticated } = useAuth()
 
+const requestUrl = useRequestURL()
+const storeUrl = computed(() => `${requestUrl.protocol}//${requestUrl.host.replace(/^admin\./, '')}`)
+
 const navigation = [
   {
     label: 'Home',
@@ -109,6 +112,17 @@ const userMenuItems = computed(() => [
           </UDropdownMenu>
         </div>
       </header>
+
+      <div class="bg-primary/10 text-primary text-center text-sm py-2 px-4">
+        This is the admin panel. Visit the
+        <a
+          :href="storeUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2 font-medium"
+        >online store</a>
+        to see the customer-facing site.
+      </div>
 
       <!-- Page content -->
       <main class="flex-1 p-6">
