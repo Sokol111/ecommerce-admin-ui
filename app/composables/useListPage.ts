@@ -43,8 +43,8 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
   }
 
   // Row actions helper
-  function createRowActions<R extends { id: string }>(row: R, basePath: string) {
-    return [
+  function createRowActions<R extends { id: string, name?: string }>(row: R, basePath: string, options?: { deleteEndpoint?: string }) {
+    const actions = [
       [
         {
           label: 'Edit',
@@ -53,6 +53,55 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
         }
       ]
     ]
+
+    if (options?.deleteEndpoint) {
+      actions.push([
+        {
+          label: 'Delete',
+          icon: 'i-lucide-trash-2',
+          onSelect: () => {
+            deleteTarget.value = { id: row.id, name: row.name, endpoint: options.deleteEndpoint! }
+          }
+        }
+      ])
+    }
+
+    return actions
+  }
+
+  // Delete
+  const deleteTarget = ref<{ id: string, name?: string, endpoint: string } | null>(null)
+  const deleteLoading = ref(false)
+
+  async function confirmDelete() {
+    const target = deleteTarget.value
+    if (!target) return
+
+    const notify = useNotify()
+    deleteLoading.value = true
+
+    try {
+      const result = await $fetch<{ success: boolean, error?: { title?: string, detail?: string } }>(
+        `${target.endpoint}/${target.id}`,
+        { method: 'DELETE' }
+      )
+
+      if (result.success) {
+        notify.crud.deleted(target.name || 'Item')
+        deleteTarget.value = null
+        await refresh()
+      } else {
+        notify.crud.deleteFailed(target.name || 'Item', result.error)
+      }
+    } catch {
+      notify.crud.deleteFailed(target.name || 'Item')
+    } finally {
+      deleteLoading.value = false
+    }
+  }
+
+  function cancelDelete() {
+    deleteTarget.value = null
   }
 
   return {
@@ -71,6 +120,12 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
     handlePageChange,
 
     // Helpers
-    createRowActions
+    createRowActions,
+
+    // Delete
+    deleteTarget,
+    deleteLoading,
+    confirmDelete,
+    cancelDelete
   }
 }

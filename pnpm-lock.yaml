@@ -30,8 +30,8 @@ importers:
         specifier: 1.1.1
         version: 1.1.1
       '@sokol111/ecommerce-catalog-service-api':
-        specifier: 1.1.1
-        version: 1.1.1
+        specifier: 1.1.5
+        version: 1.1.5
       '@sokol111/ecommerce-image-service-api':
         specifier: 1.1.5
         version: 1.1.5
@@ -1465,8 +1465,8 @@ packages:
   '@sokol111/ecommerce-auth-service-api@1.1.1':
     resolution: {integrity: sha512-ZcNj6OFFIQgswlsVROS/FEDoVrwFtetwbvvAdxOPGagkM2HtvKWzvj1xNzXtegRO5zVwvA/rmRdBTQ8YTeIcnA==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-auth-service-api/1.1.1/2bbb91171329cbdc7a295f2a6df46284f7442f67}
 
-  '@sokol111/ecommerce-catalog-service-api@1.1.1':
-    resolution: {integrity: sha512-fCNL/w4nZt0huZFAYSZmpB64iImmXykoZomfPZF0+MpG5EJY/ruBaQ+/2gIULTeiB+LfjAFJ4wljZsLCYnuNvw==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-catalog-service-api/1.1.1/adf209580de96f65d4a1cc80841e11ee27eb9faa}
+  '@sokol111/ecommerce-catalog-service-api@1.1.5':
+    resolution: {integrity: sha512-OgzJF4SvnSEeG8+ix+DTQb7gwFneSYW9VR5NkmKWgvGcSabdUDd96EfLT12cTXjBb2r835iomFjJlz0vQBQdoQ==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-catalog-service-api/1.1.5/43898ac8cd4230b2a037ddbb7129dbe0edd60daa}
 
   '@sokol111/ecommerce-image-service-api@1.1.5':
     resolution: {integrity: sha512-qkKqA3HfmAlW2SjPN/nL/k+ZwU8gKdjM/GtJwEZtIthETQZtBO90LApI2YOXS37ougAoAnkmKxeolM/PsPp7Sw==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-image-service-api/1.1.5/943abdb6720cf35b93cbe2e3c9bed6d9ed7cb853}
@@ -6618,7 +6618,7 @@ snapshots:
 
   '@sokol111/ecommerce-auth-service-api@1.1.1': {}
 
-  '@sokol111/ecommerce-catalog-service-api@1.1.1': {}
+  '@sokol111/ecommerce-catalog-service-api@1.1.5': {}
 
   '@sokol111/ecommerce-image-service-api@1.1.5': {}
 

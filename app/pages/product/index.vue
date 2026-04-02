@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { TableColumn } from '@nuxt/ui';
+import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api';
 
 const {
   items,
@@ -11,7 +11,11 @@ const {
   size,
   totalPages,
   handlePageChange,
-  createRowActions
+  createRowActions,
+  deleteTarget,
+  deleteLoading,
+  confirmDelete,
+  cancelDelete
 } = await useListPage<ProductResponse>('/api/catalog/products')
 
 // Table columns
@@ -75,7 +79,7 @@ const columns: TableColumn<ProductResponse>[] = [
           </template>
 
           <template #actions-cell="{ row }">
-            <UDropdownMenu :items="createRowActions(row.original, '/product')">
+            <UDropdownMenu :items="createRowActions(row.original, '/product', { deleteEndpoint: '/api/catalog/products' })">
               <UButton
                 color="neutral"
                 variant="ghost"
@@ -106,5 +110,40 @@ const columns: TableColumn<ProductResponse>[] = [
         </div>
       </template>
     </UCard>
+
+    <!-- Delete Confirmation Modal -->
+    <UModal
+      :open="!!deleteTarget"
+      @update:open="(val: boolean) => !val && cancelDelete()"
+    >
+      <template #header>
+        <h3 class="text-lg font-semibold">
+          Delete Product
+        </h3>
+      </template>
+
+      <template #body>
+        <p>
+          Are you sure you want to delete <strong>{{ deleteTarget?.name }}</strong>? This action cannot be undone.
+        </p>
+      </template>
+
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            label="Cancel"
+            @click="cancelDelete"
+          />
+          <UButton
+            color="error"
+            label="Delete"
+            :loading="deleteLoading"
+            @click="confirmDelete"
+          />
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

@@ -19,6 +19,7 @@ import {
   getCreateAttributeUrl,
   getCreateCategoryUrl,
   getCreateProductUrl,
+  getDeleteProductUrl,
   getGetAttributeByIdUrl,
   getGetAttributeListUrl,
   getGetCategoryByIdUrl,
@@ -81,6 +82,14 @@ export function useCatalogClient(event: H3Event) {
         method: 'PUT',
         headers,
         body: updatedProduct
+      })
+    },
+
+    async deleteProduct(productId: string): Promise<void> {
+      await $fetch(getDeleteProductUrl(productId), {
+        baseURL,
+        method: 'DELETE',
+        headers
       })
     },
 
