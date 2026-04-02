@@ -1,9 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
   modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt', '@vueuse/nuxt'],
 
   devtools: {
     enabled: import.meta.dev
+  },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
   css: ['~/assets/css/main.css'],
@@ -22,11 +27,6 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/login': { ssr: true }
-  },
-
-  app: {
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
   experimental: {
