@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui';
-import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api';
+import type { TableColumn } from '@nuxt/ui'
+import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api'
 
 const {
   items,
