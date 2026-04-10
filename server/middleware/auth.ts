@@ -34,6 +34,7 @@ export default defineEventHandler(async (event) => {
     const data = await $fetch<TokenRefreshResponse>(getTokenRefreshUrl(), {
       baseURL,
       method: 'POST',
+      headers: { ...tenantHeaders(event) },
       body: { refreshToken }
     })
     setAuthCookies(event, data)

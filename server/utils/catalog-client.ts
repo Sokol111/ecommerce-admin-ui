@@ -35,7 +35,7 @@ import type { H3Event } from 'h3'
 export function useCatalogClient(event: H3Event) {
   const { catalogApiUrl: baseURL } = useRuntimeConfig()
   const token = useAuthToken(event)
-  const headers: HeadersInit = { Authorization: `Bearer ${token}` }
+  const headers: HeadersInit = { Authorization: `Bearer ${token}`, ...tenantHeaders(event) }
 
   return {
     // ==================== PRODUCTS ====================

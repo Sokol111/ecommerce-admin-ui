@@ -1,23 +1,25 @@
 import type {
-  AdminAuthResponse,
-  AdminUserProfile,
-  LoginRequest
+    AdminAuthResponse,
+    AdminUserProfile,
+    LoginRequest
 } from '@sokol111/ecommerce-auth-service-api'
 import {
-  getAdminGetProfileUrl,
-  getAdminLoginUrl,
-  getAdminLogoutUrl
+    getAdminGetProfileUrl,
+    getAdminLoginUrl,
+    getAdminLogoutUrl
 } from '@sokol111/ecommerce-auth-service-api'
 import type { H3Event } from 'h3'
 
 export function useAuthClient(event: H3Event) {
   const { authApiUrl: baseURL } = useRuntimeConfig()
+  const tenant = tenantHeaders(event)
 
   return {
     async login(credentials: LoginRequest): Promise<AdminAuthResponse> {
       return $fetch<AdminAuthResponse>(getAdminLoginUrl(), {
         baseURL,
         method: 'POST',
+        headers: { ...tenant },
         body: credentials
       })
     },
@@ -27,7 +29,7 @@ export function useAuthClient(event: H3Event) {
       await $fetch(getAdminLogoutUrl(), {
         baseURL,
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}`, ...tenant }
       })
     },
 
@@ -36,7 +38,7 @@ export function useAuthClient(event: H3Event) {
       try {
         const profile = await $fetch<AdminUserProfile>(getAdminGetProfileUrl(), {
           baseURL,
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}`, ...tenant }
         })
         return profile
       } catch {

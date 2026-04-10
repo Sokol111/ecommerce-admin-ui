@@ -18,7 +18,7 @@ import type { H3Event } from 'h3'
 export function useImageClient(event: H3Event) {
   const { imageApiUrl: baseURL } = useRuntimeConfig()
   const token = useAuthToken(event)
-  const headers: HeadersInit = { Authorization: `Bearer ${token}` }
+  const headers: HeadersInit = { Authorization: `Bearer ${token}`, ...tenantHeaders(event) }
 
   return {
     async createPresign(request: PresignRequest): Promise<PresignResponse> {
