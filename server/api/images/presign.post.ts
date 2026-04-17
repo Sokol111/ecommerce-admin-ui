@@ -4,7 +4,7 @@ const logger = consola.withTag('api:images:presign')
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const imageClient = useImageClient(event)
+  const imageClient = await useImageClient(event)
 
   try {
     const result = await imageClient.createPresign(body)

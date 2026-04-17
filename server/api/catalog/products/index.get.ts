@@ -4,7 +4,7 @@ import { consola } from 'consola'
 const logger = consola.withTag('api:catalog:products')
 
 export default defineEventHandler(async (event) => {
-  const catalogClient = useCatalogClient(event)
+  const catalogClient = await useCatalogClient(event)
   const query = getQuery(event)
 
   try {

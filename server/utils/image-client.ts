@@ -15,9 +15,9 @@ import {
 } from '@sokol111/ecommerce-image-service-api'
 import type { H3Event } from 'h3'
 
-export function useImageClient(event: H3Event) {
+export async function useImageClient(event: H3Event) {
   const { imageApiUrl: baseURL } = useRuntimeConfig()
-  const token = useAuthToken(event)
+  const token = await useAuthToken(event)
   const headers: HeadersInit = { Authorization: `Bearer ${token}`, ...tenantHeaders(event) }
 
   return {

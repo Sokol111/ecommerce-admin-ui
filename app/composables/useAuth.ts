@@ -1,79 +1,47 @@
-import type { AdminUserProfile } from '@sokol111/ecommerce-auth-service-api'
-import { ACCESS_TOKEN_EXPIRES_AT_KEY, isTokenExpired } from '~/utils/auth/constants'
-import { readCookie } from '~/utils/cookie'
+export interface UserProfile {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+}
 
 export function useAuth() {
-  const user = useState<AdminUserProfile | null>('auth:user', () => null)
-  const isLoading = useState<boolean>('auth:loading', () => true)
-  const isAuthenticated = computed(() => !!user.value)
+  const { loggedIn, user: oidcUser, login: oidcLogin, logout: oidcLogout, fetch: refreshSession } = useOidcAuth()
 
-  const getHeaders = (): HeadersInit | undefined => {
-    if (import.meta.server) {
-      const event = useRequestEvent()
-      return event?.headers
+  const user = computed<UserProfile | null>(() => {
+    if (!loggedIn.value || !oidcUser.value) return null
+    const claims = oidcUser.value.claims as Record<string, unknown> | undefined
+    return {
+      id: (claims?.sub as string) ?? '',
+      email: (claims?.email as string) ?? '',
+      firstName: (claims?.given_name as string) ?? '',
+      lastName: (claims?.family_name as string) ?? ''
     }
-    return undefined
+  })
+
+  const isAuthenticated = loggedIn
+  const isLoading = ref(false)
+
+  const login = async () => {
+    await oidcLogin('zitadel')
   }
 
-  const login = async (email: string, password: string): Promise<{ success: boolean, message?: string }> => {
-    try {
-      const response = await $fetch('/api/auth/login', {
-        method: 'POST',
-        body: { email, password }
-      })
-
-      user.value = response.user
-      await navigateTo('/')
-      return { success: true }
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } }
-      return { success: false, message: err.data?.message || 'Login failed' }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const logout = async (): Promise<void> => {
-    try {
-      await $fetch('/api/auth/logout', { method: 'POST' })
-    } catch {
-      // Ignore - clear state anyway
-    }
-    user.value = null
-    await navigateTo('/login')
+  const logout = async () => {
+    await oidcLogout('zitadel')
   }
 
   const ensureAuthenticated = async (): Promise<boolean> => {
-    const expiresAtRaw = readCookie(ACCESS_TOKEN_EXPIRES_AT_KEY)
-    const tokenExpired = isTokenExpired(expiresAtRaw)
-
-    if (user.value && !tokenExpired) {
-      return true
-    }
-
-    // No cookies at all — skip the API call, we know user is not authenticated
-    if (!expiresAtRaw) {
-      user.value = null
-      isLoading.value = false
-      return false
-    }
-
+    if (loggedIn.value) return true
     try {
-      user.value = await $fetch<AdminUserProfile>('/api/auth/session', {
-        headers: getHeaders()
-      })
-
-      return true
+      await refreshSession()
+      return loggedIn.value
     } catch {
-      user.value = null
       return false
-    } finally {
-      isLoading.value = false
     }
   }
 
   return {
-    user: readonly(user),
+    user,
     isLoading: readonly(isLoading),
     isAuthenticated,
     ensureAuthenticated,

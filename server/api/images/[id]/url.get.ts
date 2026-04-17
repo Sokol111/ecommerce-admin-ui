@@ -5,7 +5,7 @@ const logger = consola.withTag('api:images:url')
 export default defineEventHandler(async (event) => {
   const imageId = getRouterParam(event, 'id')
   const query = getQuery(event)
-  const imageClient = useImageClient(event)
+  const imageClient = await useImageClient(event)
 
   if (!imageId) {
     throw createError({ statusCode: 400, message: 'Image ID is required' })

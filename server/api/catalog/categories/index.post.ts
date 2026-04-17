@@ -4,7 +4,7 @@ const logger = consola.withTag('api:catalog:categories:create')
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const catalogClient = useCatalogClient(event)
+  const catalogClient = await useCatalogClient(event)
 
   try {
     const result = await catalogClient.createCategory(body)

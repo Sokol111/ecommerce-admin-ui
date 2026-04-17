@@ -7,10 +7,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  const { ensureAuthenticated } = useAuth()
-  const isAuthenticated = await ensureAuthenticated()
+  const { loggedIn } = useOidcAuth()
 
-  if (!isAuthenticated) {
+  if (!loggedIn.value) {
     return navigateTo('/login')
   }
 })

@@ -32,9 +32,9 @@ import {
 } from '@sokol111/ecommerce-catalog-service-api'
 import type { H3Event } from 'h3'
 
-export function useCatalogClient(event: H3Event) {
+export async function useCatalogClient(event: H3Event) {
   const { catalogApiUrl: baseURL } = useRuntimeConfig()
-  const token = useAuthToken(event)
+  const token = await useAuthToken(event)
   const headers: HeadersInit = { Authorization: `Bearer ${token}`, ...tenantHeaders(event) }
 
   return {

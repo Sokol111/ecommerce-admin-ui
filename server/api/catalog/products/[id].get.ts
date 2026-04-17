@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const catalogClient = useCatalogClient(event)
+  const catalogClient = await useCatalogClient(event)
 
   try {
     const result = await catalogClient.getProductById(id)

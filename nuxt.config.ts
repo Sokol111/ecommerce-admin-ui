@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt', '@vueuse/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt', '@vueuse/nuxt', 'nuxt-oidc-auth'],
 
   devtools: {
     enabled: import.meta.dev
@@ -15,8 +15,6 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Server-only (not exposed to client)
-    // Values are set from .env: NUXT_AUTH_API_URL, NUXT_CATALOG_API_URL, etc.
-    authApiUrl: '',
     catalogApiUrl: '',
     imageApiUrl: '',
 
@@ -76,5 +74,24 @@ export default defineNuxtConfig({
 
   icon: {
     serverBundle: 'local'
+  },
+
+  oidc: {
+    providers: {
+      zitadel: {
+        clientId: '', // NUXT_OIDC_PROVIDERS_ZITADEL_CLIENT_ID
+        clientSecret: '', // Empty for PKCE
+        redirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_REDIRECT_URI
+        baseUrl: '', // NUXT_OIDC_PROVIDERS_ZITADEL_BASE_URL
+        audience: '', // NUXT_OIDC_PROVIDERS_ZITADEL_AUDIENCE (usually same as clientId)
+        logoutRedirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_LOGOUT_REDIRECT_URI
+        authenticationScheme: 'none', // PKCE, no client secret
+        exposeAccessToken: true // Expose to server-side handlers for API calls
+      }
+    },
+    middleware: {
+      globalMiddlewareEnabled: true,
+      customLoginPage: true
+    }
   }
 })
