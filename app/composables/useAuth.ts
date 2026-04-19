@@ -23,11 +23,11 @@ export function useAuth() {
   const isLoading = ref(false)
 
   const login = async () => {
-    await oidcLogin('zitadel')
+    await oidcLogin('oidc')
   }
 
   const logout = async () => {
-    await oidcLogout('zitadel')
+    await oidcLogout('oidc')
   }
 
   const ensureAuthenticated = async (): Promise<boolean> => {

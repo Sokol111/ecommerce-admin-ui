@@ -78,18 +78,35 @@ export default defineNuxtConfig({
 
   oidc: {
     providers: {
-      zitadel: {
-        clientId: '', // NUXT_OIDC_PROVIDERS_ZITADEL_CLIENT_ID
-        clientSecret: '', // Empty for PKCE
-        redirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_REDIRECT_URI
-        baseUrl: '', // NUXT_OIDC_PROVIDERS_ZITADEL_BASE_URL
-        logoutRedirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_LOGOUT_REDIRECT_URI
-        authenticationScheme: 'none', // PKCE, no client secret
-        exposeAccessToken: true // Expose to server-side handlers for API calls
+      oidc: {
+        clientId: '',
+        clientSecret: 'pkce-unused',
+        redirectUri: '',
+        logoutRedirectUri: '',
+        authorizationUrl: '', // External (browser): http://localhost:8080/oauth/v2/authorize
+        tokenUrl: '', // Internal (pod→Zitadel): http://zitadel-api:8080/oauth/v2/token
+        userinfoUrl: '', // Internal (pod→Zitadel): http://zitadel-api:8080/oidc/v1/userinfo
+        logoutUrl: '', // External (browser): http://localhost:8080/oidc/v1/end_session
+        authenticationScheme: 'none',
+        pkce: true,
+        state: true,
+        nonce: false,
+        scope: ['openid', 'profile', 'email'],
+        responseMode: 'query',
+        tokenRequestType: 'form-urlencoded',
+        exposeAccessToken: true,
+        validateAccessToken: false,
+        validateIdToken: false
+      }
+    },
+    session: {
+      cookie: {
+        secure: false,
+        sameSite: 'lax'
       }
     },
     middleware: {
-      globalMiddlewareEnabled: true,
+      globalMiddlewareEnabled: false,
       customLoginPage: true
     }
   }
