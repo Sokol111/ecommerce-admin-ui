@@ -83,7 +83,6 @@ export default defineNuxtConfig({
         clientSecret: '', // Empty for PKCE
         redirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_REDIRECT_URI
         baseUrl: '', // NUXT_OIDC_PROVIDERS_ZITADEL_BASE_URL
-        audience: '', // NUXT_OIDC_PROVIDERS_ZITADEL_AUDIENCE (usually same as clientId)
         logoutRedirectUri: '', // NUXT_OIDC_PROVIDERS_ZITADEL_LOGOUT_REDIRECT_URI
         authenticationScheme: 'none', // PKCE, no client secret
         exposeAccessToken: true // Expose to server-side handlers for API calls
