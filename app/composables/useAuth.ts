@@ -11,11 +11,13 @@ export function useAuth() {
   const user = computed<UserProfile | null>(() => {
     if (!loggedIn.value || !oidcUser.value) return null
     const claims = oidcUser.value.claims as Record<string, unknown> | undefined
+    const fullName = (claims?.name as string) ?? ''
+    const [first, ...rest] = fullName.split(' ')
     return {
       id: (claims?.sub as string) ?? '',
       email: (claims?.email as string) ?? '',
-      firstName: (claims?.given_name as string) ?? '',
-      lastName: (claims?.family_name as string) ?? ''
+      firstName: (claims?.given_name as string) ?? first ?? '',
+      lastName: (claims?.family_name as string) ?? rest.join(' ') ?? ''
     }
   })
 

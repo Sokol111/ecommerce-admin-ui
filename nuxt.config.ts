@@ -83,10 +83,10 @@ export default defineNuxtConfig({
         clientSecret: 'pkce-unused',
         redirectUri: '',
         logoutRedirectUri: '',
-        authorizationUrl: '', // External (browser): http://localhost:8080/oauth/v2/authorize
-        tokenUrl: '', // Internal (pod→Zitadel): http://zitadel-api:8080/oauth/v2/token
-        userinfoUrl: '', // Internal (pod→Zitadel): http://zitadel-api:8080/oidc/v1/userinfo
-        logoutUrl: '', // External (browser): http://localhost:8080/oidc/v1/end_session
+        authorizationUrl: '', // External (browser): http://localhost:3001/oidc/auth
+        tokenUrl: '', // Internal (pod→Logto): http://logto:3001/oidc/token
+        userinfoUrl: '', // Internal (pod→Logto): http://logto:3001/oidc/me
+        logoutUrl: '', // External (browser): http://localhost:3001/oidc/session/end
         authenticationScheme: 'none',
         pkce: true,
         state: true,
