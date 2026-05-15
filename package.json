@@ -9,8 +9,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
-    "link:local": "pnpm link ../ecommerce-catalog-service-api/gen/typescript ../ecommerce-image-service-api/gen/typescript",
-    "unlink:local": "rm -f node_modules/@sokol111/ecommerce-catalog-service-api node_modules/@sokol111/ecommerce-image-service-api && pnpm install"
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@date-fns/utc": "^2.1.1",

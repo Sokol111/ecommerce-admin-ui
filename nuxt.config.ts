@@ -87,13 +87,25 @@ export default defineNuxtConfig({
         tokenUrl: '', // Internal (pod→Logto): http://logto:3001/oidc/token
         userinfoUrl: '', // Internal (pod→Logto): http://logto:3001/oidc/me
         logoutUrl: '', // External (browser): http://localhost:3001/oidc/session/end
-        authenticationScheme: 'none',
+        authenticationScheme: 'body',
         pkce: true,
         state: true,
         nonce: false,
-        scope: ['openid', 'profile', 'email'],
+        scope: [
+          'openid', 'profile', 'email',
+          'products:read', 'products:write', 'products:delete',
+          'categories:read', 'categories:write', 'categories:delete',
+          'attributes:read', 'attributes:write', 'attributes:delete',
+          'users:read', 'tenants:read', 'tenants:write'
+        ],
         responseMode: 'query',
         tokenRequestType: 'form-urlencoded',
+        additionalAuthParameters: {
+          resource: 'https://api.sokolshop.com'
+        },
+        additionalTokenParameters: {
+          resource: 'https://api.sokolshop.com'
+        },
         exposeAccessToken: true,
         validateAccessToken: false,
         validateIdToken: false

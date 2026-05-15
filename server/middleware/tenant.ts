@@ -1,13 +1,18 @@
-export default defineEventHandler((event) => {
-  // Skip tenant resolution for health checks (k8s probes use pod IP, no hostname)
-  if (event.path === '/api/health') return
+import { getUserSession } from 'nuxt-oidc-auth/runtime/server/utils/session.js'
 
-  const host = getRequestHost(event, { xForwardedHost: true })
-  const slug = host.split('.')[0]
+export default defineEventHandler(async (event) => {
+  // Skip paths that don't need tenant context
+  if (event.path === '/api/health' || event.path.startsWith('/auth/')) return
 
-  if (!slug || slug === host) {
-    throw createError({ statusCode: 400, message: 'Tenant not resolved from hostname' })
+  const session = await getUserSession(event).catch(() => null)
+  const token = session?.accessToken as string | undefined
+  if (!token) return
+
+  // Decode JWT payload (access token is a signed JWT with a `tenant` claim)
+  const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64url').toString())
+  const slug = payload.tenant as string | undefined
+
+  if (slug) {
+    event.context.tenantSlug = slug
   }
-
-  event.context.tenantSlug = slug
 })
