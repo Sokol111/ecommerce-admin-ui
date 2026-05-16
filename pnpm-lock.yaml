@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@sokol111/ecommerce-catalog-service-api': link:../ecommerce-catalog-service-api/gen/typescript
+  '@sokol111/ecommerce-image-service-api': link:../ecommerce-image-service-api/gen/typescript
+
 importers:
 
   .:
@@ -27,11 +31,11 @@ importers:
         specifier: 0.11.3
         version: 0.11.3(magicast@0.5.2)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))
       '@sokol111/ecommerce-catalog-service-api':
-        specifier: 1.1.8
-        version: 1.1.8
+        specifier: link:../ecommerce-catalog-service-api/gen/typescript
+        version: link:../ecommerce-catalog-service-api/gen/typescript
       '@sokol111/ecommerce-image-service-api':
-        specifier: 1.1.8
-        version: 1.1.8
+        specifier: link:../ecommerce-image-service-api/gen/typescript
+        version: link:../ecommerce-image-service-api/gen/typescript
       '@vueuse/nuxt':
         specifier: 14.2.1
         version: 14.2.1(magicast@0.5.2)(nuxt@4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6(@babel/core@7.29.0))(@parcel/watcher@2.5.6)(@types/node@25.6.0)(@vue/compiler-sfc@3.5.30)(cac@6.7.14)(db0@0.3.4)(eslint@10.0.3(jiti@2.6.1))(ioredis@5.10.0)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(rollup-plugin-visualizer@6.0.11(rollup@4.59.0))(rollup@4.59.0)(terser@5.46.0)(typescript@5.9.3)(vite@7.3.1(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(yaml@2.8.2))(vue-tsc@3.2.5(typescript@5.9.3))(yaml@2.8.2))(vue@3.5.30(typescript@5.9.3))
@@ -1622,12 +1626,6 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
-
-  '@sokol111/ecommerce-catalog-service-api@1.1.8':
-    resolution: {integrity: sha512-7xyiQ4/L+D3gGWCsygVOMsRPg8CLIjMwVMaoiPajtGkH0AfmRhVTKARuuYczLagvj5UUhnHlvRquOBax0/4mbg==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-catalog-service-api/1.1.8/fb20967b15627c74a939f00342ad04e9d2a31c90}
-
-  '@sokol111/ecommerce-image-service-api@1.1.8':
-    resolution: {integrity: sha512-KgaHagzuXBaL1o4wyPsR6BTuGwm8v5C2A0tOFoyuWL4F1MJFr0wPLW4sZj4zaKSRxMDHzV1quay5Vg242kzsxA==, tarball: https://npm.pkg.github.com/download/@sokol111/ecommerce-image-service-api/1.1.8/3c592a5aa62f5e56be28a2c0107de43d9fdcd86c}
 
   '@speed-highlight/core@1.2.14':
     resolution: {integrity: sha512-G4ewlBNhUtlLvrJTb88d2mdy2KRijzs4UhnlrOSRT4bmjh/IqNElZa3zkrZ+TC47TwtlDWzVLFADljF1Ijp5hA==}
@@ -7251,10 +7249,6 @@ snapshots:
   '@sindresorhus/is@7.2.0': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
-
-  '@sokol111/ecommerce-catalog-service-api@1.1.8': {}
-
-  '@sokol111/ecommerce-image-service-api@1.1.8': {}
 
   '@speed-highlight/core@1.2.14': {}
 

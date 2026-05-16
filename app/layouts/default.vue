@@ -2,7 +2,9 @@
 const { user, logout, isLoading, isAuthenticated } = useAuth()
 
 const requestUrl = useRequestURL()
-const storeUrl = computed(() => `${requestUrl.protocol}//${requestUrl.host.replace(/^admin\./, '')}`)
+const baseDomain = requestUrl.host.replace(/^admin\./, '')
+const tenantSlug = useTenantSlug()
+const storeUrl = computed(() => tenantSlug.value ? `${requestUrl.protocol}//${tenantSlug.value}.${baseDomain}` : null)
 
 const navigation = [
   {
@@ -113,12 +115,13 @@ const userMenuItems = computed(() => [
         </div>
       </header>
 
-      <div class="bg-primary/10 text-primary text-center text-sm py-2 px-4">
+      <div
+        v-if="storeUrl"
+        class="bg-primary/10 text-primary text-center text-sm py-2 px-4"
+      >
         This is the admin panel. Visit the
         <a
           :href="storeUrl"
-          target="_blank"
-          rel="noopener noreferrer"
           class="underline underline-offset-2 font-medium"
         >online store</a>
         to see the customer-facing site.
