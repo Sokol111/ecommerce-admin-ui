@@ -40,7 +40,11 @@ export default defineNuxtConfig({
         'vue-router',
         '@vueuse/core',
         'date-fns',
-        'zod'
+        'zod',
+        '@tanstack/vue-table',
+        'reka-ui',
+        '@floating-ui/dom',
+        'vaul-vue'
       ]
     },
     server: {
