@@ -121,6 +121,9 @@ export default defineNuxtConfig({
       }
     },
     session: {
+      expirationCheck: true,
+      expirationThreshold: 30,
+      automaticRefresh: false,
       cookie: {
         secure: false,
         sameSite: 'lax'
