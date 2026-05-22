@@ -41,10 +41,7 @@ export default defineNuxtConfig({
         '@vueuse/core',
         'date-fns',
         'zod',
-        '@tanstack/vue-table',
-        'reka-ui',
-        '@floating-ui/dom',
-        'vaul-vue'
+        'reka-ui'
       ]
     },
     server: {
