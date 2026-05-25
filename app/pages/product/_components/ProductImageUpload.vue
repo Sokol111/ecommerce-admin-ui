@@ -9,6 +9,8 @@ const emit = defineEmits<{
   'update:imageId': [id: string | undefined]
 }>()
 
+const { id: formFieldId } = useFormField()
+
 const { upload, uploadState, uploadProgress, isUploading, reset, validateFile } = useImageUpload({
   role: 'main',
   onUploaded: (id: string) => {
@@ -207,6 +209,7 @@ const hasImage = computed(() => !!previewUrl.value || !!props.imageId)
 
     <!-- Hidden file input -->
     <input
+      :id="formFieldId"
       ref="fileInputRef"
       type="file"
       accept="image/jpeg,image/png,image/webp,image/avif"
