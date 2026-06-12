@@ -118,7 +118,11 @@ export default defineNuxtConfig({
         },
         exposeAccessToken: true,
         validateAccessToken: false,
-        validateIdToken: false
+        validateIdToken: false,
+        logoutRedirectParameterName: 'post_logout_redirect_uri',
+        additionalLogoutParameters: {
+          idTokenHint: ''
+        }
       }
     },
     session: {
