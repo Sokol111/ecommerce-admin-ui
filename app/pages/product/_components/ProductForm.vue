@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { AttributeResponse, CategoryResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { Attribute, Category } from '@sokol111/ecommerce-catalog-service-api'
 import { productSchema, type ProductFormData } from '~/schemas/product.schema'
 import ProductAttributeEditor from './ProductAttributeEditor.vue'
 import ProductImageUpload from './ProductImageUpload.vue'
 
 const props = defineProps<{
   initialData?: Partial<ProductFormData>
-  categories: CategoryResponse[]
-  availableAttributes: AttributeResponse[]
+  categories: Category[]
+  availableAttributes: Attribute[]
   isEditMode?: boolean
 }>()
 

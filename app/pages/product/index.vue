@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { ProductResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { TableColumn } from '@nuxt/ui';
+import type { Product } from '@sokol111/ecommerce-catalog-service-api';
 
 const {
   items,
@@ -16,10 +16,10 @@ const {
   deleteLoading,
   confirmDelete,
   cancelDelete
-} = await useListPage<ProductResponse>('/api/catalog/products')
+} = await useListPage<Product>('/api/catalog/products')
 
 // Table columns
-const columns: TableColumn<ProductResponse>[] = [
+const columns: TableColumn<Product>[] = [
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'price', header: 'Price' },
   { accessorKey: 'quantity', header: 'Quantity' },
@@ -27,6 +27,12 @@ const columns: TableColumn<ProductResponse>[] = [
   { accessorKey: 'createdAt', header: 'Created At' },
   { id: 'actions', header: '' }
 ]
+
+function formatTimestamp(val: { seconds: bigint | number } | string | null | undefined) {
+  if (!val) return { date: '-', time: '' }
+  if (typeof val === 'string') return formatDate(val)
+  return formatDate(new Date(Number(val.seconds) * 1000).toISOString())
+}
 </script>
 
 <template>
@@ -73,9 +79,9 @@ const columns: TableColumn<ProductResponse>[] = [
 
           <template #createdAt-cell="{ row }">
             <div class="text-sm">
-              <div>{{ formatDate(row.original.createdAt).date }}</div>
+              <div>{{ formatTimestamp(row.original.createdAt).date }}</div>
               <div class="text-muted">
-                {{ formatDate(row.original.createdAt).time }}
+                {{ formatTimestamp(row.original.createdAt).time }}
               </div>
             </div>
           </template>

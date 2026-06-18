@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { GetAttributeListResponse } from '@sokol111/ecommerce-catalog-service-api'
+import { CategoryAttributeRole } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { CategoryAttributeFormData, CategoryFormData } from '~/schemas/category.schema'
 import CategoryForm from '../_components/CategoryForm.vue'
@@ -11,7 +13,7 @@ const categoryId = computed(() => route.params.id)
 // Fetch category and attributes
 const [{ data: category, error: categoryError }, { data: attributesData }] = await Promise.all([
   useFetch(`/api/catalog/categories/${categoryId.value}`),
-  useFetch('/api/catalog/attributes')
+  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 if (categoryError.value || !category.value) {
@@ -23,6 +25,12 @@ if (categoryError.value || !category.value) {
 
 const availableAttributes = computed(() => attributesData.value?.items || [])
 
+const categoryAttributeRoleStrings: Record<CategoryAttributeRole, 'variant' | 'specification'> = {
+  [CategoryAttributeRole.UNSPECIFIED]: 'specification',
+  [CategoryAttributeRole.VARIANT]: 'variant',
+  [CategoryAttributeRole.SPECIFICATION]: 'specification'
+}
+
 // Convert category to form data
 const initialData = computed(() => ({
   id: category.value!.id,
@@ -31,7 +39,7 @@ const initialData = computed(() => ({
   enabled: category.value!.enabled,
   attributes: category.value!.attributes?.map((attr) => ({
     attributeId: attr.attributeId,
-    role: attr.role as 'variant' | 'specification',
+    role: categoryAttributeRoleStrings[attr.role] ?? 'specification',
     sortOrder: attr.sortOrder,
     filterable: attr.filterable,
     searchable: attr.searchable

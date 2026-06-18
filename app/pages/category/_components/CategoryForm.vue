@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { AttributeResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { Attribute } from '@sokol111/ecommerce-catalog-service-api'
 import { categorySchema, type CategoryFormData } from '~/schemas/category.schema'
 
 const props = defineProps<{
   initialData?: Partial<CategoryFormData>
-  availableAttributes: AttributeResponse[]
+  availableAttributes: Attribute[]
   isEditMode?: boolean
 }>()
 

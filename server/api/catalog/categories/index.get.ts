@@ -1,4 +1,3 @@
-import type { GetCategoryListSort } from '@sokol111/ecommerce-catalog-service-api'
 import { consola } from 'consola'
 
 const logger = consola.withTag('api:catalog:categories')
@@ -11,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const result = await catalogClient.getCategoryList({
       page: query.page ? Number(query.page) : 1,
       size: query.size ? Number(query.size) : 100, // Get all categories for select
-      sort: query.sort as GetCategoryListSort | undefined,
+      sort: query.sort as string | undefined,
       order: query.order as 'asc' | 'desc' | undefined,
       enabled:
         query.enabled === 'true'

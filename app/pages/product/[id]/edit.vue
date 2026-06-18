@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { GetAttributeListResponse, GetCategoryListResponse, Product } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { ProductFormData } from '~/schemas/product.schema'
 import ProductForm from '../_components/ProductForm.vue'
@@ -10,9 +11,9 @@ const productId = computed(() => route.params.id)
 
 // Fetch product, categories, and attributes
 const [{ data: product, error: productError }, { data: categoriesData }, { data: attributesData }] = await Promise.all([
-  useFetch(`/api/catalog/products/${productId.value}`),
-  useFetch('/api/catalog/categories'),
-  useFetch('/api/catalog/attributes')
+  useFetch<Product>(`/api/catalog/products/${productId.value}`),
+  useFetch<GetCategoryListResponse>('/api/catalog/categories'),
+  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 if (productError.value || !product.value) {
@@ -38,11 +39,11 @@ const initialData = computed(() => ({
   enabled: product.value!.enabled,
   attributes: product.value!.attributes?.map((attr) => ({
     attributeId: attr.attributeId,
-    optionSlugValue: attr.optionSlugValue,
-    optionSlugValues: attr.optionSlugValues,
-    numericValue: attr.numericValue,
-    textValue: attr.textValue,
-    booleanValue: attr.booleanValue
+    optionSlugValue: attr.value.case === 'optionSlugValue' ? attr.value.value : undefined,
+    optionSlugValues: attr.value.case === 'optionSlugValues' ? attr.value.value.values : undefined,
+    numericValue: attr.value.case === 'numericValue' ? attr.value.value : undefined,
+    textValue: attr.value.case === 'textValue' ? attr.value.value : undefined,
+    booleanValue: attr.value.case === 'booleanValue' ? attr.value.value : undefined
   })) || []
 }))
 

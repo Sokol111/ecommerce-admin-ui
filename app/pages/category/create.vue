@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { GetAttributeListResponse } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { CategoryAttributeFormData, CategoryFormData } from '~/schemas/category.schema'
 import CategoryForm from './_components/CategoryForm.vue'
@@ -6,7 +7,7 @@ import CategoryForm from './_components/CategoryForm.vue'
 const notify = useNotify()
 
 // Fetch attributes for the form
-const { data: attributesData } = await useFetch('/api/catalog/attributes')
+const { data: attributesData } = await useFetch<GetAttributeListResponse>('/api/catalog/attributes')
 
 const availableAttributes = computed(() => attributesData.value?.items || [])
 

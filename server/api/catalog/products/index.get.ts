@@ -1,4 +1,3 @@
-import type { GetProductListSort } from '@sokol111/ecommerce-catalog-service-api'
 import { consola } from 'consola'
 
 const logger = consola.withTag('api:catalog:products')
@@ -11,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const result = await catalogClient.getProductList({
       page: query.page ? Number(query.page) : undefined,
       size: query.size ? Number(query.size) : undefined,
-      sort: query.sort as GetProductListSort | undefined,
+      sort: query.sort as string | undefined,
       order: query.order as 'asc' | 'desc' | undefined,
       enabled:
         query.enabled === 'true'

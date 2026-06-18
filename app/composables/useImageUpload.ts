@@ -1,4 +1,4 @@
-import type { PresignResponse } from '@sokol111/ecommerce-image-service-api'
+import type { CreatePresignResponse } from '@sokol111/ecommerce-image-service-api'
 
 export type UploadState = 'idle' | 'presigning' | 'uploading' | 'confirming' | 'done' | 'error'
 
@@ -67,7 +67,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
       const presignResult = await $fetch('/api/images/presign', {
         method: 'POST',
         body: presignBody
-      }) as { success: boolean, data?: PresignResponse, error?: { title?: string, detail?: string } }
+      }) as { success: boolean, data?: CreatePresignResponse, error?: { title?: string, detail?: string } }
 
       if (!presignResult.success || !presignResult.data) {
         throw new Error(presignResult.error?.detail || 'Failed to get upload URL')

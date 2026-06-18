@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { CategoryResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { TableColumn } from '@nuxt/ui';
+import type { Category } from '@sokol111/ecommerce-catalog-service-api';
 
 const {
   items,
@@ -12,10 +12,10 @@ const {
   totalPages,
   handlePageChange,
   createRowActions
-} = await useListPage<CategoryResponse>('/api/catalog/categories')
+} = await useListPage<Category>('/api/catalog/categories')
 
 // Table columns
-const columns: TableColumn<CategoryResponse>[] = [
+const columns: TableColumn<Category>[] = [
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'attributes', header: 'Attributes' },
   { accessorKey: 'enabled', header: 'Status' },

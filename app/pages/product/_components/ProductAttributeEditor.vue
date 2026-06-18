@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import type {
-  AttributeResponse,
+  Attribute,
   CategoryAttribute
-} from '@sokol111/ecommerce-catalog-service-api'
-import type { ProductAttributeData } from '~/schemas/product.schema'
+} from '@sokol111/ecommerce-catalog-service-api';
+import {
+  AttributeType,
+  CategoryAttributeRole
+} from '@sokol111/ecommerce-catalog-service-api';
+import type { ProductAttributeData } from '~/schemas/product.schema';
 
 const props = defineProps<{
   categoryAttributes: CategoryAttribute[]
-  allAttributes: AttributeResponse[]
+  allAttributes: Attribute[]
   disabled?: boolean
 }>()
 
@@ -17,7 +21,7 @@ const attributes = defineModel<ProductAttributeData[]>('modelValue', {
 
 // Build a lookup map for attribute definitions
 const attributeMap = computed(() => {
-  const map = new Map<string, AttributeResponse>()
+  const map = new Map<string, Attribute>()
   for (const attr of props.allAttributes) {
     map.set(attr.id, attr)
   }
@@ -64,7 +68,7 @@ watch(
 )
 
 // Helper: option items for single/multiple select
-function getOptionItems(def: AttributeResponse) {
+function getOptionItems(def: Attribute) {
   return (def.options || [])
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((opt) => ({
@@ -103,7 +107,7 @@ function getOptionItems(def: AttributeResponse) {
       >
         <!-- Single select -->
         <UFormField
-          v-if="definition!.type === 'single'"
+          v-if="definition!.type === AttributeType.SINGLE"
           :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
@@ -119,7 +123,7 @@ function getOptionItems(def: AttributeResponse) {
 
         <!-- Multiple select -->
         <UFormField
-          v-else-if="definition!.type === 'multiple'"
+          v-else-if="definition!.type === AttributeType.MULTIPLE"
           :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
@@ -136,7 +140,7 @@ function getOptionItems(def: AttributeResponse) {
 
         <!-- Range (numeric with unit) -->
         <UFormField
-          v-else-if="definition!.type === 'range'"
+          v-else-if="definition!.type === AttributeType.RANGE"
           :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
@@ -159,7 +163,7 @@ function getOptionItems(def: AttributeResponse) {
 
         <!-- Boolean -->
         <UFormField
-          v-else-if="definition!.type === 'boolean'"
+          v-else-if="definition!.type === AttributeType.BOOLEAN"
           :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
         >
@@ -177,7 +181,7 @@ function getOptionItems(def: AttributeResponse) {
 
         <!-- Text -->
         <UFormField
-          v-else-if="definition!.type === 'text'"
+          v-else-if="definition!.type === AttributeType.TEXT"
           :label="`${definition!.name}${definition!.unit ? ` (${definition!.unit})` : ''}`"
           :name="`attr-${categoryAttr.attributeId}`"
           class="md:col-span-2"
@@ -192,11 +196,11 @@ function getOptionItems(def: AttributeResponse) {
 
         <!-- Role badge -->
         <div
-          v-if="definition!.type !== 'text'"
+          v-if="definition!.type !== AttributeType.TEXT"
           class="flex items-center gap-2 pt-7"
         >
           <UBadge
-            :color="categoryAttr.role === 'variant' ? 'primary' : 'neutral'"
+            :color="categoryAttr.role === CategoryAttributeRole.VARIANT ? 'primary' : 'neutral'"
             variant="subtle"
             size="sm"
           >

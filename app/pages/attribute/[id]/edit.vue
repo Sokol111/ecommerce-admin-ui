@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AttributeType } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { AttributeFormData, AttributeOptionFormData } from '~/schemas/attribute.schema'
 import AttributeForm from '../_components/AttributeForm.vue'
@@ -20,13 +21,22 @@ if (attributeError.value || !attribute.value) {
   })
 }
 
+const attributeTypeStrings: Record<AttributeType, 'single' | 'multiple' | 'range' | 'boolean' | 'text'> = {
+  [AttributeType.UNSPECIFIED]: 'single',
+  [AttributeType.SINGLE]: 'single',
+  [AttributeType.MULTIPLE]: 'multiple',
+  [AttributeType.RANGE]: 'range',
+  [AttributeType.BOOLEAN]: 'boolean',
+  [AttributeType.TEXT]: 'text'
+}
+
 // Convert attribute to form data
 const initialData = computed(() => ({
   id: attribute.value!.id,
   version: attribute.value!.version,
   name: attribute.value!.name,
   slug: attribute.value!.slug,
-  type: attribute.value!.type as 'single' | 'multiple' | 'range' | 'boolean' | 'text',
+  type: attributeTypeStrings[attribute.value!.type] ?? 'single',
   unit: attribute.value!.unit,
   enabled: attribute.value!.enabled,
   options: attribute.value!.options?.map((opt) => ({

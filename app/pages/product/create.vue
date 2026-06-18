@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { GetAttributeListResponse, GetCategoryListResponse } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { ProductFormData } from '~/schemas/product.schema'
 import ProductForm from './_components/ProductForm.vue'
@@ -7,8 +8,8 @@ const notify = useNotify()
 
 // Fetch categories and attributes for the form
 const [{ data: categoriesData }, { data: attributesData }] = await Promise.all([
-  useFetch('/api/catalog/categories'),
-  useFetch('/api/catalog/attributes')
+  useFetch<GetCategoryListResponse>('/api/catalog/categories'),
+  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 const categories = computed(() => categoriesData.value?.items || [])
