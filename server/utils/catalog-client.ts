@@ -23,6 +23,11 @@ type FlatAttributeValue = {
   booleanValue?: boolean
 }
 
+// Deeply converts all BigInt values to numbers so h3 can JSON.stringify the response
+function bigintSafe<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value, (_, v) => typeof v === 'bigint' ? Number(v) : v))
+}
+
 function toAttributeValueInput(attr: FlatAttributeValue) {
   if (attr.optionSlugValue !== undefined)
     return { attributeId: attr.attributeId, value: { case: 'optionSlugValue' as const, value: attr.optionSlugValue } }
@@ -143,7 +148,7 @@ export async function useCatalogClient(event: H3Event) {
         enabled: params?.enabled,
         categoryId: params?.categoryId
       })
-      return { ...res, total: Number(res.total) }
+      return bigintSafe(res)
     },
 
     async createProduct(body: ProductBody): Promise<Product> {
@@ -187,7 +192,7 @@ export async function useCatalogClient(event: H3Event) {
         order: params?.order,
         enabled: params?.enabled
       })
-      return { ...res, total: Number(res.total) }
+      return bigintSafe(res)
     },
 
     async createCategory(body: CategoryBody): Promise<Category> {
@@ -233,7 +238,7 @@ export async function useCatalogClient(event: H3Event) {
         order: params?.order,
         enabled: params?.enabled
       })
-      return { ...res, total: Number(res.total) }
+      return bigintSafe(res)
     },
 
     async createAttribute(body: AttributeBody): Promise<Attribute> {
