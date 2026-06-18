@@ -3,9 +3,6 @@ import { createGrpcTransport } from '@connectrpc/connect-node'
 import type {
   Attribute,
   Category,
-  GetAttributeListResponse,
-  GetCategoryListResponse,
-  GetProductListResponse,
   Product
 } from '@sokol111/ecommerce-catalog-service-api'
 import {
@@ -137,8 +134,8 @@ export async function useCatalogClient(event: H3Event) {
       order?: string
       enabled?: boolean
       categoryId?: string
-    }): Promise<GetProductListResponse> {
-      return productClient.getProductList({
+    }) {
+      const res = await productClient.getProductList({
         page: params?.page ?? 1,
         size: params?.size ?? 10,
         sort: params?.sort,
@@ -146,6 +143,7 @@ export async function useCatalogClient(event: H3Event) {
         enabled: params?.enabled,
         categoryId: params?.categoryId
       })
+      return { ...res, total: Number(res.total) }
     },
 
     async createProduct(body: ProductBody): Promise<Product> {
@@ -181,14 +179,15 @@ export async function useCatalogClient(event: H3Event) {
       sort?: string
       order?: string
       enabled?: boolean
-    }): Promise<GetCategoryListResponse> {
-      return categoryClient.getCategoryList({
+    }) {
+      const res = await categoryClient.getCategoryList({
         page: params?.page ?? 1,
         size: params?.size ?? 10,
         sort: params?.sort,
         order: params?.order,
         enabled: params?.enabled
       })
+      return { ...res, total: Number(res.total) }
     },
 
     async createCategory(body: CategoryBody): Promise<Category> {
@@ -226,14 +225,15 @@ export async function useCatalogClient(event: H3Event) {
       sort?: string
       order?: string
       enabled?: boolean
-    }): Promise<GetAttributeListResponse> {
-      return attributeClient.getAttributeList({
+    }) {
+      const res = await attributeClient.getAttributeList({
         page: params?.page ?? 1,
         size: params?.size ?? 10,
         sort: params?.sort,
         order: params?.order,
         enabled: params?.enabled
       })
+      return { ...res, total: Number(res.total) }
     },
 
     async createAttribute(body: AttributeBody): Promise<Attribute> {
