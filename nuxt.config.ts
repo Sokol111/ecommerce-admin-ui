@@ -106,7 +106,8 @@ export default defineNuxtConfig({
           'products:read', 'products:write', 'products:delete',
           'categories:read', 'categories:write', 'categories:delete',
           'attributes:read', 'attributes:write', 'attributes:delete',
-          'users:read', 'tenants:read', 'tenants:write'
+          'users:read', 'tenants:read', 'tenants:write',
+          'images:write', 'images:read', 'images:delete'
         ],
         responseMode: 'query',
         tokenRequestType: 'form-urlencoded',
