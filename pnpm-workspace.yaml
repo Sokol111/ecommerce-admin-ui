@@ -10,8 +10,5 @@ ignoredBuiltDependencies:
   - unrs-resolver
   - vue-demi
 minimumReleaseAgeExclude:
-  - '@sokol111/ecommerce-catalog-service-api@1.2.2'
-  - '@sokol111/ecommerce-image-service-api@1.2.2'
-overrides:
-  '@sokol111/ecommerce-catalog-service-api': link:../ecommerce-catalog-service-api/gen/typescript
-  '@sokol111/ecommerce-image-service-api': link:../ecommerce-image-service-api/gen/typescript
+  - '@sokol111/ecommerce-catalog-service-api@1.3.0'
+  - '@sokol111/ecommerce-image-service-api@1.2.7'

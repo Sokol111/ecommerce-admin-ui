@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type { Attribute } from '@sokol111/ecommerce-catalog-service-api'
+import { AttributeType } from '@sokol111/ecommerce-catalog-service-api'
 
 const {
   items,
@@ -25,12 +26,13 @@ const columns: TableColumn<Attribute>[] = [
 ]
 
 // Type labels
-const typeLabels: Record<string, string> = {
-  single: 'Single',
-  multiple: 'Multiple',
-  range: 'Range',
-  boolean: 'Boolean',
-  text: 'Text'
+const typeLabels: Record<AttributeType, string> = {
+  [AttributeType.UNSPECIFIED]: 'Unknown',
+  [AttributeType.SINGLE]: 'Single',
+  [AttributeType.MULTIPLE]: 'Multiple',
+  [AttributeType.RANGE]: 'Range',
+  [AttributeType.BOOLEAN]: 'Boolean',
+  [AttributeType.TEXT]: 'Text'
 }
 </script>
 

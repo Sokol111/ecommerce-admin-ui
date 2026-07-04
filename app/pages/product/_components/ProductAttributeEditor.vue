@@ -19,6 +19,12 @@ const attributes = defineModel<ProductAttributeData[]>('modelValue', {
   default: () => []
 })
 
+const ROLE_LABELS: Record<CategoryAttributeRole, string> = {
+  [CategoryAttributeRole.UNSPECIFIED]: 'Unknown',
+  [CategoryAttributeRole.VARIANT]: 'Variant',
+  [CategoryAttributeRole.SPECIFICATION]: 'Specification'
+}
+
 // Build a lookup map for attribute definitions
 const attributeMap = computed(() => {
   const map = new Map<string, Attribute>()
@@ -204,7 +210,7 @@ function getOptionItems(def: Attribute) {
             variant="subtle"
             size="sm"
           >
-            {{ categoryAttr.role }}
+            {{ ROLE_LABELS[categoryAttr.role] ?? categoryAttr.role }}
           </UBadge>
         </div>
       </div>

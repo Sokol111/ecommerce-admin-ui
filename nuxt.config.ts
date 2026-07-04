@@ -41,7 +41,10 @@ export default defineNuxtConfig({
         '@vueuse/core',
         'date-fns',
         'zod',
-        'reka-ui'
+        'reka-ui',
+        '@date-fns/utc',
+        '@bufbuild/protobuf/codegenv2',
+        '@bufbuild/protobuf/wkt'
       ]
     },
     server: {
