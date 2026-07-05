@@ -2,12 +2,12 @@
 import type {
   Attribute,
   CategoryAttribute
-} from '@sokol111/ecommerce-catalog-service-api';
+} from '@sokol111/ecommerce-catalog-service-api'
 import {
   AttributeType,
   CategoryAttributeRole
-} from '@sokol111/ecommerce-catalog-service-api';
-import type { ProductAttributeData } from '~/schemas/product.schema';
+} from '@sokol111/ecommerce-catalog-service-api'
+import type { ProductAttributeData } from '~/schemas/product.schema'
 
 const props = defineProps<{
   categoryAttributes: CategoryAttribute[]

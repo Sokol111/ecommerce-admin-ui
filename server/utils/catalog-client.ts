@@ -157,6 +157,7 @@ export async function useCatalogClient(event: H3Event) {
     async updateProduct(body: ProductBody & { id: string }): Promise<Product> {
       const res = await productClient.updateProduct({
         ...body,
+        version: body.version !== undefined ? BigInt(body.version) : undefined,
         attributes: body.attributes?.map(toAttributeValueInput) ?? []
       })
       return res.product!
@@ -204,6 +205,7 @@ export async function useCatalogClient(event: H3Event) {
     async updateCategory(body: CategoryBody & { id: string }): Promise<Category> {
       const res = await categoryClient.updateCategory({
         ...body,
+        version: body.version !== undefined ? BigInt(body.version) : undefined,
         attributes: body.attributes?.map((a) => ({
           ...a,
           role: categoryAttributeRoleMap[a.role] ?? CategoryAttributeRole.SPECIFICATION
@@ -249,6 +251,7 @@ export async function useCatalogClient(event: H3Event) {
       const { type: _type, slug: _slug, ...rest } = body
       const res = await attributeClient.updateAttribute({
         ...rest,
+        version: rest.version !== undefined ? BigInt(rest.version) : undefined,
         options: body.options ?? []
       })
       return res.attribute!

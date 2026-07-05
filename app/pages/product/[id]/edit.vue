@@ -29,7 +29,7 @@ const attributes = computed(() => attributesData.value?.items || [])
 // Convert product to form data
 const initialData = computed(() => ({
   id: product.value!.id,
-  version: product.value!.version,
+  version: Number(product.value!.version),
   imageId: product.value!.imageId,
   categoryId: product.value!.categoryId,
   name: product.value!.name,

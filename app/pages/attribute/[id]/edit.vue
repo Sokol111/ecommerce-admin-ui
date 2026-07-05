@@ -33,7 +33,7 @@ const attributeTypeStrings: Record<AttributeType, 'single' | 'multiple' | 'range
 // Convert attribute to form data
 const initialData = computed(() => ({
   id: attribute.value!.id,
-  version: attribute.value!.version,
+  version: Number(attribute.value!.version),
   name: attribute.value!.name,
   slug: attribute.value!.slug,
   type: attributeTypeStrings[attribute.value!.type] ?? 'single',

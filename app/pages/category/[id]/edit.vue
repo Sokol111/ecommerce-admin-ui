@@ -34,7 +34,7 @@ const categoryAttributeRoleStrings: Record<CategoryAttributeRole, 'variant' | 's
 // Convert category to form data
 const initialData = computed(() => ({
   id: category.value!.id,
-  version: category.value!.version,
+  version: Number(category.value!.version),
   name: category.value!.name,
   enabled: category.value!.enabled,
   attributes: category.value!.attributes?.map((attr) => ({
