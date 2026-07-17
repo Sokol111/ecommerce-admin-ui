@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { user, logout, isLoading, isAuthenticated } = useAuth()
+const { user, logout, isAuthenticated } = useAuth()
 
 const requestUrl = useRequestURL()
 const baseDomain = requestUrl.host.replace(/^admin\./, '')
@@ -102,7 +102,7 @@ const userMenuItems = computed(() => [
           </ClientOnly>
 
           <UDropdownMenu
-            v-if="isAuthenticated && !isLoading"
+            v-if="isAuthenticated"
             :items="userMenuItems"
           >
             <UButton

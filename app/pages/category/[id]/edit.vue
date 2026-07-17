@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GetAttributeListResponse } from '@sokol111/ecommerce-catalog-service-api'
+import type { Category, GetAttributeListResponse } from '@sokol111/ecommerce-catalog-service-api'
 import { CategoryAttributeRole } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { CategoryAttributeFormData, CategoryFormData } from '~/schemas/category.schema'
@@ -12,8 +12,8 @@ const categoryId = computed(() => route.params.id)
 
 // Fetch category and attributes
 const [{ data: category, error: categoryError }, { data: attributesData }] = await Promise.all([
-  useFetch(`/api/catalog/categories/${categoryId.value}`),
-  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
+  useApiFetch<Category>(`/api/catalog/categories/${categoryId.value}`),
+  useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 if (categoryError.value || !category.value) {
@@ -47,7 +47,7 @@ const initialData = computed(() => ({
 }))
 
 async function handleSubmit(data: CategoryFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/categories', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/categories', {
     method: 'PUT',
     body: {
       id: data.id,

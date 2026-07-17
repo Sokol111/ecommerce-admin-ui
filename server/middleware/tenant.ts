@@ -1,18 +1,15 @@
-import { getUserSession } from 'nuxt-oidc-auth/runtime/server/utils/session.js'
-
 export default defineEventHandler(async (event) => {
   // Skip paths that don't need tenant context
-  if (event.path === '/api/health' || event.path.startsWith('/auth/')) return
+  if (event.path === '/api/health' || event.path.startsWith('/api/auth/') || event.path.startsWith('/auth/')) return
 
-  const session = await getUserSession(event).catch(() => null)
-  const token = session?.accessToken as string | undefined
-  if (!token) return
+  try {
+    const token = (await getValidAuthSessionTokens(event))?.accessToken
+    if (!token) return
 
-  // Decode JWT payload (access token is a signed JWT with a `tenant` claim)
-  const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64url').toString())
-  const slug = payload.tenant as string | undefined
-
-  if (slug) {
-    event.context.tenantSlug = slug
+    const claims = await verifyAccessToken(token, event)
+    if (claims.tenant) event.context.tenantSlug = claims.tenant
+  } catch {
+    await clearAuthSession(event)
+    throw createError({ statusCode: 401, message: 'Invalid session' })
   }
 })

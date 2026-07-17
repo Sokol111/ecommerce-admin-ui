@@ -28,7 +28,7 @@ const isLoadingPreview = ref(false)
 async function loadPreview(imageId: string) {
   isLoadingPreview.value = true
   try {
-    const result = await $fetch(`/api/images/${imageId}/url`, {
+    const result = await useNuxtApp().$api(`/api/images/${imageId}/url`, {
       query: { w: 400, quality: 80 }
     }) as { url: string }
     previewUrl.value = result.url

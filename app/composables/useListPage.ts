@@ -18,7 +18,7 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
   const size = computed(() => Number(route.query.size) || defaultSize)
 
   // Fetch data
-  const { data, pending, error, refresh } = await useFetch<PaginatedResponse<T>>(endpoint, {
+  const { data, pending, error, refresh } = await useApiFetch<PaginatedResponse<T>>(endpoint, {
     query: {
       page,
       size
@@ -81,7 +81,7 @@ export async function useListPage<T>(endpoint: string, options: UseListPageOptio
     deleteLoading.value = true
 
     try {
-      const result = await $fetch<{ success: boolean, error?: { title?: string, detail?: string } }>(
+      const result = await useNuxtApp().$api<{ success: boolean, error?: { title?: string, detail?: string } }>(
         `${target.endpoint}/${target.id}`,
         { method: 'DELETE' }
       )

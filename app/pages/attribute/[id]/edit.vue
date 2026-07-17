@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Attribute } from '@sokol111/ecommerce-catalog-service-api'
 import { AttributeType } from '@sokol111/ecommerce-catalog-service-api'
 import type { ApiErrorData } from '~/composables/useNotify'
 import type { AttributeFormData, AttributeOptionFormData } from '~/schemas/attribute.schema'
@@ -10,7 +11,7 @@ const notify = useNotify()
 const attributeId = computed(() => route.params.id)
 
 // Fetch attribute
-const { data: attribute, error: attributeError } = await useFetch(
+const { data: attribute, error: attributeError } = await useApiFetch<Attribute>(
   `/api/catalog/attributes/${attributeId.value}`
 )
 
@@ -48,7 +49,7 @@ const initialData = computed(() => ({
 }))
 
 async function handleSubmit(data: AttributeFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/attributes', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/attributes', {
     method: 'PUT',
     body: {
       id: data.id,

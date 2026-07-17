@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
     const result = await catalogClient.updateProduct(body)
     return { success: true, data: result }
   } catch (error: unknown) {
+    rethrowHttpAuthError(error)
     const err = error as {
       response?: {
         status?: number

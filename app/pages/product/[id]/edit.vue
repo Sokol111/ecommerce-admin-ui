@@ -11,9 +11,9 @@ const productId = computed(() => route.params.id)
 
 // Fetch product, categories, and attributes
 const [{ data: product, error: productError }, { data: categoriesData }, { data: attributesData }] = await Promise.all([
-  useFetch<Product>(`/api/catalog/products/${productId.value}`),
-  useFetch<GetCategoryListResponse>('/api/catalog/categories'),
-  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
+  useApiFetch<Product>(`/api/catalog/products/${productId.value}`),
+  useApiFetch<GetCategoryListResponse>('/api/catalog/categories'),
+  useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 if (productError.value || !product.value) {
@@ -48,7 +48,7 @@ const initialData = computed(() => ({
 }))
 
 async function handleSubmit(data: ProductFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/products', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/products', {
     method: 'PUT',
     body: {
       id: data.id,

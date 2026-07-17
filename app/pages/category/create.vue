@@ -7,12 +7,12 @@ import CategoryForm from './_components/CategoryForm.vue'
 const notify = useNotify()
 
 // Fetch attributes for the form
-const { data: attributesData } = await useFetch<GetAttributeListResponse>('/api/catalog/attributes')
+const { data: attributesData } = await useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 
 const availableAttributes = computed(() => attributesData.value?.items || [])
 
 async function handleSubmit(data: CategoryFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/categories', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/categories', {
     method: 'POST',
     body: {
       name: data.name,

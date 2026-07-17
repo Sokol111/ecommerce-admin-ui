@@ -64,7 +64,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         size: file.size,
         role: options.role || 'main'
       }
-      const presignResult = await $fetch('/api/images/presign', {
+      const presignResult = await useNuxtApp().$api('/api/images/presign', {
         method: 'POST',
         body: presignBody
       }) as { success: boolean, data?: CreatePresignResponse, error?: { title?: string, detail?: string } }
@@ -112,7 +112,7 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         alt: params.alt || file.name.replace(/\.[^.]+$/, ''),
         role: options.role || 'main'
       }
-      const confirmResult = await $fetch('/api/images/confirm', {
+      const confirmResult = await useNuxtApp().$api('/api/images/confirm', {
         method: 'POST',
         body: confirmBody
       }) as { success: boolean, data?: { id: string }, error?: { title?: string, detail?: string } }

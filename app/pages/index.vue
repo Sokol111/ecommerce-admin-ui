@@ -7,9 +7,9 @@ const [
   { data: categoriesData },
   { data: attributesData }
 ] = await Promise.all([
-  useFetch('/api/catalog/products', { query: { size: 1 } }),
-  useFetch('/api/catalog/categories', { query: { size: 1 } }),
-  useFetch('/api/catalog/attributes', { query: { size: 1 } })
+  useApiFetch<{ total: number }>('/api/catalog/products', { query: { size: 1 } }),
+  useApiFetch<{ total: number }>('/api/catalog/categories', { query: { size: 1 } }),
+  useApiFetch<{ total: number }>('/api/catalog/attributes', { query: { size: 1 } })
 ])
 
 const stats = computed(() => [

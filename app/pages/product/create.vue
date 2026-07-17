@@ -8,15 +8,15 @@ const notify = useNotify()
 
 // Fetch categories and attributes for the form
 const [{ data: categoriesData }, { data: attributesData }] = await Promise.all([
-  useFetch<GetCategoryListResponse>('/api/catalog/categories'),
-  useFetch<GetAttributeListResponse>('/api/catalog/attributes')
+  useApiFetch<GetCategoryListResponse>('/api/catalog/categories'),
+  useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
 const categories = computed(() => categoriesData.value?.items || [])
 const attributes = computed(() => attributesData.value?.items || [])
 
 async function handleSubmit(data: ProductFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/products', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/products', {
     method: 'POST',
     body: {
       name: data.name,

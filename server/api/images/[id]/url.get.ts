@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
     })
     return result
   } catch (error: unknown) {
+    rethrowHttpAuthError(error)
     const err = error as {
       response?: { status?: number, data?: { detail?: string } }
     }

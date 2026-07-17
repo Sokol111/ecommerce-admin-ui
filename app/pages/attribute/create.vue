@@ -6,7 +6,7 @@ import AttributeForm from './_components/AttributeForm.vue'
 const notify = useNotify()
 
 async function handleSubmit(data: AttributeFormData) {
-  const { data: result, error } = await useFetch('/api/catalog/attributes', {
+  const { data: result, error } = await useApiFetch<{ success: boolean, error?: ApiErrorData }>('/api/catalog/attributes', {
     method: 'POST',
     body: {
       name: data.name,

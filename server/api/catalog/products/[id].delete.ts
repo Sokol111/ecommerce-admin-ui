@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
     await catalogClient.deleteProduct(id)
     return { success: true }
   } catch (error: unknown) {
+    rethrowHttpAuthError(error)
     const err = error as {
       response?: {
         status?: number
