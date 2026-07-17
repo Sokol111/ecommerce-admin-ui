@@ -14,3 +14,12 @@ export function hasAdminAccess(claims: AdminAccessClaims): boolean {
     && scopes.has('categories:read')
     && scopes.has('attributes:read')
 }
+
+export function hasApiPermission(claims: AdminAccessClaims, method: string, path: string): boolean {
+  const action = ({ DELETE: 'delete', PATCH: 'write', POST: 'write', PUT: 'write' } as Record<string, string>)[method]
+  if (!action) return true
+  if (!path.startsWith('/api/catalog/') && !path.startsWith('/api/images/')) return true
+
+  const resource = path.startsWith('/api/images/') ? 'images' : path.split('/')[3]
+  return new Set(claims.scope?.split(' ').filter(Boolean)).has(`${resource}:${action}`)
+}

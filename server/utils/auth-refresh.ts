@@ -8,6 +8,20 @@ interface RefreshTokenResponse {
 }
 
 const refreshes = new Map<string, Promise<AuthSessionTokens>>()
+const invalidatedRefreshes = new Set<string>()
+const refreshGracePeriodMs = 5_000
+
+export function invalidateAuthRefresh(refreshToken?: string): void {
+  if (!refreshToken) return
+  const refresh = refreshes.get(refreshToken)
+  if (!refresh) return
+  invalidatedRefreshes.add(refreshToken)
+  refreshes.delete(refreshToken)
+  void refresh.then(
+    () => setTimeout(() => invalidatedRefreshes.delete(refreshToken), refreshGracePeriodMs),
+    () => setTimeout(() => invalidatedRefreshes.delete(refreshToken), refreshGracePeriodMs)
+  )
+}
 
 async function refreshAuthSession(event: H3Event, tokens: AuthSessionTokens): Promise<AuthSessionTokens> {
   const config = useRuntimeConfig(event)
@@ -17,19 +31,29 @@ async function refreshAuthSession(event: H3Event, tokens: AuthSessionTokens): Pr
     throw createError({ statusCode: 401, message: 'Session expired' })
   }
 
-  const response = await $fetch<RefreshTokenResponse>(tokenEndpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      grant_type: 'refresh_token',
-      refresh_token: tokens.refreshToken,
-      client_id: clientId,
-      client_secret: clientSecret,
-      resource: config.apiResourceIndicator
-    }).toString()
-  })
+  let response: RefreshTokenResponse
+  try {
+    response = await $fetch<RefreshTokenResponse>(tokenEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: tokens.refreshToken,
+        client_id: clientId,
+        client_secret: clientSecret,
+        resource: config.apiResourceIndicator
+      }).toString()
+    })
+  } catch (error) {
+    const status = (error as { response?: { status?: number }, statusCode?: number }).response?.status
+      ?? (error as { statusCode?: number }).statusCode
+    if (status === 400 || status === 401) {
+      throw createError({ statusCode: 401, message: 'Session expired' })
+    }
+    throw createError({ statusCode: 503, message: 'Authentication service unavailable' })
+  }
 
   const claims = await verifyAccessToken(response.access_token, event)
   if (!hasAdminAccess(claims)) {
@@ -57,10 +81,17 @@ export async function getValidAuthSessionTokens(event: H3Event): Promise<AuthSes
 
   let refresh = refreshes.get(key)
   if (!refresh) {
-    refresh = refreshAuthSession(event, tokens).finally(() => refreshes.delete(key))
+    refresh = refreshAuthSession(event, tokens)
     refreshes.set(key, refresh)
+    void refresh.then(
+      () => setTimeout(() => refreshes.delete(key), refreshGracePeriodMs),
+      () => refreshes.delete(key)
+    )
   }
   const refreshed = await refresh
+  if (invalidatedRefreshes.has(key)) {
+    throw createError({ statusCode: 401, message: 'Session expired' })
+  }
   await setUserSession(event, { secure: refreshed })
   return refreshed
 }

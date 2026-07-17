@@ -16,7 +16,8 @@ const [{ data: product, error: productError }, { data: categoriesData }, { data:
   useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
-if (productError.value || !product.value) {
+if (productError.value) throw productError.value
+if (!product.value) {
   throw createError({
     statusCode: 404,
     message: 'Product not found'

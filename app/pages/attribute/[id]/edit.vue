@@ -15,7 +15,8 @@ const { data: attribute, error: attributeError } = await useApiFetch<Attribute>(
   `/api/catalog/attributes/${attributeId.value}`
 )
 
-if (attributeError.value || !attribute.value) {
+if (attributeError.value) throw attributeError.value
+if (!attribute.value) {
   throw createError({
     statusCode: 404,
     message: 'Attribute not found'

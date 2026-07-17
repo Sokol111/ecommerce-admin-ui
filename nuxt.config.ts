@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     imageApiUrl: '',
 
     oidcLogoutUrl: '',
+    oidcRevocationUrl: '',
     oidcLogoutRedirectUrl: '',
     oidcIssuer: '',
     oidcJwksUrl: '',

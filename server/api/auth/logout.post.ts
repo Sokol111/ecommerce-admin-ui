@@ -1,18 +1,31 @@
 export default defineEventHandler(async (event) => {
-  const origin = getHeader(event, 'origin')
-  const requestUrl = getRequestURL(event)
-  if (origin !== requestUrl.origin) {
-    throw createError({ statusCode: 403, message: 'Cross-origin logout is not allowed' })
-  }
-
-  const { oidcLogoutRedirectUrl, oidcLogoutUrl } = useRuntimeConfig(event)
-  const idToken = (await getAuthSessionTokens(event))?.idToken
+  const config = useRuntimeConfig(event)
+  const { clientId, clientSecret } = config.oauth.oidc
+  const tokens = await getAuthSessionTokens(event)
+  invalidateAuthRefresh(tokens?.refreshToken)
   await clearAuthSession(event)
 
-  if (!oidcLogoutUrl) return { redirectUrl: oidcLogoutRedirectUrl || '/' }
+  if (tokens?.refreshToken && config.oidcRevocationUrl && clientId && clientSecret) {
+    try {
+      await $fetch(config.oidcRevocationUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          token: tokens.refreshToken,
+          token_type_hint: 'refresh_token'
+        }).toString()
+      })
+    } catch (error) {
+      console.error('OIDC refresh token revocation failed', error)
+    }
+  }
 
-  const logoutUrl = new URL(oidcLogoutUrl)
-  logoutUrl.searchParams.set('post_logout_redirect_uri', oidcLogoutRedirectUrl)
-  if (idToken) logoutUrl.searchParams.set('id_token_hint', idToken)
+  if (!config.oidcLogoutUrl) return { redirectUrl: config.oidcLogoutRedirectUrl || '/' }
+
+  const logoutUrl = new URL(config.oidcLogoutUrl)
+  logoutUrl.searchParams.set('post_logout_redirect_uri', config.oidcLogoutRedirectUrl)
+  if (tokens?.idToken) logoutUrl.searchParams.set('id_token_hint', tokens.idToken)
   return { redirectUrl: logoutUrl.toString() }
 })

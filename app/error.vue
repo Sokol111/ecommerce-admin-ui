@@ -10,6 +10,7 @@ const handleError = () => clearError({ redirect: '/' })
 const statusCode = computed(() => props.error.status || 500)
 const message = computed(() => {
   if (statusCode.value === 401) return 'You are not authorized to access this page.'
+  if (statusCode.value === 403) return 'You do not have permission to perform this action.'
   if (statusCode.value === 404) return 'The page you are looking for does not exist.'
   return 'Something went wrong. Please try again later.'
 })

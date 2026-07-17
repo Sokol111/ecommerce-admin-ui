@@ -8,6 +8,7 @@ export interface AccessTokenClaims extends JWTPayload {
 }
 
 export interface IdTokenClaims extends JWTPayload {
+  azp?: string
   email?: string
   name?: string
   given_name?: string
@@ -32,13 +33,24 @@ function getJwks(url: string) {
 }
 
 export async function verifyTokenWithConfig<T extends JWTPayload>(token: string, config: TokenValidationConfig): Promise<T> {
-  const { payload } = await jwtVerify(token, getJwks(config.jwksUrl), {
-    algorithms: ['ES256', 'ES384', 'RS256'],
-    audience: config.audience,
-    issuer: config.issuer,
-    requiredClaims: ['exp', 'sub']
-  })
-  return payload as T
+  try {
+    const { payload } = await jwtVerify(token, getJwks(config.jwksUrl), {
+      algorithms: ['ES256', 'ES384', 'RS256'],
+      audience: config.audience,
+      issuer: config.issuer,
+      requiredClaims: ['exp', 'iat', 'sub']
+    })
+    return payload as T
+  } catch (error) {
+    const code = (error as { code?: string }).code
+    if (code === 'ERR_JWKS_TIMEOUT') {
+      throw createError({ statusCode: 503, message: 'Authentication service unavailable' })
+    }
+    if (code?.startsWith('ERR_')) {
+      throw createError({ statusCode: 401, message: 'Invalid token' })
+    }
+    throw error
+  }
 }
 
 function getAuthConfig(event?: Parameters<typeof useRuntimeConfig>[0]) {
@@ -64,9 +76,13 @@ export async function verifyIdToken(token: string, event?: Parameters<typeof use
   if (!clientId) {
     throw createError({ statusCode: 500, message: 'OIDC client ID is not configured' })
   }
-  return verifyTokenWithConfig<IdTokenClaims>(token, {
+  const claims = await verifyTokenWithConfig<IdTokenClaims>(token, {
     audience: clientId,
     issuer: config.oidcIssuer,
     jwksUrl: config.oidcJwksUrl
   })
+  if (Array.isArray(claims.aud) && claims.aud.length > 1 && claims.azp !== clientId) {
+    throw createError({ statusCode: 401, message: 'Invalid ID token authorized party' })
+  }
+  return claims
 }

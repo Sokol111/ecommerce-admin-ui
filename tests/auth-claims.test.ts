@@ -7,7 +7,7 @@ const issuer = 'https://issuer.example/oidc'
 const audience = 'https://api.example'
 let server: Server
 let jwksUrl: string
-let signToken: (tokenAudience?: string) => Promise<string>
+let signToken: (tokenAudience?: string, includeIssuedAt?: boolean) => Promise<string>
 
 beforeAll(async () => {
   const { privateKey, publicKey } = await generateKeyPair('ES384')
@@ -23,14 +23,16 @@ beforeAll(async () => {
   if (!address || typeof address === 'string') throw new Error('Test JWKS server did not start')
   jwksUrl = `http://127.0.0.1:${address.port}/jwks`
 
-  signToken = (tokenAudience = audience) => new SignJWT({ tenant: 'shop', role: 'viewer' })
-    .setProtectedHeader({ alg: 'ES384', kid: 'test-key' })
-    .setIssuer(issuer)
-    .setAudience(tokenAudience)
-    .setSubject('user-1')
-    .setIssuedAt()
-    .setExpirationTime('5m')
-    .sign(privateKey)
+  signToken = (tokenAudience = audience, includeIssuedAt = true) => {
+    const token = new SignJWT({ tenant: 'shop', role: 'viewer' })
+      .setProtectedHeader({ alg: 'ES384', kid: 'test-key' })
+      .setIssuer(issuer)
+      .setAudience(tokenAudience)
+      .setSubject('user-1')
+      .setExpirationTime('5m')
+    if (includeIssuedAt) token.setIssuedAt()
+    return token.sign(privateKey)
+  }
 })
 
 afterAll(() => new Promise<void>((resolve, reject) => {
@@ -45,6 +47,14 @@ describe('verifyTokenWithConfig', () => {
 
   it('rejects a token issued for another audience', async () => {
     await expect(verifyTokenWithConfig(await signToken('https://other-api.example'), {
+      audience,
+      issuer,
+      jwksUrl
+    })).rejects.toThrow()
+  })
+
+  it('rejects a token without an issued-at claim', async () => {
+    await expect(verifyTokenWithConfig(await signToken(audience, false), {
       audience,
       issuer,
       jwksUrl

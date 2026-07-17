@@ -16,7 +16,8 @@ const [{ data: category, error: categoryError }, { data: attributesData }] = awa
   useApiFetch<GetAttributeListResponse>('/api/catalog/attributes')
 ])
 
-if (categoryError.value || !category.value) {
+if (categoryError.value) throw categoryError.value
+if (!category.value) {
   throw createError({
     statusCode: 404,
     message: 'Category not found'

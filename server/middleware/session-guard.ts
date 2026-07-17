@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
   try {
     const tokens = await getValidAuthSessionTokens(event)
     if (!tokens && (await getAuthSessionTokens(event))) await clearAuthSession(event)
-  } catch {
-    await clearAuthSession(event)
+  } catch (error) {
+    const statusCode = (error as { statusCode?: number }).statusCode
+    if (statusCode === 401 || statusCode === 403) await clearAuthSession(event)
   }
 })
